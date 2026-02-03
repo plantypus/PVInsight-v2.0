@@ -1,0 +1,7 @@
+file=Hourly_results.CSV
+pvsyst_version=PVSYST 8.0.19
+simulation_date=18/12/25 11h38
+columns=GlobInc,GlobEff,EArray,E_Grid,PR,InvLoss,IL_Pmax,EOutInv
+threshold_column=E_Grid
+threshold_value=10000.0
+available_analyses=threshold,power_distribution,inverter_clipping

@@ -1,0 +1,45 @@
+======================================================================
+TMY_Analysis — PVInsight
+Generated: 2026-01-21 15:25:17
+======================================================================
+Sources:
+  - tmy_pvsyst_P50.csv
+
+Time step (min): 60
+
+Header info:
+  TMY hourly data: 
+  Site: Chasseneuil-sur-Bonnieure
+  Country: France
+  Data Source: 3E solar data
+  Time Step: h
+  Latitude: 45.85257988
+  Longitude: 0.43536362
+  Altitude: 131.0
+  Time Zone: 0
+  Time reference: UT
+
+Units by column:
+  datetime: 
+  YEAR: 
+  MONTH: 
+  DAY: 
+  HOUR: 
+  ghi: W/m²
+  gpi: W/m²
+  dni: W/m²
+  dhi: W/m²
+  temp: °C
+  wind_speed: m/s
+  wind_direction: deg
+
+Quality summary:
+  n_rows: 8760
+  n_nan: 0
+  n_nat: 0
+  start: 1990-01-01 00:00:00
+  end: 1990-12-31 23:00:00
+  expected_rows: 8760
+  warning: -
+
+Warnings: none

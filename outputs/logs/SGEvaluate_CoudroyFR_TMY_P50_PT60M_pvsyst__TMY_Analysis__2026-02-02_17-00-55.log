@@ -1,0 +1,39 @@
+======================================================================
+TMY_Analysis — PVInsight
+Generated: 2026-02-02 17:00:56
+======================================================================
+Sources:
+  - SGEvaluate_CoudroyFR_TMY_P50_PT60M_pvsyst.csv
+
+Time step (min): 60
+
+Header info:
+  Site: Coudroy
+  Country: France
+  Data Source: Solargis TMY data, version 2.2.66
+  Time step: Hour
+  Latitude: 47.898992
+  Longitude: 2.471623
+  Altitude: 123
+  Time Zone: 0
+  Time reference: UT1
+  Order number: HEAqQOG7VUcIu5PR
+  Data provider;Solargis s.r.o.;https: //solargis.com
+
+Units by column:
+  datetime: 
+  ghi: W/m²
+  dhi: W/m²
+  temp: °C
+  wind_speed: m/s
+
+Quality summary:
+  n_rows: 8760
+  n_nan: 0
+  n_nat: 0
+  start: 1990-01-01 00:30:00
+  end: 1990-12-31 23:30:00
+  expected_rows: 8760
+  warning: -
+
+Warnings: none

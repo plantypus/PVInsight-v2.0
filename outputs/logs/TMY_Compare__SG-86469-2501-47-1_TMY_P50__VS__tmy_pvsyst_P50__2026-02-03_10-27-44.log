@@ -1,0 +1,26 @@
+======================================================================
+TMY_Compare — PVInsight
+Generated: 2026-02-03 10:27:45
+======================================================================
+Sources:
+  - SG-86469-2501-47-1_TMY_P50.csv
+  - tmy_pvsyst_P50.csv
+
+Time step (min): 60
+
+Header info:
+  reader_a: solargis
+  reader_b: 3E
+  file_a: SG-86469-2501-47-1_TMY_P50.csv
+  file_b: tmy_pvsyst_P50.csv
+  step_a_min: 60
+  step_b_min: 60
+  used_step_min: 60
+  common_start: 2001-01-01 00:00:00
+  common_end: 2001-12-31 23:00:00
+
+Units by column:
+  A: {'datetime': '', 'ghi': 'W/m²', 'dni': 'W/m²', 'dhi': 'W/m²', 'temp': '°C', 'wind_speed': 'm/s', 'wind_direction': 'deg'}
+  B: {'datetime': '', 'YEAR': '', 'MONTH': '', 'DAY': '', 'HOUR': '', 'ghi': 'W/m²', 'gpi': 'W/m²', 'dni': 'W/m²', 'dhi': 'W/m²', 'temp': '°C', 'wind_speed': 'm/s', 'wind_direction': 'deg'}
+
+Warnings: none

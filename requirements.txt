@@ -1,0 +1,20 @@
+# --- Core scientific stack ---
+pandas>=2.0
+numpy>=1.24
+
+# --- Plotting / visualization ---
+matplotlib>=3.7
+plotly>=5.18
+
+# --- Streamlit UI ---
+streamlit>=1.32
+
+# --- Excel export ---
+xlsxwriter>=3.1
+openpyxl>=3.1
+
+# --- PDF export ---
+reportlab>=4.0
+
+# --- Image handling (logos, icons) ---
+Pillow>=10.0

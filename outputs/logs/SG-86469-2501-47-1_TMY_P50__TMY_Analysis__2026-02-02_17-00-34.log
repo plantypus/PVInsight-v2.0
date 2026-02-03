@@ -1,0 +1,50 @@
+======================================================================
+TMY_Analysis — PVInsight
+Generated: 2026-02-02 17:00:36
+======================================================================
+Sources:
+  - SG-86469-2501-47-1_TMY_P50.csv
+
+Time step (min): 60
+
+Header info:
+  File type: Solargis_TMY60_P50
+  Report number: SG-86469-2501-47-1
+  Customer name: ABO WIND AG
+  Issued: 2025-01-22 14:37
+  Site name: Chasseneuil-sur-Bonnieure, Frankreich (FR)
+  Latitude: 45.852580
+  Longitude: 0.435364
+  Elevation: 134.0 m a.s.l.
+  https: //solargis.com, contact@solargis.com
+  Solargis database version: v2.2.60
+  Description: spatially disaggregated from ERA5Land and ERA5 model data ((c) 2025 ECMWF) by Solargis method
+  Summarization type: harmonized to 60 min (typical meteorological year)
+  Summarization period: 01/01/1994 - 31/12/2024
+  Spatial resolution: temperature 1 km, other meteorological parameters 12 km to 25 km
+  Service provider: Solargis s.r.o., Bottova 2A, Bratislava, Slovakia
+  Company ID: 45 354 766, VAT Number: SK2022962766
+  Registration: Business register, City Court Bratislava III, Section Sro, File 62765/B
+  TMY method: solargis_3
+  TMY created from selected years: 1:2005 2:2015 3:2011 4:2019 5:2021 6:2008 7:2010 8:2012 9:2009 10:2008 11:2004 12:2024
+  Time - Time reference UTC+0, time step 60 min, time format HH: MM, center of the averaging interval
+
+Units by column:
+  datetime: 
+  ghi: W/m²
+  dni: W/m²
+  dhi: W/m²
+  temp: °C
+  wind_speed: m/s
+  wind_direction: deg
+
+Quality summary:
+  n_rows: 8760
+  n_nan: 0
+  n_nat: 0
+  start: 2001-01-01 00:30:00
+  end: 2001-12-31 23:30:00
+  expected_rows: 8760
+  warning: -
+
+Warnings: none
