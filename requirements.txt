@@ -18,3 +18,5 @@ reportlab>=4.0
 
 # --- Image handling (logos, icons) ---
 Pillow>=10.0
+
+pdfplumber

@@ -18,8 +18,8 @@ LOGO_ICO = ASSETS_DIR / "logo.ico"
 # =============================================================================
 # App identity
 # =============================================================================
-APP_NAME = "PVInsight — PVSyst Analyzer"
-APP_VERSION = "0.1.0"
+APP_NAME = "PVInsight — PV Data Analyzer"
+APP_VERSION = "0.2.1"
 
 
 # =============================================================================
@@ -51,16 +51,3 @@ class ToolCard:
     badge: Optional[str] = None
 
 
-# Site "vide" pour l'instant : aucun outil métier
-TOOLS: List[ToolCard] = [
-    # Exemple (à activer quand la page existera) :
-    # ToolCard(
-    #     key="HOURLY",
-    #     page="app/pages/10_📈_Analyse_Hourly.py",
-    #     icon="📈",
-    #     title_key="TOOL_HOURLY_TITLE",
-    #     desc_key="TOOL_HOURLY_DESC",
-    #     enabled=True,
-    #     badge="BETA",
-    # ),
-]

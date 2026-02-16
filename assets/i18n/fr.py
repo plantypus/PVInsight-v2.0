@@ -391,4 +391,252 @@ TEXTS = {
     "TMY_COMPARE_STEP_NATIVE_B": "Pas de temps natif (B)",
     "TMY_COMPARE_STEP_USED": "Pas de temps utilisé pour la comparaison",
     "TMY_COMPARE_ALERT": "Alertes",
+
+  # --- Compare PAN vs Datasheet ---
+  "COMPARE_PAN_DS_TITLE": "Comparaison .PAN vs Datasheet",
+  "COMPARE_PAN_DS_DESC": "Compare les valeurs électriques STC et quelques caractéristiques mécaniques entre un fichier PVsyst (.PAN) et une datasheet constructeur (PDF).",
+
+  "COMPARE_PAN_DS_INPUTS_HELP": "1) Choisis un fabricant (détermine le reader PDF). 2) Charge un fichier .PAN et une datasheet PDF. 3) Lance la comparaison.",
+
+  "COMPARE_PAN_DS_MFR_SELECT": "Fabricant (datasheet)",
+  "COMPARE_PAN_DS_MFR_HELP": "Le fabricant sélectionné détermine quel reader PDF sera utilisé côté module métier.",
+  "COMPARE_PAN_DS_MFR_JINKO": "Jinko Solar",
+  "COMPARE_PAN_DS_MFR_DMEGC": "DMEGC",
+  "COMPARE_PAN_DS_MFR_ASTRONERGY": "Astronergy",
+  "COMPARE_PAN_DS_MFR_DAS_SOLAR": "DAS Solar",
+  "COMPARE_PAN_DS_MFR_CANADIAN_SOLAR": "Canadian Solar",
+
+  "COMPARE_PAN_DS_UPLOAD_PAN": "Fichier PVsyst (.PAN)",
+  "COMPARE_PAN_DS_UPLOAD_DS": "Datasheet constructeur (PDF)",
+
+  "COMPARE_PAN_DS_CLEANUP_TMP": "Supprimer les fichiers temporaires",
+  "COMPARE_PAN_DS_CLEANUP_TMP_HELP": "Si activé, le PDF écrit sur disque pour lecture pourra être supprimé après parsing (utile en mode “stateless”).",
+
+  "COMPARE_PAN_DS_RUN": "Lancer la comparaison",
+  "COMPARE_PAN_DS_RUNNING": "Comparaison en cours…",
+  "COMPARE_PAN_DS_DONE": "Comparaison terminée.",
+  "COMPARE_PAN_DS_ERROR": "Erreur pendant la comparaison.",
+  "COMPARE_PAN_DS_NEED_FILES": "Veuillez fournir un fichier .PAN et une datasheet PDF.",
+
+  "COMPARE_PAN_DS_WARNINGS_TITLE": "Avertissements",
+  "COMPARE_PAN_DS_SUMMARY_TITLE": "Résumé",
+  "COMPARE_PAN_DS_SUM_MANUFACTURER": "Fabricant (code)",
+  "COMPARE_PAN_DS_SUM_PAN_MODEL": "Modèle (PAN)",
+  "COMPARE_PAN_DS_SUM_DS_MODEL": "Modèle (datasheet)",
+  "COMPARE_PAN_DS_SUM_PICK_MODE": "Sélection variante (mode)",
+  "COMPARE_PAN_DS_SUM_FIELDS": "Nombre de champs",
+  "COMPARE_PAN_DS_SUM_OK": "Champs OK",
+  "COMPARE_PAN_DS_SUM_WARN": "Champs en écart",
+  "COMPARE_PAN_DS_SUM_MISSING": "Champs manquants",
+
+  "COMPARE_PAN_DS_TABLE_TITLE": "Détails de comparaison",
+  "COMPARE_PAN_DS_NO_ROWS": "Aucune ligne de comparaison disponible.",
+  "COMPARE_PAN_DS_NO_OUTPUTS_YET": "Aucun résultat pour le moment.",
+
+  "COMPARE_PAN_DS_COL_LABEL": "Paramètre",
+  "COMPARE_PAN_DS_COL_UNIT": "Unité",
+  "COMPARE_PAN_DS_COL_PAN": "PAN",
+  "COMPARE_PAN_DS_COL_DS": "Datasheet",
+  "COMPARE_PAN_DS_COL_DABS": "Δ absolu",
+  "COMPARE_PAN_DS_COL_DPCT": "Δ %",
+  "COMPARE_PAN_DS_COL_STATUS": "Statut",
+  "COMPARE_PAN_DS_COL_TOL_ABS": "Tolérance abs.",
+  "COMPARE_PAN_DS_COL_TOL_PCT": "Tolérance %",
+
+  # --- Compare PAN vs Datasheet (IAM + Exports + Generalities + Project) ---
+
+  "COMPARE_PAN_DS_GENERALITIES_TITLE": "Généralités",
+  "COMPARE_PAN_DS_GEN_DATE": "Date d’analyse",
+  "COMPARE_PAN_DS_GEN_MFR": "Fabricant sélectionné",
+  "COMPARE_PAN_DS_GEN_PAN_FILE": "Fichier PAN",
+  "COMPARE_PAN_DS_GEN_DS_FILE": "Fichier datasheet",
+  "COMPARE_PAN_DS_GEN_PAN_MODEL": "Modèle (PAN)",
+  "COMPARE_PAN_DS_GEN_PAN_POWER": "Puissance (PAN, W)",
+  "COMPARE_PAN_DS_GEN_DS_VARIANT": "Variante (datasheet)",
+  "COMPARE_PAN_DS_GEN_DS_POWER": "Puissance (datasheet, W)",
+
+  "COMPARE_PAN_DS_PROJECT_EXPANDER": "Informations projet (optionnel – pour le rapport PDF)",
+  "COMPARE_PAN_DS_PROJECT_NAME": "Nom du projet",
+  "COMPARE_PAN_DS_PROJECT_NO": "N° projet",
+  "COMPARE_PAN_DS_SOLAR_ENGINEER": "Ingénieur solaire",
+
+  "COMPARE_PAN_DS_GRAPHS_TITLE": "Graphiques",
+  "COMPARE_PAN_DS_IAM_NOT_AVAILABLE": "Profil IAM non disponible dans le fichier PAN.",
+  "COMPARE_PAN_DS_IAM_MODE": "Mode IAM",
+  "COMPARE_PAN_DS_IAM_PROFILE": "Nom du profil",
+  "COMPARE_PAN_DS_IAM_TYPE": "Type de profil",
+  "COMPARE_PAN_DS_IAM_X": "Angle d’incidence (°)",
+  "COMPARE_PAN_DS_IAM_Y": "Facteur IAM",
+  "COMPARE_PAN_DS_IAM_LOSS": "Pertes IAM (%)",
+  "COMPARE_PAN_DS_IAM_TABLE_TITLE": "Table du profil IAM",
+  "COMPARE_PAN_DS_IAM_COL_ANGLE": "Angle (°)",
+  "COMPARE_PAN_DS_IAM_COL_IAM": "IAM",
+  "COMPARE_PAN_DS_IAM_COL_LOSS": "Pertes (%)",
+  "COMPARE_PAN_DS_IAM_WARNINGS_TITLE": "Avertissements IAM",
+  "COMPARE_PAN_DS_IAM_STATS_TITLE": "Indicateurs IAM",
+
+  "COMPARE_PAN_DS_COMPARE_SKIPPED": "Comparaison désactivée : le modèle (marque / puissance) ne correspond pas strictement.",
+  "COMPARE_PAN_DS_AVAILABLE_VARIANTS": "Variantes disponibles dans la datasheet (diagnostic)",
+
+  "COMPARE_PAN_DS_COL_SECTION": "Section",
+  "COMPARE_PAN_DS_COL_LABEL": "Paramètre",
+  "COMPARE_PAN_DS_COL_UNIT": "Unité",
+  "COMPARE_PAN_DS_COL_DS": "Datasheet",
+  "COMPARE_PAN_DS_COL_PAN": "PAN",
+  "COMPARE_PAN_DS_COL_DABS": "Écart absolu",
+  "COMPARE_PAN_DS_COL_DPCT": "Écart (%)",
+  "COMPARE_PAN_DS_COL_STATUS": "Statut",
+  "COMPARE_PAN_DS_COL_TOL_ABS": "Tolérance abs.",
+  "COMPARE_PAN_DS_COL_TOL_PCT": "Tolérance %",
+
+  "COMPARE_PAN_DS_NO_OUTPUTS_YET": "Aucun résultat pour le moment. Lancez l’analyse pour générer un rapport.",
+  "COMPARE_PAN_DS_DOWNLOAD_PDF": "Télécharger le rapport PDF",
+  "COMPARE_PAN_DS_DOWNLOAD_LOG": "Télécharger le fichier log (texte)",
+  "COMPARE_PAN_DS_EXPORTS_READY": "Exports disponibles ci-dessous (PDF / log).",
+
+  # --- Compare PAN vs Datasheet (UI/Help additions) ---
+
+  "COMPARE_PAN_DS_TIMESTAMP_OUTPUTS": "Ajouter un horodatage aux exports",
+  "COMPARE_PAN_DS_RUN_HELP": "Lance l’analyse PAN vs datasheet et génère un rapport PDF + un log.",
+  "COMPARE_PAN_DS_EXPORT_TITLE": "Exports",
+
+  "COMPARE_PAN_DS_HELP_GENERALITIES": (
+      "Synthèse d’identification et de traçabilité : date d’analyse, fabricant sélectionné, "
+      "fichiers utilisés, modèle et puissance. Utile pour éviter toute comparaison entre modules différents."
+  ),
+
+  "COMPARE_PAN_DS_HELP_COMPARISON": (
+      "Comparaison stricte des paramètres influençant la performance du module selon l’irradiance "
+      "(STC, coefficients de température, bifacialité, Rshunt). "
+      "Un écart (%) élevé indique souvent une incohérence de modèle ou de paramétrage."
+  ),
+
+  "COMPARE_PAN_DS_HELP_IAM": (
+      "Le profil IAM (Incidence Angle Modifier) décrit la perte optique lorsque la lumière arrive "
+      "avec un angle non normal au module. Plus l’angle augmente, plus l’IAM diminue → pertes IAM augmentent. "
+      "Impact direct sur la production en matin/soir et en hiver."
+  ),
+
+  "COMPARE_PAN_DS_HELP_EXPORTS": (
+      "Télécharge le rapport PDF et le log texte générés lors de la dernière analyse."
+  ),
+
+  # --- Compare PAN vs Datasheet — Electrical explainer ---
+
+  "COMPARE_PAN_DS_ELEC_EXPLAINER_TITLE": "Comprendre les paramètres électriques",
+  "COMPARE_PAN_DS_ELEC_EXPLAINER_SECION" : "Explications Techniques",
+
+  "COMPARE_PAN_DS_ELEC_EXPLAINER_TEXT": """
+  Comprendre les paramètres électriques du module
+
+  ---
+
+  ## 🔹 Données STC (conditions standard)
+
+  STC = 1000 W/m², 25°C cellule.
+
+  ### Isc – Courant de court-circuit
+
+  - Courant maximal fourni par le module à irradiance donnée.
+  - Augmente quasi linéairement avec l’irradiance.
+  - Augmente légèrement avec la température (α > 0).
+  - Paramètre principalement piloté par l’irradiance.
+
+  ---
+
+  ### Voc – Tension à vide
+
+  - Tension maximale sans charge.
+  - Diminue lorsque la température augmente (β < 0).
+  - Paramètre critique pour le dimensionnement des strings (surtension à froid).
+
+  ---
+
+  ### Vmpp & Impp – Point de puissance maximale
+
+  - Définissent le point optimal de fonctionnement.
+  - Vmpp diminue avec la température.
+  - Impp augmente légèrement avec l’irradiance.
+  - Leur produit donne la puissance maximale Pmax.
+
+  ---
+
+  ## 🔹 Coefficients de température
+
+  Ces paramètres décrivent la sensibilité du module à la température cellule.
+
+  ### α – Coefficient de Isc (%/°C)
+
+  - Généralement faible et positif (~ +0.04 à +0.06 %/°C).
+  - Impact limité sur la puissance globale.
+
+  ### β – Coefficient de Voc (%/°C)
+
+  - Toujours négatif (~ −0.25 à −0.35 %/°C).
+  - Impact significatif en climat chaud.
+
+  ### γ – Coefficient de Pmax (%/°C)
+
+  - Paramètre thermique le plus important.
+  - Typiquement entre −0.28 et −0.35 %/°C.
+  - Exemple : -0.30 %/°C → +20°C → -6 % de puissance.
+
+  ### μIsc (mA/°C) & μVoc (mV/°C)
+
+  - Versions absolues des coefficients précédents.
+  - Permettent de vérifier la cohérence entre valeurs absolues et valeurs en %/°C.
+
+  ---
+
+  ## 🔹 RShunt – Résistance de shunt
+
+  RShunt représente les pertes internes dues aux chemins parasites dans la cellule.
+
+  - Plus RShunt est élevée → moins de pertes → meilleur rendement à faible irradiance.
+  - Faible RShunt → dégradation de la courbe I/V à basse tension.
+  - Impact visible le matin, le soir et sous ciel couvert.
+
+  ### Formule par défaut utilisée par PVsyst :
+
+  Rshunt = Vmpp / (0.2 × (Isc − Impp))
+
+  où :
+  - Vmpp = tension au point de puissance max
+  - Isc = courant de court-circuit
+  - Impp = courant au point de puissance max
+
+  Le facteur 0.2 correspond à une approximation empirique de la conductance différentielle autour du point MPP.
+
+  Cette valeur est une estimation basée uniquement sur les données STC.
+  Le fichier PAN peut contenir une valeur optimisée issue du modèle une-diode.
+
+  ---
+
+  ## 🔹 IAM – Incidence Angle Modifier
+
+  L’IAM décrit la perte optique due à l’angle d’incidence.
+
+  - IAM = 1 → incidence normale.
+  - IAM < 1 → pertes optiques.
+  - Impact important le matin, le soir et en hiver.
+
+  Même avec des STC identiques, un profil IAM défavorable réduit la production annuelle.
+
+  ---
+
+  ## 🔹 Bifacialité
+
+  - Rapport entre puissance arrière et avant.
+  - Facteur 0.7 → 70 % de performance face arrière.
+  - Paramètre déterminant pour centrales au sol à albédo élevé.
+
+  ---
+
+  ## 🔹 Tension système maximale
+
+  - Limite électrique maximale du module.
+  - Paramètre critique pour le dimensionnement des strings à basse température.
+  """,
+
+
 }

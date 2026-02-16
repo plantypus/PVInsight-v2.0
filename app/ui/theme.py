@@ -9,6 +9,10 @@ def inject_css() -> None:
         .pv-title { font-size: 2.0rem; font-weight: 700; margin-bottom: 0.25rem; }
         .pv-subtitle { font-size: 1.0rem; opacity: 0.85; margin-bottom: 1rem; }
         .tool-row { padding: 0.25rem 0; }
+        .pv-small-text {
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
         </style>
         """,
         unsafe_allow_html=True,

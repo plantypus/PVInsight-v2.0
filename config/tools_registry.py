@@ -14,6 +14,19 @@ class ToolSpec:
     enabled: bool = True
     badge: Optional[str] = None
 
+# Site "vide" pour l'instant : aucun outil métier
+# TOOLS: List[ToolCard] = [
+    # Exemple (à activer quand la page existera) :
+    # ToolCard(
+    #     key="HOURLY",
+    #     page="app/pages/10_📈_Analyse_Hourly.py",
+    #     icon="📈",
+    #     title_key="TOOL_HOURLY_TITLE",
+    #     desc_key="TOOL_HOURLY_DESC",
+    #     enabled=True,
+    #     badge="BETA",
+    # ),
+# ]
 
 TOOLS: List[ToolSpec] = [
     ToolSpec(
@@ -23,7 +36,7 @@ TOOLS: List[ToolSpec] = [
         title_key="TOOL_TMY_ANALYSIS_TITLE",
         desc_key="TOOL_TMY_ANALYSIS_DESC",
         enabled=True,
-        badge="NEW",
+        badge="",
     ),
     ToolSpec(
         tool_id="tmy_compare",
@@ -32,7 +45,7 @@ TOOLS: List[ToolSpec] = [
         title_key="TOOL_TMY_COMPARE_TITLE",
         desc_key="TOOL_TMY_COMPARE_DESC",
         enabled=True,
-        badge="NEW",
+        badge="",
     ),
     ToolSpec(
         tool_id="hourly_results_analysis",
@@ -41,7 +54,16 @@ TOOLS: List[ToolSpec] = [
         title_key="TOOL_HOURLY_RESULTS_TITLE",
         desc_key="TOOL_HOURLY_RESULTS_DESC",
         enabled=True,
-        badge="NEW",
+        badge="",
+    ),
+    ToolSpec(
+        tool_id="compare_pan_to_ds",
+        page="pages/40_compare_pan_to_ds.py",
+        icon="🧾",
+        title_key="COMPARE_PAN_DS_TITLE",
+        desc_key="COMPARE_PAN_DS_DESC",
+        enabled=True,
+        badge="",
     ),
 ]
 
