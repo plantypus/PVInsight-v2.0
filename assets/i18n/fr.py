@@ -340,6 +340,23 @@ TEXTS = {
     "⚠️ Les résultats dépendent des paramètres exportés par PVSyst et du pas de temps détecté."
   ),
 
+    "HOURLY_HEATMAP_TITLE": "Heatmap de l’injection réseau (mois × heure)",
+
+    "HOURLY_HEATMAP_CAPTION": (
+        "Valeur moyenne de la puissance injectée P_grid (kW), "
+        "calculée à partir de l’énergie E_Grid et du pas de temps Δt."
+    ),
+
+    "HOURLY_HEATMAP_MISSING_COLUMN": "Colonne requise absente pour la heatmap",
+
+    "HOURLY_HEATMAP_NOT_AVAILABLE": (
+        "Heatmap indisponible : données manquantes ou index temporel invalide."
+    ),
+    
+    "HOURLY_HEATMAP_COLORBAR_TITLE_P_GRID": "Puissance injectée (P_grid)",
+    "HOURLY_HEATMAP_UNIT_KW": "kW",
+
+    #TMY compare tool
     "TOOL_TMY_COMPARE_TITLE": "Comparaison de TMY",
     "TOOL_TMY_COMPARE_DESC": "Comparer deux fichiers TMY (GHI/DNI/DHI/Temp) sur un pas horaire commun (60 min) et analyser les écarts.",
 

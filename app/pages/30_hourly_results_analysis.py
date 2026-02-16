@@ -7,7 +7,10 @@ from typing import Any, Optional
 
 import pandas as pd
 import streamlit as st
+import calendar
+import numpy as np
 import plotly.express as px
+import plotly.graph_objects as go
 
 from app.bootstrap import configure_page, bootstrap
 from ui.tool_layout import tool_header, section
@@ -116,6 +119,87 @@ def _bar(df: pd.DataFrame, x: str, y: str, title: str, xlab: str, ylab: str):
 def _line(df: pd.DataFrame, x: str, y: str, title: str, xlab: str, ylab: str):
     return px.line(df, x=x, y=y, markers=True, title=title, labels={x: xlab, y: ylab})
 
+def _month_hour_heatmap(
+    df: pd.DataFrame,
+    value_col: str = "E_Grid",
+    dt_hours: float = 1.0,
+    mode: str = "power_kw",   # "power_kw" ou "energy_kwh_step"
+    agg: str = "mean",        # "mean" ou "sum"
+):
+    if df is None or df.empty:
+        return None
+    if value_col not in df.columns:
+        return None
+    if not isinstance(df.index, pd.DatetimeIndex):
+        return None
+
+    dt_hours = float(dt_hours) if (dt_hours and dt_hours > 0) else 1.0
+
+    tmp = pd.DataFrame(index=df.index)
+    tmp["month"] = tmp.index.month
+    tmp["hour"] = tmp.index.hour
+
+    v = pd.to_numeric(df[value_col], errors="coerce")
+    if mode == "power_kw":
+        tmp["value"] = v / dt_hours
+        unit = t("HOURLY_HEATMAP_UNIT_KW")  # "kW"
+        legend = t("HOURLY_HEATMAP_COLORBAR_TITLE_P_GRID")
+    else:
+        tmp["value"] = v
+        unit = "kWh"
+        legend = "E_grid"
+
+    pivot = tmp.pivot_table(
+        values="value",
+        index="hour",
+        columns="month",
+        aggfunc=agg,
+    ).reindex(index=list(range(24)), columns=list(range(1, 13)))
+
+    pivot = pivot.fillna(0.0)
+
+    month_labels = [calendar.month_abbr[m] for m in range(1, 13)]
+    hour_labels = [f"{h:02d}:00" for h in range(24)]
+
+    z = pivot.to_numpy(dtype=float)
+
+    # Texte dans les cellules
+    eps = 1e-6
+    text = np.where(z > eps, np.round(z, 1).astype(str), "")
+
+    # Dégradé blanc -> jaune -> rouge
+    colorscale_wyr = [
+        [0.00, "#ffffff"],
+        [0.50, "#fff2a8"],
+        [1.00, "#d7191c"],
+    ]
+
+    fig = go.Figure(
+        data=go.Heatmap(
+            z=z,
+            x=month_labels,
+            y=hour_labels,
+            colorscale=colorscale_wyr,
+            colorbar=dict(title=f"{legend} ({unit})", len=0.8, thickness=14),
+            text=text,
+            texttemplate="%{text}",
+            textfont=dict(size=10),
+            hovertemplate=(
+                "Month: %{x}<br>"
+                "Hour: %{y}<br>"
+                f"{legend}: %{{z:.2f}} {unit}"
+                "<extra></extra>"
+            ),
+        )
+    )
+
+    fig.update_layout(
+        margin=dict(l=40, r=40, t=10, b=10),
+    )
+    fig.update_xaxes(side="top")
+    fig.update_yaxes(autorange="reversed")  # 00:00 en haut
+
+    return fig
 
 # =============================================================================
 # 1) Inputs
@@ -293,7 +377,45 @@ with section("SECTION_RESULTS", icon="📊"):
         with tab_graphs:
             left, right = st.columns([2, 1], gap="large")
 
+            # ---------------------------------------------------------------------
+            # Heatmap E_Grid (Month x Hour) — FIRST GRAPH in LEFT column (2/3 width)
+            # ---------------------------------------------------------------------
+            with left:
+                st.subheader(t("HOURLY_HEATMAP_TITLE"))
+
+                dt_hours = 1.0
+                gp = ctx.results.get("global_production", {})
+                if gp and gp.get("available", False):
+                    dt_hours = float(gp.get("summary", {}).get("dt_hours", 1.0) or 1.0)
+
+                col = "E_Grid"
+                if col not in df.columns:
+                    st.warning(t("HOURLY_HEATMAP_MISSING_COLUMN") + f": {col}")
+                else:
+                    fig_hm = _month_hour_heatmap(
+                        df=df,
+                        value_col=col,
+                        dt_hours=dt_hours,
+                        mode="power_kw",
+                        agg="mean",
+                    )
+
+                    if fig_hm is None:
+                        st.warning(t("HOURLY_HEATMAP_NOT_AVAILABLE"))
+                    else:
+                        # “centrage” visuel: un peu de marge + colorbar plus compacte
+                        fig_hm.update_layout(
+                            margin=dict(l=40, r=40, t=10, b=10),
+                            coloraxis_colorbar=dict(len=0.8, thickness=14),
+                        )
+                        st.plotly_chart(fig_hm, width="stretch")
+                        st.caption(t("HOURLY_HEATMAP_CAPTION"))
+
+                st.divider()  # séparation visuelle avant les autres graphes
+
+            # ---------------------------------------------------------------------
             # Threshold (existing)
+            # ---------------------------------------------------------------------
             thr = ctx.results.get("threshold", {})
             with right:
                 st.markdown(f"**{t('HOURLY_RESULTS_THRESHOLD')}**")
@@ -376,6 +498,7 @@ with section("SECTION_RESULTS", icon="📊"):
                         st.write({t("HOURLY_MISSING_COLUMNS"): ", ".join(thr["missing_columns"])})
                         if thr.get("suggestions"):
                             st.write({t("HOURLY_SUGGESTED_COLUMNS"): thr["suggestions"]})
+
 
             # Grid limitation (new)
             gl = ctx.results.get("grid_limit", {})
@@ -595,7 +718,7 @@ with section("SECTION_EXPORT", icon="📤"):
         c1, c2 = st.columns(2, gap="large")
 
         with c1:
-            if st.button(t("HOURLY_GENERATE_EXCEL"), use_container_width=True):
+            if st.button(t("HOURLY_GENERATE_EXCEL"), width="stretch"):
                 suffix = _ts_suffix(bool(get(TOOL_ID, "add_timestamp_to_outputs", True)))
                 out = REPORTS_DIR / f"hourly_results_analysis{suffix}.xlsx"
                 export_excel(ctx, out)
@@ -603,14 +726,14 @@ with section("SECTION_EXPORT", icon="📤"):
                 st.success(t("HOURLY_EXCEL_READY"))
 
         with c2:
-            if st.button(t("HOURLY_GENERATE_PDF"), use_container_width=True):
+            if st.button(t("HOURLY_GENERATE_PDF"), width="stretch"):
                 suffix = _ts_suffix(bool(get(TOOL_ID, "add_timestamp_to_outputs", True)))
                 out = REPORTS_DIR / f"hourly_results_analysis{suffix}.pdf"
                 export_pdf(ctx, out)
                 set_(TOOL_ID, "last_pdf", str(out))
                 st.success(t("HOURLY_PDF_READY"))
 
-        if st.button(t("HOURLY_GENERATE_LOG"), use_container_width=True):
+        if st.button(t("HOURLY_GENERATE_LOG"), width="stretch"):
             suffix = _ts_suffix(bool(get(TOOL_ID, "add_timestamp_to_outputs", True)))
             out = LOGS_DIR / f"hourly_results_analysis{suffix}.txt"
             df = ctx.df_raw

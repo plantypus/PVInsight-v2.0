@@ -337,7 +337,22 @@ TEXTS = {
     "⚠️ Results depend on the parameters exported from PVSyst and on the detected timestep."
   ),
 
+    "HOURLY_HEATMAP_TITLE": "Grid injection heatmap (month × hour)",
 
+    "HOURLY_HEATMAP_CAPTION": (
+        "Average injected power P_grid (kW), "
+        "computed from E_Grid and the time step Δt."
+    ),
+
+    "HOURLY_HEATMAP_MISSING_COLUMN": "Required column missing for heatmap",
+
+    "HOURLY_HEATMAP_NOT_AVAILABLE": (
+        "Heatmap unavailable: missing data or invalid datetime index."
+    ),
+    "HOURLY_HEATMAP_COLORBAR_TITLE_P_GRID": "Injected power (P_grid)",
+    "HOURLY_HEATMAP_UNIT_KW": "kW",
+
+    # TMY compare
     "TOOL_TMY_COMPARE_TITLE": "TMY Comparison",
     "TOOL_TMY_COMPARE_DESC": "Compare two TMY files (GHI/DNI/DHI/Temp) on a common hourly step (60 min) and analyze differences.",
 
