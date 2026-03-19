@@ -352,6 +352,461 @@ TEXTS = {
     "HOURLY_HEATMAP_COLORBAR_TITLE_P_GRID": "Injected power (P_grid)",
     "HOURLY_HEATMAP_UNIT_KW": "kW",
 
+#new keys i18n
+    "HOURLY_TAB_MAIN_ANALYSIS": "Main analysis",
+    "HOURLY_TAB_DETAILED_ANALYSIS": "Detailed analysis",
+
+    "HOURLY_HELP_FILE_SUMMARY_MD": (
+        "This section summarizes the main information from the analyzed hourly file: "
+        "project identity, variant, PVsyst version, covered period, and timestep quality."
+    ),
+    "HOURLY_HELP_AVAILABLE_STUDIES_MD": (
+        "This section indicates which studies are available based on the columns detected in the file "
+        "and the analyses effectively computed."
+    ),
+    "HOURLY_HELP_GLOBAL_RESULTS_MD": (
+        "This section presents the overall energy summary of the simulation: "
+        "production, night import, operating hours, and annual load factor when available."
+    ),
+    "HOURLY_HELP_CLIPPING_MD": (
+        "Inverter clipping corresponds to energy lost when the available DC power "
+        "exceeds the conversion/injection capability of the inverters."
+    ),
+    "HOURLY_HELP_HEATMAP_MD": (
+        "The heatmap shows the average production distribution by month and hour of day. "
+        "It helps identify periods of high production."
+    ),
+    "HOURLY_HELP_POWER_DISTRIBUTION_MD": (
+        "This table presents a simplified distribution of production using classes relative "
+        "to the observed maximum."
+    ),
+
+    "HOURLY_SUMMARY_COLUMNS_EXPANDER": "Show column list",
+
+    "HOURLY_AVAILABLE_STUDIES_TITLE": "Available studies",
+
+    "HOURLY_AVAIL_STUDY": "Study",
+    "HOURLY_AVAIL_STATUS": "Status",
+    "HOURLY_AVAIL_DETAIL": "Detail",
+
+    "HOURLY_STATUS_AVAILABLE": "Available",
+    "HOURLY_STATUS_PARTIAL": "Partial",
+    "HOURLY_STATUS_MISSING": "Not available",
+    "HOURLY_STATUS_ESTIMABLE": "Estimable",
+
+    "HOURLY_AVAIL_GLOBAL_RESULTS": "Global results",
+    "HOURLY_AVAIL_GLOBAL_RESULTS_DETAIL": "Overall energy summary of the file.",
+    "HOURLY_AVAIL_CLIPPING": "Inverter clipping",
+    "HOURLY_AVAIL_CLIPPING_DETAIL": "IL_Pmax loss analysis if the required columns are present.",
+    "HOURLY_AVAIL_HEATMAP": "Production heatmap",
+    "HOURLY_AVAIL_HEATMAP_DETAIL": "Production visualization by month and hour.",
+    "HOURLY_AVAIL_GRID_LIMIT_BASE": "Simulated base curtailment",
+    "HOURLY_AVAIL_GRID_LIMIT_BASE_DETAIL_YES": "The file contains EGrdLim: simulated base curtailment can be analyzed.",
+    "HOURLY_AVAIL_GRID_LIMIT_BASE_DETAIL_NO": "No simulated curtailment detected through EGrdLim.",
+    "HOURLY_AVAIL_LIMIT_STUDY": "Complementary limit study",
+    "HOURLY_AVAIL_LIMIT_STUDY_DETAIL": "User threshold analysis based on the selected production column.",
+    "HOURLY_AVAIL_LOAD_FACTOR": "Active / reactive grid analysis",
+    "HOURLY_AVAIL_LOAD_FACTOR_DETAIL_AVAILABLE": "Apparent and reactive columns are available in the file.",
+    "HOURLY_AVAIL_LOAD_FACTOR_DETAIL_ESTIMABLE": "The dedicated simulation is not present, but an estimation could be considered.",
+    "HOURLY_AVAIL_LOAD_FACTOR_DETAIL_MISSING": "The required columns are not available in the file.",
+
+    "HOURLY_SECTION_CLIPPING_TITLE": "Inverter clipping",
+    "HOURLY_CLIPPING_NOT_AVAILABLE": "Inverter clipping analysis not available.",
+    "HOURLY_CLIP_ENERGY": "Clipping energy loss",
+    "HOURLY_CLIP_PCT": "Clipping share",
+    "HOURLY_CLIP_HOURS": "Clipping steps/occurrences",
+    "HOURLY_CLIP_MAX_VALUE": "Maximum clipping value",
+    "HOURLY_CHART_CLIPPING_MONTHLY": "Monthly inverter clipping losses",
+
+    "HOURLY_SECTION_LIMIT_STUDY_TITLE": "Threshold / curtailment study",
+    "HOURLY_LIMIT_CURRENT_STATE_TITLE": "Current simulation state",
+    "HOURLY_LIMIT_COMPLEMENTARY_STUDY_TITLE": "Complementary limitation study",
+    "HOURLY_LIMIT_METHOD": "Method",
+    "HOURLY_LIMIT_METHOD_MEASURED": "Measured in file",
+    "HOURLY_LIMIT_METHOD_ESTIMATED": "Estimated from provided capacity",
+
+    "HOURLY_CHART_DURATION_CURVE_THRESHOLD": "Duration curve with threshold",
+    "HOURLY_X_DURATION_RANK": "Rank",
+    "HOURLY_Y_POWER_OR_ENERGY": "Value",
+
+    "HOURLY_SECTION_LOAD_FACTOR_TITLE": "Active / reactive grid analysis",
+    "HOURLY_LOAD_FACTOR_ESTIMABLE": (
+        "The detailed active / reactive simulation is not present in the file, "
+        "but a potential impact could be estimated in a future update."
+    ),
+
+    "HOURLY_DETAILS_THRESHOLD_TITLE": "Threshold study details",
+    "HOURLY_DETAILS_GRID_LIMIT_TITLE": "Grid curtailment details",
+    "HOURLY_DETAILS_LOAD_FACTOR_TITLE": "Active / reactive grid details",
+    "HOURLY_DETAILS_POWER_DISTRIBUTION_TITLE": "Detailed power distribution",
+
+
+    "TOOL_HOURLY_RESULTS_TITLE": "Hourly Results Analysis",
+    "TOOL_HOURLY_RESULTS_DESC": "Analyze a PVsyst hourly file to summarize production, clipping, grid curtailment, and electrical indicators.",
+
+    "SECTION_INPUTS": "Inputs",
+    "SECTION_RUN": "Run",
+    "SECTION_RESULTS": "Results",
+    "SECTION_EXPORT": "Exports",
+
+    "HOURLY_INPUTS_GUIDE_TITLE": "Parameter guide",
+    "HOURLY_INPUTS_GUIDE_LIMIT_VALUE": "Define the analyzed column and the studied limit value for the complementary analysis.",
+    "HOURLY_INPUTS_GUIDE_GRID_CAPACITY_REVISED": "Optionally provide a grid capacity to estimate curtailment if the file does not contain EGrdLim.",
+    "HOURLY_INPUTS_GUIDE_CLIPPING": "Inverter clipping is analyzed automatically if the required columns are present.",
+    "HOURLY_INPUTS_GUIDE_NIGHT": "The night disconnection option ignores negative values in some complementary analyses.",
+    "HOURLY_INPUTS_GUIDE_LOAD_FACTOR": "The active / reactive analysis depends on the columns available in the file.",
+
+    "HOURLY_UPLOAD_LABEL": "PVsyst hourly file (.csv, .txt)",
+    "HOURLY_TIMESTAMP_OUTPUTS": "Add timestamp to exported files",
+
+    "HOURLY_LIMIT_COLUMN_LABEL": "Column used for limit study",
+    "HOURLY_LIMIT_COLUMN_HELP": "Column used for the complementary limit study. Default: E_Grid.",
+    "HOURLY_LIMIT_VALUE_LABEL": "Studied limit value / power",
+    "HOURLY_LIMIT_VALUE_HELP": "Value used to analyze the share of production above a chosen limit.",
+
+    "HOURLY_NIGHT_DISCONNECT_LABEL": "Enable night disconnection",
+    "HOURLY_NIGHT_DISCONNECT_HELP": "If enabled, negative values are ignored in some limit and distribution analyses. Night import is still computed separately.",
+
+    "HOURLY_GRID_CAPACITY_LABEL_REVISED": "Grid capacity (optional)",
+    "HOURLY_GRID_CAPACITY_HELP_REVISED": "Grid capacity used to estimate curtailment when the file does not already contain EGrdLim.",
+
+    "HOURLY_RUN": "Run analysis",
+    "HOURLY_RUNNING": "Running analysis…",
+    "HOURLY_DONE": "Analysis completed.",
+    "HOURLY_FAILED": "Analysis failed.",
+    "HOURLY_NO_OUTPUTS_YET": "No results available yet.",
+
+    "HOURLY_TAB_MAIN_ANALYSIS": "Main analysis",
+    "HOURLY_TAB_DETAILED_ANALYSIS": "Detailed analysis",
+
+    "HOURLY_SUMMARY": "Simulation summary",
+    "HOURLY_HELP_FILE_SUMMARY_MD": "This section summarizes the main information from the analyzed hourly file: project, variant, PVsyst version, covered period, and timestep quality.",
+    "HOURLY_SUMMARY_FILE": "File",
+    "HOURLY_SUMMARY_PVSYST_VERSION": "PVsyst version",
+    "HOURLY_SUMMARY_SIM_DATE": "Simulation date",
+    "HOURLY_SUMMARY_PERIOD": "Period",
+    "HOURLY_SUMMARY_ROWS": "Row count",
+    "HOURLY_SUMMARY_COLUMNS": "Columns",
+    "HOURLY_SUMMARY_COLUMNS_EXPANDER": "Show column list",
+    "HOURLY_SUMMARY_NIGHT_OPTION": "Night option",
+
+    "HOURLY_GLOBAL_PROJECT": "Project",
+    "HOURLY_GLOBAL_PROJECT_FILE": "Project file",
+    "HOURLY_GLOBAL_VARIANT": "Variant",
+    "HOURLY_GLOBAL_TIMESTEP": "Timestep",
+    "HOURLY_GLOBAL_TIMESTEP_QUALITY": "Timestep quality",
+    "HOURLY_NIGHT_DISCONNECT_ON": "Night disconnection enabled",
+    "HOURLY_NIGHT_DISCONNECT_OFF": "Night disconnection disabled",
+
+    "HOURLY_AVAILABLE_STUDIES_TITLE": "Available studies",
+    "HOURLY_HELP_AVAILABLE_STUDIES_MD": "This section indicates which studies are available depending on the detected columns and the analyses effectively computed.",
+    "HOURLY_AVAIL_STUDY": "Study",
+    "HOURLY_AVAIL_STATUS": "Status",
+    "HOURLY_AVAIL_DETAIL": "Detail",
+    "HOURLY_STATUS_AVAILABLE": "Available",
+    "HOURLY_STATUS_PARTIAL": "Partial",
+    "HOURLY_STATUS_MISSING": "Not available",
+    "HOURLY_STATUS_ESTIMABLE": "Estimable",
+
+    "HOURLY_AVAIL_GLOBAL_RESULTS": "Global results",
+    "HOURLY_AVAIL_GLOBAL_RESULTS_DETAIL": "Overall energy summary of the file.",
+    "HOURLY_AVAIL_CLIPPING": "Inverter clipping",
+    "HOURLY_AVAIL_CLIPPING_DETAIL": "IL_Pmax loss analysis if the required columns are present.",
+    "HOURLY_AVAIL_HEATMAP": "Production heatmap",
+    "HOURLY_AVAIL_HEATMAP_DETAIL": "Production visualization by month and hour.",
+    "HOURLY_AVAIL_GRID_LIMIT_BASE": "Simulated base curtailment",
+    "HOURLY_AVAIL_GRID_LIMIT_BASE_DETAIL_YES": "The file contains EGrdLim: simulated curtailment can be analyzed.",
+    "HOURLY_AVAIL_GRID_LIMIT_BASE_DETAIL_NO": "No simulated curtailment detected through EGrdLim.",
+    "HOURLY_AVAIL_LIMIT_STUDY": "Complementary limit study",
+    "HOURLY_AVAIL_LIMIT_STUDY_DETAIL": "User-defined limit analysis based on the selected column.",
+    "HOURLY_AVAIL_LOAD_FACTOR": "Active / reactive grid analysis",
+    "HOURLY_AVAIL_LOAD_FACTOR_DETAIL_AVAILABLE": "Apparent and reactive columns are available in the file.",
+    "HOURLY_AVAIL_LOAD_FACTOR_DETAIL_ESTIMABLE": "The dedicated simulation is not present, but an estimate could be considered.",
+    "HOURLY_AVAIL_LOAD_FACTOR_DETAIL_MISSING": "The required columns are not available in the file.",
+
+    "HOURLY_GLOBAL_PRODUCTION_TITLE": "Global results",
+    "HOURLY_HELP_GLOBAL_RESULTS_MD": "This section presents the overall energy summary of the simulation: production, night import, operating hours, and annual load factor when available.",
+    "HOURLY_GLOBAL_NOT_AVAILABLE": "Global results not available.",
+    "HOURLY_MISSING_COLUMNS": "Missing columns",
+    "HOURLY_SUGGESTED_COLUMNS": "Suggested columns",
+
+    "HOURLY_GLOBAL_PRODUCTION_NO_IMPORT": "Production without import",
+    "HOURLY_GLOBAL_NET_PRODUCTION": "Net production",
+    "HOURLY_GLOBAL_NIGHT_CONSUMPTION": "Night import",
+    "HOURLY_GLOBAL_OPERATING_HOURS": "Operating hours",
+    "HOURLY_GLOBAL_IMPORT_HOURS": "Import hours",
+    "HOURLY_GLOBAL_GRID_CAPACITY": "Grid capacity",
+    "HOURLY_GLOBAL_GRID_CAPACITY_NONE": "Not provided",
+    "HOURLY_GLOBAL_ANNUAL_LOAD_FACTOR": "Annual load factor",
+    "HOURLY_GLOBAL_ANNUAL_LOAD_FACTOR_NONE": "Not available",
+
+    "HOURLY_SECTION_CLIPPING_TITLE": "Inverter clipping",
+    "HOURLY_HELP_CLIPPING_MD": "Inverter clipping corresponds to energy lost when available power exceeds the inverter conversion capability. The displayed percentage is computed against inverter potential energy before clipping.",
+    "HOURLY_CLIPPING_NOT_AVAILABLE": "Inverter clipping analysis not available.",
+    "HOURLY_EMPTY": "No usable data.",
+    "HOURLY_CLIP_ENERGY": "Clipping energy loss",
+    "HOURLY_CLIP_PCT": "Clipping share",
+    "HOURLY_CLIP_REFERENCE": "Percentage reference",
+    "HOURLY_CLIP_HOURS": "Clipping duration",
+    "HOURLY_CLIP_MAX_VALUE": "Maximum clipping value",
+    "HOURLY_CLIP_REFERENCE_POTENTIAL_AC": "Relative to inverter potential energy before clipping",
+
+    "HOURLY_HEATMAP_TITLE": "Production heatmap",
+    "HOURLY_HELP_HEATMAP_MD": "The heatmap shows the average power distribution by month and hour of day. It is displayed in MW.",
+    "HOURLY_HEATMAP_MISSING_COLUMN": "Missing column for heatmap",
+    "HOURLY_HEATMAP_NOT_AVAILABLE": "Heatmap not available.",
+    "HOURLY_HEATMAP_CAPTION_MW": "Heatmap of average power in MW by month and hour.",
+
+    "HOURLY_SECTION_LIMIT_STUDY_TITLE": "Limit / curtailment study",
+    "HOURLY_HELP_GRID_LIMIT_MD": "This section distinguishes curtailment already present in the simulation from the complementary study of a user-defined limit.",
+    "HOURLY_LIMIT_CURRENT_STATE_TITLE": "Current simulation state",
+    "HOURLY_LIMIT_METHOD": "Method",
+    "HOURLY_LIMIT_METHOD_MEASURED": "Measured in file",
+    "HOURLY_LIMIT_METHOD_ESTIMATED": "Estimated from provided capacity",
+    "HOURLY_GRID_LOST_ENERGY": "Curtailment energy loss",
+    "HOURLY_GRID_LOST_PCT": "Loss share",
+    "HOURLY_GRID_HOURS_LIMITED": "Curtailed duration",
+    "HOURLY_GRID_INJECTED": "Injected energy",
+    "HOURLY_GRID_LIMIT_NOT_AVAILABLE": "Grid curtailment analysis not available.",
+
+    "HOURLY_LIMIT_COMPLEMENTARY_STUDY_TITLE": "Complementary limit study",
+    "HOURLY_THR_HOURS_ABOVE": "Duration above limit",
+    "HOURLY_THR_SHARE_ABOVE": "Share of operating time above limit",
+    "HOURLY_THR_ENERGY_ABOVE": "Energy above limit",
+    "HOURLY_THRESHOLD_NOT_AVAILABLE": "Limit study not available.",
+
+    "HOURLY_SECTION_LOAD_FACTOR_TITLE": "Active / reactive grid analysis",
+    "HOURLY_HELP_LOAD_FACTOR_MD": "This section presents active, reactive, and apparent quantities as well as a cos(phi) indicator when the required columns are available.",
+    "HOURLY_LF_P_ACTIVE": "Active energy",
+    "HOURLY_LF_Q_REACTIVE": "Reactive energy",
+    "HOURLY_LF_S_APPARENT": "Apparent energy",
+    "HOURLY_LF_COSPHI": "cos(phi)",
+    "HOURLY_LF_Q_SHARE": "Reactive share",
+    "HOURLY_LOAD_FACTOR_ESTIMABLE": "The detailed active / reactive simulation is not present in the file, but a potential impact could be estimated in a future update.",
+    "HOURLY_LOAD_FACTOR_NOT_AVAILABLE": "Active / reactive analysis not available.",
+
+    "HOURLY_DETAILS_THRESHOLD_TITLE": "Limit study details",
+    "HOURLY_TABLE_THRESHOLD_MONTHLY": "Monthly limit table",
+    "HOURLY_COL_MONTH": "Month",
+    "HOURLY_COL_HOURS_ABOVE": "Hours above",
+    "HOURLY_COL_ENERGY_ABOVE_KWH": "Energy above (kWh)",
+    "HOURLY_TABLE_THRESHOLD_SEASONAL": "Seasonal limit table",
+    "HOURLY_COL_SEASON": "Season",
+
+    "HOURLY_DETAILS_GRID_LIMIT_TITLE": "Grid curtailment details",
+    "HOURLY_TABLE_GRID_LIMIT_MONTHLY": "Monthly grid curtailment table",
+
+    "HOURLY_DETAILS_CLIPPING_TITLE": "Inverter clipping details",
+
+    "HOURLY_DETAILS_LOAD_FACTOR_TITLE": "Active / reactive grid details",
+    "HOURLY_TABLE_LOAD_FACTOR_MONTHLY": "Monthly active / reactive table",
+    "HOURLY_TABLE_SATURATION_DIST": "Saturation distribution",
+    "HOURLY_COL_CLASS": "Class",
+    "HOURLY_COL_HOURS": "Hours",
+    "HOURLY_COL_PCT_TIME": "Time share",
+
+    "HOURLY_DETAILS_POWER_DISTRIBUTION_TITLE": "Detailed power distribution",
+    "HOURLY_HELP_POWER_DISTRIBUTION_MD": "This table presents a simplified production distribution using classes relative to the observed maximum.",
+    "HOURLY_DISTRIBUTION_NOT_AVAILABLE": "Power distribution not available.",
+    "HOURLY_COL_ENERGY_KWH": "Energy (kWh)",
+
+    "HOURLY_GENERATE_EXCEL": "Generate Excel export",
+    "HOURLY_EXCEL_READY": "Excel export ready.",
+    "HOURLY_GENERATE_PDF": "Generate PDF export",
+    "HOURLY_PDF_READY": "PDF export ready.",
+    "HOURLY_GENERATE_LOG": "Generate log",
+    "HOURLY_LOG_READY": "Log ready.",
+    "HOURLY_NO_EXPORTS_YET": "No exports generated yet.",
+    "HOURLY_DOWNLOAD_EXCEL": "Download Excel",
+    "HOURLY_DOWNLOAD_PDF": "Download PDF",
+    "HOURLY_DOWNLOAD_LOG": "Download log",
+
+    "HOURLY_SYSTEM_SUMMARY_TITLE": "System summary",
+    "HOURLY_HELP_SYSTEM_SUMMARY_MD": (
+        "This summary consolidates annual production excluding night import, clipping losses, "
+        "night import, possible grid curtailment, the overall system state, and a curtailment recommendation. "
+        "System state criteria: very low constraint < 1%, low constraint from 1 to < 3%, moderate constraint "
+        "from 3 to < 6%, high constraint ≥ 6% of total losses relative to production excluding night import. "
+        "The curtailment recommendation is based on energy above the studied limit and on the average operating "
+        "rate during productive hours, computed relative to the maximum observed positive value."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_GENERAL": "The plant produces **{prod_mwh}** MWh/year excluding night import.",
+    "HOURLY_SYSTEM_SENTENCE_CLIP_NIGHT": (
+        "Overpower losses amount to **{clip_mwh}** MWh/year, i.e. {clip_pct} of production excluding night import. "
+        "Night import amounts to **{night_mwh}** MWh/year, i.e. {night_pct} of production excluding night import."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_GRID": (
+        "A grid curtailment is also present in the simulation, with **{grid_mwh}** MWh/year lost, "
+        "i.e. {grid_pct} of production excluding night import."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_STATE": "Overall, the plant shows a **{state}** operating state.",
+    "HOURLY_SYSTEM_STATE_VERY_LOW_CONSTRAINT": "very low constraint",
+    "HOURLY_SYSTEM_STATE_LOW_CONSTRAINT": "low constraint",
+    "HOURLY_SYSTEM_STATE_MODERATE_CONSTRAINT": "moderate constraint",
+    "HOURLY_SYSTEM_STATE_HIGH_CONSTRAINT": "high constraint",
+    "HOURLY_BRIDGING_RECOMMENDATION_FAVORABLE": (
+        "Curtailment appears feasible: the plant operates on average at {utilization_pct} "
+        "of its maximum observed value during productive hours, and the share of energy above "
+        "the studied limit remains low ({energy_above_pct})."
+    ),
+    "HOURLY_BRIDGING_RECOMMENDATION_CAUTION": (
+        "Curtailment may be considered with caution: the plant operates on average at {utilization_pct} "
+        "of its maximum observed value during productive hours, with {energy_above_pct} of energy "
+        "above the studied limit."
+    ),
+    "HOURLY_BRIDGING_RECOMMENDATION_NOT_RECOMMENDED": (
+        "Curtailment is not especially recommended at this level: the plant already operates at "
+        "{utilization_pct} of its maximum observed value during productive hours or the share of "
+        "energy above the studied limit becomes significant ({energy_above_pct})."
+    ),
+    "HOURLY_BRIDGING_RECOMMENDATION_NOT_AVAILABLE": (
+        "No curtailment recommendation is available until a relevant studied limit is defined."
+    ),
+    "HOURLY_CLIP_PCT_PRIMARY": "Clipping share / production excluding night import",
+    "HOURLY_CLIP_REFERENCE_PRIMARY": "Primary reference",
+    "HOURLY_CLIP_PCT_SECONDARY": "Clipping share / potential energy",
+    "HOURLY_CLIP_REFERENCE_SECONDARY": "Secondary reference",
+    "HOURLY_CLIP_REFERENCE_PROD_WO_NIGHT": "Relative to production excluding night import",
+    "HOURLY_CLIP_REFERENCE_POTENTIAL_AC": "Relative to potential energy before clipping",
+    "HOURLY_UTILIZATION_REFERENCE_MAX_OBSERVED": "Maximum observed positive value",
+
+    "HOURLY_AVAIL_PERFORMANCE": "Monthly performance",
+    "HOURLY_AVAIL_PERFORMANCE_DETAIL": "Monthly performance table with irradiation, PR, specific yield, and E_Grid.",
+
+    "HOURLY_GLOBAL_PR": "Annual mean PR",
+
+    "HOURLY_SYSTEM_SUMMARY_TITLE": "System summary",
+    "HOURLY_HELP_SYSTEM_SUMMARY_MD": (
+        "This summary consolidates annual production excluding night import, clipping losses, "
+        "night import, possible grid curtailment, the overall system state, and a curtailment recommendation. "
+        "System state criteria: very low constraint < 1%, low constraint from 1 to < 3%, moderate constraint "
+        "from 3 to < 6%, high constraint ≥ 6% of total losses relative to production excluding night import. "
+        "The curtailment recommendation is based on energy above the studied limit and on the average operating "
+        "rate during productive hours, computed relative to the P99 percentile of observed positive values."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_GENERAL": "The plant produces **{prod_mwh}** MWh/year excluding night import.",
+    "HOURLY_SYSTEM_SENTENCE_CLIP_NIGHT": (
+        "Overpower losses amount to **{clip_mwh}** MWh/year, i.e. {clip_pct} of production excluding night import. "
+        "Night import amounts to **{night_mwh}** MWh/year, i.e. {night_pct} of production excluding night import."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_GRID": (
+        "A grid curtailment is also present in the simulation, with **{grid_mwh}** MWh/year lost, "
+        "i.e. {grid_pct} of production excluding night import."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_METEO": (
+        "The site shows a {meteo} solar resource over the simulated period. "
+        "Effective irradiation represents **{globeff_ratio}** of incident irradiation, "
+        "indicating **{optics}** optical and/or shading losses."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_PERFORMANCE": (
+        "Annual mean PR is **{pr}**. "
+        "Specific yield reaches **{productible}** kWh/kWc/year when the data is available."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_STATE": "Overall, the plant shows a **{state}** operating state.",
+
+    "HOURLY_SYSTEM_STATE_VERY_LOW_CONSTRAINT": "very low constraint",
+    "HOURLY_SYSTEM_STATE_LOW_CONSTRAINT": "low constraint",
+    "HOURLY_SYSTEM_STATE_MODERATE_CONSTRAINT": "moderate constraint",
+    "HOURLY_SYSTEM_STATE_HIGH_CONSTRAINT": "high constraint",
+
+    "HOURLY_METEO_MODEST": "moderate",
+    "HOURLY_METEO_GOOD": "good",
+    "HOURLY_METEO_VERY_GOOD": "very good",
+
+    "HOURLY_OPTICS_LOW_LOSSES": "low",
+    "HOURLY_OPTICS_MODERATE_LOSSES": "moderate",
+    "HOURLY_OPTICS_MARKED_LOSSES": "marked",
+
+    "HOURLY_BRIDGING_RECOMMENDATION_FAVORABLE": (
+        "Curtailment appears feasible: the plant operates on average at {utilization_pct} "
+        "of its usual high operating level (P99) during productive hours, and the share of energy "
+        "above the studied limit remains low ({energy_above_pct})."
+    ),
+    "HOURLY_BRIDGING_RECOMMENDATION_CAUTION": (
+        "Curtailment may be considered with caution: the plant operates on average at {utilization_pct} "
+        "of its usual high operating level (P99) during productive hours, with {energy_above_pct} of "
+        "energy above the studied limit."
+    ),
+    "HOURLY_BRIDGING_RECOMMENDATION_NOT_RECOMMENDED": (
+        "Curtailment is not especially recommended at this level: the plant already operates at "
+        "{utilization_pct} of its usual high operating level (P99) during productive hours or the share "
+        "of energy above the studied limit becomes significant ({energy_above_pct})."
+    ),
+    "HOURLY_BRIDGING_RECOMMENDATION_NOT_AVAILABLE": (
+        "No curtailment recommendation is available until a relevant studied limit is defined."
+    ),
+
+    "HOURLY_CLIP_PCT_PRIMARY": "Clipping share / production excluding night import",
+    "HOURLY_CLIP_REFERENCE_PRIMARY": "Primary reference",
+    "HOURLY_CLIP_PCT_SECONDARY": "Clipping share / potential energy",
+    "HOURLY_CLIP_REFERENCE_SECONDARY": "Secondary reference",
+    "HOURLY_CLIP_REFERENCE_PROD_WO_NIGHT": "Relative to production excluding night import",
+    "HOURLY_CLIP_REFERENCE_POTENTIAL_AC": "Relative to potential energy before clipping",
+
+    "HOURLY_PERFORMANCE_MONTHLY_TITLE": "Monthly performance",
+    "HOURLY_HELP_PERFORMANCE_MONTHLY_MD": (
+        "This table consolidates by month incident irradiation, effective irradiation, the GlobEff/GlobInc ratio, "
+        "PR, specific yield when available, and E_Grid. The last row provides an annual summary."
+    ),
+    "HOURLY_DETAILS_PERFORMANCE_TITLE": "Monthly performance details",
+
+    "HOURLY_COL_GLOBINC": "GlobInc (kWh/m²)",
+    "HOURLY_COL_GLOBEFF": "GlobEff (kWh/m²)",
+    "HOURLY_COL_GLOBEFF_RATIO": "GlobEff / GlobInc",
+    "HOURLY_COL_PR": "PR",
+    "HOURLY_COL_PRODUCTIBLE": "Specific Yield (kWh/kWc)",
+    "HOURLY_COL_EGRID_MWH": "E_Grid (MWh)",
+
+    "HOURLY_UTILIZATION_REFERENCE_P99": "P99 percentile of positive values",
+
+    "HOURLY_COL_GLOBHOR": "GlobHor (kWh/m²)",
+    "HOURLY_COL_TILT_GAIN": "Tilt gain",
+    "HOURLY_HELP_PERFORMANCE_MONTHLY_MD": (
+        "This table consolidates monthly horizontal irradiation (GlobHor), irradiation in the plane of array (GlobInc), "
+        "effective irradiation (GlobEff), tilt gain (GlobInc / GlobHor), optical ratio (GlobEff / GlobInc), "
+        "PR computed only over positive-production hours, specific yield when available, and E_Grid. "
+        "The GlobEff / GlobInc ratio represents the share of irradiation in the plane of array that remains effectively usable "
+        "after IAM and shading."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_PERFORMANCE_WITH_PRODUCTIBLE": (
+        "Annual mean PR is **{pr}**. "
+        "Specific yield reaches **{productible}** kWh/kWc/year."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_PERFORMANCE_NO_PRODUCTIBLE": (
+        "Annual mean PR is {pr}."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_OPTICS": (
+        "Tilt-related gain reaches {tilt_gain} between the horizontal plane and the plane of array. "
+        "Remaining optical efficiency after IAM and shading is {optical_efficiency}."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_UTILIZATION": (
+        "The mean operating rate during productive hours is {utilization_pct}, "
+        "computed relative to {ref_label}."
+    ),
+    "HOURLY_UTILIZATION_REFERENCE_P99": "the P99 percentile of positive power values",
+    "HOURLY_DCAC_RECOMMENDATION_RELEVANT": (
+        "A DC/AC ratio review appears relevant: clipping losses remain very low and "
+        "the plant operating level stays moderate during productive hours."
+    ),
+    "HOURLY_DCAC_RECOMMENDATION_POSSIBLE": (
+        "A DC/AC ratio review may be considered: the plant appears weakly constrained by clipping "
+        "and its operating level remains relatively limited."
+    ),
+    "HOURLY_DCAC_RECOMMENDATION_NOT_PRIORITY": (
+        "A DC/AC ratio review does not appear to be a priority at this stage."
+    ),
+    "HOURLY_DCAC_RECOMMENDATION_NOT_AVAILABLE": (
+        "No specific conclusion is available regarding the DC/AC ratio."
+    ),
+
+    "HOURLY_SYSTEM_SENTENCE_OPTICS_FULL": (
+        "Tilt-related gain reaches {tilt_gain} between the horizontal plane and the plane of array. "
+        "Remaining optical efficiency after IAM and shading is {optical_efficiency}."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_OPTICS_ONLY": (
+        "Remaining optical efficiency after IAM and shading is {optical_efficiency}."
+    ),
+
     # TMY compare
     "TOOL_TMY_COMPARE_TITLE": "TMY Comparison",
     "TOOL_TMY_COMPARE_DESC": "Compare two TMY files (GHI/DNI/DHI/Temp) on a common hourly step (60 min) and analyze differences.",

@@ -20,11 +20,6 @@ def parse_general_info(lines: List[str]) -> Dict[str, str]:
     """
     Extracts a few useful fields from the PVSyst header.
 
-    With your sample:
-      Projet;9312_LGR_9-E3.PRJ;26/08/25 09h50;...
-    We capture:
-      Project_file = 9312_LGR_9-E3.PRJ
-      Project_code = 9312_LGR_9-E3    (best-effort)
     """
     info: Dict[str, str] = {}
 

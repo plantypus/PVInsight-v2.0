@@ -355,6 +355,465 @@ TEXTS = {
     
     "HOURLY_HEATMAP_COLORBAR_TITLE_P_GRID": "Puissance injectée (P_grid)",
     "HOURLY_HEATMAP_UNIT_KW": "kW",
+# new keys i18n
+    "HOURLY_TAB_MAIN_ANALYSIS": "Analyse principale",
+    "HOURLY_TAB_DETAILED_ANALYSIS": "Analyses détaillées",
+
+    "HOURLY_HELP_FILE_SUMMARY_MD": (
+        "Cette section résume les informations principales du fichier horaire analysé : "
+        "identité du projet, variante, version PVSyst, période couverte et qualité du pas de temps."
+    ),
+    "HOURLY_HELP_AVAILABLE_STUDIES_MD": (
+        "Cette section indique quelles études sont disponibles selon les colonnes détectées dans le fichier "
+        "et les analyses effectivement calculées."
+    ),
+    "HOURLY_HELP_GLOBAL_RESULTS_MD": (
+        "Cette section présente la synthèse énergétique globale de la simulation : "
+        "production, soutirage nocturne, heures de fonctionnement et, si possible, facteur de charge annuel."
+    ),
+    "HOURLY_HELP_CLIPPING_MD": (
+        "Le clipping onduleur correspond à l'énergie perdue lorsque la puissance disponible côté DC "
+        "dépasse la capacité de conversion/injection des onduleurs."
+    ),
+    "HOURLY_HELP_HEATMAP_MD": (
+        "La heatmap montre la répartition moyenne de la production selon les mois et les heures de la journée. "
+        "Elle aide à repérer les périodes de forte production."
+    ),
+    "HOURLY_HELP_POWER_DISTRIBUTION_MD": (
+        "Cette table présente une répartition simplifiée de la production selon des classes relatives "
+        "au maximum observé."
+    ),
+
+    "HOURLY_SUMMARY_COLUMNS_EXPANDER": "Afficher la liste des colonnes",
+
+    "HOURLY_AVAILABLE_STUDIES_TITLE": "Études disponibles",
+
+    "HOURLY_AVAIL_STUDY": "Étude",
+    "HOURLY_AVAIL_STATUS": "Statut",
+    "HOURLY_AVAIL_DETAIL": "Détail",
+
+    "HOURLY_STATUS_AVAILABLE": "Disponible",
+    "HOURLY_STATUS_PARTIAL": "Partielle",
+    "HOURLY_STATUS_MISSING": "Non disponible",
+    "HOURLY_STATUS_ESTIMABLE": "Estimable",
+
+    "HOURLY_AVAIL_GLOBAL_RESULTS": "Résultats généraux",
+    "HOURLY_AVAIL_GLOBAL_RESULTS_DETAIL": "Synthèse énergétique globale du fichier.",
+    "HOURLY_AVAIL_CLIPPING": "Clipping onduleur",
+    "HOURLY_AVAIL_CLIPPING_DETAIL": "Analyse des pertes IL_Pmax si les colonnes nécessaires sont présentes.",
+    "HOURLY_AVAIL_HEATMAP": "Heatmap de production",
+    "HOURLY_AVAIL_HEATMAP_DETAIL": "Visualisation de la production par mois et par heure.",
+    "HOURLY_AVAIL_GRID_LIMIT_BASE": "Bridage déjà simulé",
+    "HOURLY_AVAIL_GRID_LIMIT_BASE_DETAIL_YES": "Le fichier contient EGrdLim : le bridage de base simulé peut être analysé.",
+    "HOURLY_AVAIL_GRID_LIMIT_BASE_DETAIL_NO": "Aucun bridage simulé détecté via EGrdLim.",
+    "HOURLY_AVAIL_LIMIT_STUDY": "Étude de limitation complémentaire",
+    "HOURLY_AVAIL_LIMIT_STUDY_DETAIL": "Analyse d'un seuil utilisateur à partir de la colonne de production choisie.",
+    "HOURLY_AVAIL_LOAD_FACTOR": "Analyse active / réactive réseau",
+    "HOURLY_AVAIL_LOAD_FACTOR_DETAIL_AVAILABLE": "Les colonnes apparente et réactive sont disponibles dans le fichier.",
+    "HOURLY_AVAIL_LOAD_FACTOR_DETAIL_ESTIMABLE": "La simulation dédiée n'est pas présente, mais une estimation pourra être envisagée.",
+    "HOURLY_AVAIL_LOAD_FACTOR_DETAIL_MISSING": "Les colonnes nécessaires ne sont pas disponibles dans le fichier.",
+
+    "HOURLY_SECTION_CLIPPING_TITLE": "Clipping onduleur",
+    "HOURLY_CLIPPING_NOT_AVAILABLE": "Analyse du clipping onduleur non disponible.",
+    "HOURLY_CLIP_ENERGY": "Énergie perdue par clipping",
+    "HOURLY_CLIP_PCT": "Part du clipping",
+    "HOURLY_CLIP_HOURS": "Pas/occurrences de clipping",
+    "HOURLY_CLIP_MAX_VALUE": "Valeur maximale de clipping",
+    "HOURLY_CHART_CLIPPING_MONTHLY": "Pertes mensuelles par clipping onduleur",
+
+    "HOURLY_SECTION_LIMIT_STUDY_TITLE": "Étude seuil / bridage",
+    "HOURLY_LIMIT_CURRENT_STATE_TITLE": "État actuel de la simulation",
+    "HOURLY_LIMIT_COMPLEMENTARY_STUDY_TITLE": "Étude complémentaire de limitation",
+    "HOURLY_LIMIT_METHOD": "Méthode",
+    "HOURLY_LIMIT_METHOD_MEASURED": "Mesurée dans le fichier",
+    "HOURLY_LIMIT_METHOD_ESTIMATED": "Estimée à partir de la capacité renseignée",
+
+    "HOURLY_CHART_DURATION_CURVE_THRESHOLD": "Courbe de durée avec seuil",
+    "HOURLY_X_DURATION_RANK": "Rang",
+    "HOURLY_Y_POWER_OR_ENERGY": "Valeur",
+
+    "HOURLY_SECTION_LOAD_FACTOR_TITLE": "Analyse active / réactive réseau",
+    "HOURLY_LOAD_FACTOR_ESTIMABLE": (
+        "La simulation active / réactive détaillée n'est pas présente dans le fichier, "
+        "mais un impact potentiel pourra être estimé dans une évolution ultérieure."
+    ),
+
+    "HOURLY_DETAILS_THRESHOLD_TITLE": "Détails de l'étude de seuil",
+    "HOURLY_DETAILS_GRID_LIMIT_TITLE": "Détails du bridage réseau",
+    "HOURLY_DETAILS_LOAD_FACTOR_TITLE": "Détails active / réactive réseau",
+    "HOURLY_DETAILS_POWER_DISTRIBUTION_TITLE": "Distribution détaillée de puissance",
+
+    "TOOL_HOURLY_RESULTS_TITLE": "Analyse des résultats horaires",
+    "TOOL_HOURLY_RESULTS_DESC": "Analyse un fichier horaire PVSyst pour synthétiser la production, le clipping, le bridage réseau et les indicateurs électriques.",
+
+    "SECTION_INPUTS": "Entrées",
+    "SECTION_RUN": "Exécution",
+    "SECTION_RESULTS": "Résultats",
+    "SECTION_EXPORT": "Exports",
+
+    "HOURLY_INPUTS_GUIDE_TITLE": "Guide des paramètres",
+    "HOURLY_INPUTS_GUIDE_LIMIT_VALUE": "Définir la colonne analysée et la valeur limite étudiée pour l'analyse complémentaire.",
+    "HOURLY_INPUTS_GUIDE_GRID_CAPACITY_REVISED": "Renseigner éventuellement une capacité réseau pour estimer un bridage si le fichier ne contient pas EGrdLim.",
+    "HOURLY_INPUTS_GUIDE_CLIPPING": "Le clipping onduleur est analysé automatiquement si les colonnes nécessaires sont présentes.",
+    "HOURLY_INPUTS_GUIDE_NIGHT": "L'option de déconnexion nocturne ignore les valeurs négatives dans certaines analyses complémentaires.",
+    "HOURLY_INPUTS_GUIDE_LOAD_FACTOR": "L'analyse active / réactive dépend des colonnes disponibles dans le fichier.",
+
+    "HOURLY_UPLOAD_LABEL": "Fichier horaire PVSyst (.csv, .txt)",
+    "HOURLY_TIMESTAMP_OUTPUTS": "Ajouter un horodatage aux fichiers exportés",
+
+    "HOURLY_LIMIT_COLUMN_LABEL": "Colonne utilisée pour l'étude de limitation",
+    "HOURLY_LIMIT_COLUMN_HELP": "Colonne utilisée pour l'étude complémentaire de limitation. Par défaut : E_Grid.",
+    "HOURLY_LIMIT_VALUE_LABEL": "Valeur / puissance limite étudiée",
+    "HOURLY_LIMIT_VALUE_HELP": "Valeur utilisée pour analyser la part de production au-dessus d'une limite choisie.",
+
+    "HOURLY_NIGHT_DISCONNECT_LABEL": "Activer la déconnexion nocturne",
+    "HOURLY_NIGHT_DISCONNECT_HELP": "Si activé, les valeurs négatives sont ignorées dans certaines analyses de limitation et de distribution. Le soutirage nocturne reste calculé séparément.",
+
+    "HOURLY_GRID_CAPACITY_LABEL_REVISED": "Capacité réseau (optionnelle)",
+    "HOURLY_GRID_CAPACITY_HELP_REVISED": "Capacité réseau utilisée pour estimer un bridage si le fichier ne contient pas déjà EGrdLim.",
+
+    "HOURLY_RUN": "Lancer l'analyse",
+    "HOURLY_RUNNING": "Analyse en cours…",
+    "HOURLY_DONE": "Analyse terminée.",
+    "HOURLY_FAILED": "Échec de l'analyse.",
+    "HOURLY_NO_OUTPUTS_YET": "Aucun résultat disponible pour le moment.",
+
+    "HOURLY_TAB_MAIN_ANALYSIS": "Analyse principale",
+    "HOURLY_TAB_DETAILED_ANALYSIS": "Analyses détaillées",
+
+    "HOURLY_SUMMARY": "Résumé simulation",
+    "HOURLY_HELP_FILE_SUMMARY_MD": "Cette section résume les informations principales du fichier horaire analysé : projet, variante, version PVSyst, période couverte et qualité du pas de temps.",
+    "HOURLY_SUMMARY_FILE": "Fichier",
+    "HOURLY_SUMMARY_PVSYST_VERSION": "Version PVSyst",
+    "HOURLY_SUMMARY_SIM_DATE": "Date de simulation",
+    "HOURLY_SUMMARY_PERIOD": "Période",
+    "HOURLY_SUMMARY_ROWS": "Nombre de lignes",
+    "HOURLY_SUMMARY_COLUMNS": "Colonnes",
+    "HOURLY_SUMMARY_COLUMNS_EXPANDER": "Afficher la liste des colonnes",
+    "HOURLY_SUMMARY_NIGHT_OPTION": "Option nuit",
+
+    "HOURLY_GLOBAL_PROJECT": "Projet",
+    "HOURLY_GLOBAL_PROJECT_FILE": "Fichier projet",
+    "HOURLY_GLOBAL_VARIANT": "Variante",
+    "HOURLY_GLOBAL_TIMESTEP": "Pas de temps",
+    "HOURLY_GLOBAL_TIMESTEP_QUALITY": "Qualité du pas de temps",
+    "HOURLY_NIGHT_DISCONNECT_ON": "Déconnexion nocturne activée",
+    "HOURLY_NIGHT_DISCONNECT_OFF": "Déconnexion nocturne désactivée",
+
+    "HOURLY_AVAILABLE_STUDIES_TITLE": "Études disponibles",
+    "HOURLY_HELP_AVAILABLE_STUDIES_MD": "Cette section indique quelles études sont disponibles selon les colonnes détectées dans le fichier et les analyses effectivement calculées.",
+    "HOURLY_AVAIL_STUDY": "Étude",
+    "HOURLY_AVAIL_STATUS": "Statut",
+    "HOURLY_AVAIL_DETAIL": "Détail",
+    "HOURLY_STATUS_AVAILABLE": "Disponible",
+    "HOURLY_STATUS_PARTIAL": "Partielle",
+    "HOURLY_STATUS_MISSING": "Non disponible",
+    "HOURLY_STATUS_ESTIMABLE": "Estimable",
+
+    "HOURLY_AVAIL_GLOBAL_RESULTS": "Résultats généraux",
+    "HOURLY_AVAIL_GLOBAL_RESULTS_DETAIL": "Synthèse énergétique globale du fichier.",
+    "HOURLY_AVAIL_CLIPPING": "Clipping onduleur",
+    "HOURLY_AVAIL_CLIPPING_DETAIL": "Analyse des pertes IL_Pmax si les colonnes nécessaires sont présentes.",
+    "HOURLY_AVAIL_HEATMAP": "Heatmap de production",
+    "HOURLY_AVAIL_HEATMAP_DETAIL": "Visualisation de la production par mois et par heure.",
+    "HOURLY_AVAIL_GRID_LIMIT_BASE": "Bridage déjà simulé",
+    "HOURLY_AVAIL_GRID_LIMIT_BASE_DETAIL_YES": "Le fichier contient EGrdLim : le bridage simulé peut être analysé.",
+    "HOURLY_AVAIL_GRID_LIMIT_BASE_DETAIL_NO": "Aucun bridage simulé détecté via EGrdLim.",
+    "HOURLY_AVAIL_LIMIT_STUDY": "Étude de limitation complémentaire",
+    "HOURLY_AVAIL_LIMIT_STUDY_DETAIL": "Analyse d'une limite utilisateur à partir de la colonne choisie.",
+    "HOURLY_AVAIL_LOAD_FACTOR": "Analyse active / réactive réseau",
+    "HOURLY_AVAIL_LOAD_FACTOR_DETAIL_AVAILABLE": "Les colonnes apparente et réactive sont disponibles dans le fichier.",
+    "HOURLY_AVAIL_LOAD_FACTOR_DETAIL_ESTIMABLE": "La simulation dédiée n'est pas présente, mais une estimation pourra être envisagée.",
+    "HOURLY_AVAIL_LOAD_FACTOR_DETAIL_MISSING": "Les colonnes nécessaires ne sont pas disponibles dans le fichier.",
+
+    "HOURLY_GLOBAL_PRODUCTION_TITLE": "Résultats généraux",
+    "HOURLY_HELP_GLOBAL_RESULTS_MD": "Cette section présente la synthèse énergétique globale de la simulation : production, soutirage nocturne, heures de fonctionnement et facteur de charge annuel si disponible.",
+    "HOURLY_GLOBAL_NOT_AVAILABLE": "Résultats généraux non disponibles.",
+    "HOURLY_MISSING_COLUMNS": "Colonnes manquantes",
+    "HOURLY_SUGGESTED_COLUMNS": "Colonnes suggérées",
+
+    "HOURLY_GLOBAL_PRODUCTION_NO_IMPORT": "Production sans soutirage",
+    "HOURLY_GLOBAL_NET_PRODUCTION": "Production nette",
+    "HOURLY_GLOBAL_NIGHT_CONSUMPTION": "Soutirage nocturne",
+    "HOURLY_GLOBAL_OPERATING_HOURS": "Heures de fonctionnement",
+    "HOURLY_GLOBAL_IMPORT_HOURS": "Heures de soutirage",
+    "HOURLY_GLOBAL_GRID_CAPACITY": "Capacité réseau",
+    "HOURLY_GLOBAL_GRID_CAPACITY_NONE": "Non renseignée",
+    "HOURLY_GLOBAL_ANNUAL_LOAD_FACTOR": "Facteur de charge annuel",
+    "HOURLY_GLOBAL_ANNUAL_LOAD_FACTOR_NONE": "Non disponible",
+
+    "HOURLY_SECTION_CLIPPING_TITLE": "Clipping onduleur",
+    "HOURLY_HELP_CLIPPING_MD": "Le clipping onduleur correspond à l'énergie perdue lorsque la puissance disponible dépasse la capacité de conversion côté onduleur. Le pourcentage affiché est calculé par rapport à l'énergie potentielle onduleur avant clipping.",
+    "HOURLY_CLIPPING_NOT_AVAILABLE": "Analyse du clipping onduleur non disponible.",
+    "HOURLY_EMPTY": "Aucune donnée exploitable.",
+    "HOURLY_CLIP_ENERGY": "Énergie perdue par clipping",
+    "HOURLY_CLIP_PCT": "Part du clipping",
+    "HOURLY_CLIP_REFERENCE": "Référence du pourcentage",
+    "HOURLY_CLIP_HOURS": "Durée de clipping",
+    "HOURLY_CLIP_MAX_VALUE": "Valeur maximale de clipping",
+    "HOURLY_CLIP_REFERENCE_POTENTIAL_AC": "Par rapport à l'énergie potentielle onduleur avant clipping",
+
+    "HOURLY_HEATMAP_TITLE": "Heatmap de production",
+    "HOURLY_HELP_HEATMAP_MD": "La heatmap montre la répartition moyenne de la puissance selon les mois et les heures de la journée. Elle est affichée en MW.",
+    "HOURLY_HEATMAP_MISSING_COLUMN": "Colonne manquante pour la heatmap",
+    "HOURLY_HEATMAP_NOT_AVAILABLE": "Heatmap non disponible.",
+    "HOURLY_HEATMAP_CAPTION_MW": "Heatmap de la puissance moyenne en MW par mois et par heure.",
+
+    "HOURLY_SECTION_LIMIT_STUDY_TITLE": "Étude limite / bridage",
+    "HOURLY_HELP_GRID_LIMIT_MD": "Cette section distingue le bridage déjà présent dans la simulation et l'étude complémentaire d'une limite utilisateur.",
+    "HOURLY_LIMIT_CURRENT_STATE_TITLE": "État actuel de la simulation",
+    "HOURLY_LIMIT_METHOD": "Méthode",
+    "HOURLY_LIMIT_METHOD_MEASURED": "Mesurée dans le fichier",
+    "HOURLY_LIMIT_METHOD_ESTIMATED": "Estimée à partir de la capacité renseignée",
+    "HOURLY_GRID_LOST_ENERGY": "Énergie perdue par bridage",
+    "HOURLY_GRID_LOST_PCT": "Part perdue",
+    "HOURLY_GRID_HOURS_LIMITED": "Durée bridée",
+    "HOURLY_GRID_INJECTED": "Énergie injectée",
+    "HOURLY_GRID_LIMIT_NOT_AVAILABLE": "Analyse de bridage réseau non disponible.",
+
+    "HOURLY_LIMIT_COMPLEMENTARY_STUDY_TITLE": "Étude complémentaire de limitation",
+    "HOURLY_THR_HOURS_ABOVE": "Durée au-dessus de la limite",
+    "HOURLY_THR_SHARE_ABOVE": "Part du temps de fonctionnement au-dessus",
+    "HOURLY_THR_ENERGY_ABOVE": "Énergie au-dessus de la limite",
+    "HOURLY_THRESHOLD_NOT_AVAILABLE": "Étude de limitation non disponible.",
+
+    "HOURLY_SECTION_LOAD_FACTOR_TITLE": "Analyse active / réactive réseau",
+    "HOURLY_HELP_LOAD_FACTOR_MD": "Cette section présente les grandeurs active, réactive et apparente ainsi qu'un indicateur cos(phi) lorsque les colonnes nécessaires sont disponibles.",
+    "HOURLY_LF_P_ACTIVE": "Énergie active",
+    "HOURLY_LF_Q_REACTIVE": "Énergie réactive",
+    "HOURLY_LF_S_APPARENT": "Énergie apparente",
+    "HOURLY_LF_COSPHI": "cos(phi)",
+    "HOURLY_LF_Q_SHARE": "Part réactive",
+    "HOURLY_LOAD_FACTOR_ESTIMABLE": "La simulation active / réactive détaillée n'est pas présente dans le fichier, mais un impact potentiel pourra être estimé dans une évolution ultérieure.",
+    "HOURLY_LOAD_FACTOR_NOT_AVAILABLE": "Analyse active / réactive non disponible.",
+
+    "HOURLY_DETAILS_THRESHOLD_TITLE": "Détails de l'étude de limitation",
+    "HOURLY_TABLE_THRESHOLD_MONTHLY": "Tableau mensuel de limitation",
+    "HOURLY_COL_MONTH": "Mois",
+    "HOURLY_COL_HOURS_ABOVE": "Heures au-dessus",
+    "HOURLY_COL_ENERGY_ABOVE_KWH": "Énergie au-dessus (kWh)",
+    "HOURLY_TABLE_THRESHOLD_SEASONAL": "Tableau saisonnier de limitation",
+    "HOURLY_COL_SEASON": "Saison",
+
+    "HOURLY_DETAILS_GRID_LIMIT_TITLE": "Détails du bridage réseau",
+    "HOURLY_TABLE_GRID_LIMIT_MONTHLY": "Tableau mensuel du bridage réseau",
+
+    "HOURLY_DETAILS_CLIPPING_TITLE": "Détails du clipping onduleur",
+
+    "HOURLY_DETAILS_LOAD_FACTOR_TITLE": "Détails active / réactive réseau",
+    "HOURLY_TABLE_LOAD_FACTOR_MONTHLY": "Tableau mensuel active / réactive",
+    "HOURLY_TABLE_SATURATION_DIST": "Répartition de saturation",
+    "HOURLY_COL_CLASS": "Classe",
+    "HOURLY_COL_HOURS": "Heures",
+    "HOURLY_COL_PCT_TIME": "Part du temps",
+
+    "HOURLY_DETAILS_POWER_DISTRIBUTION_TITLE": "Distribution détaillée de puissance",
+    "HOURLY_HELP_POWER_DISTRIBUTION_MD": "Cette table présente une répartition simplifiée de la production selon des classes relatives au maximum observé.",
+    "HOURLY_DISTRIBUTION_NOT_AVAILABLE": "Distribution de puissance non disponible.",
+    "HOURLY_COL_ENERGY_KWH": "Énergie (kWh)",
+
+    "HOURLY_GENERATE_EXCEL": "Générer l'export Excel",
+    "HOURLY_EXCEL_READY": "Export Excel prêt.",
+    "HOURLY_GENERATE_PDF": "Générer l'export PDF",
+    "HOURLY_PDF_READY": "Export PDF prêt.",
+    "HOURLY_GENERATE_LOG": "Générer le log",
+    "HOURLY_LOG_READY": "Log prêt.",
+    "HOURLY_NO_EXPORTS_YET": "Aucun export généré pour le moment.",
+    "HOURLY_DOWNLOAD_EXCEL": "Télécharger l'Excel",
+    "HOURLY_DOWNLOAD_PDF": "Télécharger le PDF",
+    "HOURLY_DOWNLOAD_LOG": "Télécharger le log",
+
+    "HOURLY_SYSTEM_SUMMARY_TITLE": "Synthèse système",
+    "HOURLY_HELP_SYSTEM_SUMMARY_MD": (
+        "Cette synthèse résume la production annuelle hors soutirage nocturne, "
+        "les pertes de clipping, le soutirage, le bridage éventuel, l'état global du système "
+        "et une recommandation de bridage. "
+        "Critères d'état système : très peu contraint < 1 %, faiblement contraint de 1 à < 3 %, "
+        "modérément contraint de 3 à < 6 %, fortement contraint ≥ 6 % de pertes totales rapportées "
+        "à la production sans soutirage nocturne. "
+        "La recommandation de bridage s'appuie sur l'énergie au-dessus de la limite étudiée "
+        "et sur le taux moyen de fonctionnement sur heures productives, calculé par rapport à la "
+        "valeur maximale positive observée."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_GENERAL": "La centrale produit **{prod_mwh}** MWh/an hors soutirage nocturne.",
+    "HOURLY_SYSTEM_SENTENCE_CLIP_NIGHT": (
+        "Les pertes de surpuissance sont de **{clip_mwh}** MWh/an, soit **{clip_pct}** de la production sans soutirage nocturne. "
+        "L'énergie de soutirage nocturne est de **{night_mwh}** MWh/an, soit **{night_pct}** de la production sans soutirage nocturne."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_GRID": (
+        "Un bridage réseau est également présent dans la simulation, avec **{grid_mwh}** MWh/an perdus, "
+        "soit **{grid_pct}** de la production sans soutirage nocturne."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_STATE": "Globalement, la centrale présente un fonctionnement **{state}**.",
+    "HOURLY_SYSTEM_STATE_VERY_LOW_CONSTRAINT": "très peu contraint",
+    "HOURLY_SYSTEM_STATE_LOW_CONSTRAINT": "faiblement contraint",
+    "HOURLY_SYSTEM_STATE_MODERATE_CONSTRAINT": "modérément contraint",
+    "HOURLY_SYSTEM_STATE_HIGH_CONSTRAINT": "fortement contraint",
+    "HOURLY_BRIDGING_RECOMMENDATION_FAVORABLE": (
+        "Un bridage semble envisageable : la centrale fonctionne en moyenne à **{utilization_pct}** "
+        "de sa valeur maximale observée sur ses heures productives, et la part d'énergie au-dessus "
+        "de la limite reste limitée ({energy_above_pct})."
+    ),
+    "HOURLY_BRIDGING_RECOMMENDATION_CAUTION": (
+        "Un bridage peut être envisagé avec prudence : la centrale fonctionne en moyenne à **{utilization_pct}** "
+        "de sa valeur maximale observée sur ses heures productives, avec **{energy_above_pct}** d'énergie "
+        "au-dessus de la limite étudiée."
+    ),
+    "HOURLY_BRIDGING_RECOMMENDATION_NOT_RECOMMENDED": (
+        "Un bridage n'est pas particulièrement recommandé à ce niveau : la centrale fonctionne déjà à "
+        "**{utilization_pct}** de sa valeur maximale observée sur ses heures productives ou la part d'énergie "
+        "au-dessus de la limite devient significative ({energy_above_pct})."
+    ),
+    "HOURLY_BRIDGING_RECOMMENDATION_NOT_AVAILABLE": (
+        "Aucune recommandation de bridage n'est disponible tant qu'une limite étudiée pertinente n'est pas définie."
+    ),
+    "HOURLY_CLIP_PCT_PRIMARY": "Part du clipping / production sans soutirage nocturne",
+    "HOURLY_CLIP_REFERENCE_PRIMARY": "Référence principale",
+    "HOURLY_CLIP_PCT_SECONDARY": "Part du clipping / énergie potentielle",
+    "HOURLY_CLIP_REFERENCE_SECONDARY": "Référence secondaire",
+    "HOURLY_CLIP_REFERENCE_PROD_WO_NIGHT": "Par rapport à la production sans soutirage nocturne",
+    "HOURLY_CLIP_REFERENCE_POTENTIAL_AC": "Par rapport à l'énergie potentielle avant clipping",
+    "HOURLY_UTILIZATION_REFERENCE_MAX_OBSERVED": "Valeur maximale positive observée",
+
+
+    "HOURLY_AVAIL_PERFORMANCE": "Performance mensuelle",
+    "HOURLY_AVAIL_PERFORMANCE_DETAIL": "Table mensuelle de performance avec irradiation, PR, productible et E_Grid.",
+
+    "HOURLY_GLOBAL_PR": "PR annuel moyen",
+
+    "HOURLY_SYSTEM_SUMMARY_TITLE": "Synthèse système",
+    "HOURLY_HELP_SYSTEM_SUMMARY_MD": (
+        "Cette synthèse résume la production annuelle hors soutirage nocturne, les pertes de clipping, "
+        "le soutirage, le bridage éventuel, l'état global du système et une recommandation de bridage. "
+        "Critères d'état système : très peu contraint < 1 %, faiblement contraint de 1 à < 3 %, "
+        "modérément contraint de 3 à < 6 %, fortement contraint ≥ 6 % de pertes totales rapportées "
+        "à la production sans soutirage nocturne. La recommandation de bridage s'appuie sur l'énergie "
+        "au-dessus de la limite étudiée et sur le taux moyen de fonctionnement sur heures productives, "
+        "calculé par rapport au percentile P99 des valeurs positives observées."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_GENERAL": "La centrale produit **{prod_mwh}** MWh/an hors soutirage nocturne.",
+    "HOURLY_SYSTEM_SENTENCE_CLIP_NIGHT": (
+        "Les pertes de surpuissance sont de **{clip_mwh}** MWh/an, soit **{clip_pct}** de la production sans soutirage nocturne. "
+        "L'énergie de soutirage nocturne est de **{night_mwh}** MWh/an, soit **{night_pct}** de la production sans soutirage nocturne."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_GRID": (
+        "Un bridage réseau est également présent dans la simulation, avec **{grid_mwh}** MWh/an perdus, "
+        "soit **{grid_pct}** de la production sans soutirage nocturne."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_METEO": (
+        "Le site présente une ressource solaire **{meteo}** sur la période simulée. "
+        "L'irradiation effective représente **{globeff_ratio}** de l'irradiation incidente, "
+        "ce qui traduit des pertes optiques et/ou d'ombrage **{optics}**."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_PERFORMANCE": (
+        "Le PR annuel moyen est de **{pr}**. "
+        "Le productible spécifique atteint **{productible}** kWh/kWc/an lorsque la donnée est disponible."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_STATE": "Globalement, la centrale présente un fonctionnement **{state}**.",
+
+    "HOURLY_SYSTEM_STATE_VERY_LOW_CONSTRAINT": "très peu contraint",
+    "HOURLY_SYSTEM_STATE_LOW_CONSTRAINT": "faiblement contraint",
+    "HOURLY_SYSTEM_STATE_MODERATE_CONSTRAINT": "modérément contraint",
+    "HOURLY_SYSTEM_STATE_HIGH_CONSTRAINT": "fortement contraint",
+
+    "HOURLY_METEO_MODEST": "modérée",
+    "HOURLY_METEO_GOOD": "élevée",
+    "HOURLY_METEO_VERY_GOOD": "très élevée",
+
+    "HOURLY_OPTICS_LOW_LOSSES": "faibles",
+    "HOURLY_OPTICS_MODERATE_LOSSES": "modérées",
+    "HOURLY_OPTICS_MARKED_LOSSES": "marquées",
+
+    "HOURLY_BRIDGING_RECOMMENDATION_FAVORABLE": (
+        "Un bridage semble envisageable : la centrale fonctionne en moyenne à **{utilization_pct}** "
+        "de son niveau de haut fonctionnement habituel (P99) sur ses heures productives, "
+        "et la part d'énergie au-dessus de la limite reste limitée ({energy_above_pct})."
+    ),
+    "HOURLY_BRIDGING_RECOMMENDATION_CAUTION": (
+        "Un bridage peut être envisagé avec prudence : la centrale fonctionne en moyenne à **{utilization_pct}** "
+        "de son niveau de haut fonctionnement habituel (P99) sur ses heures productives, "
+        "avec **{energy_above_pct}** d'énergie au-dessus de la limite étudiée."
+    ),
+    "HOURLY_BRIDGING_RECOMMENDATION_NOT_RECOMMENDED": (
+        "Un bridage n'est pas particulièrement recommandé à ce niveau : la centrale fonctionne déjà à "
+        "**{utilization_pct}** de son niveau de haut fonctionnement habituel (P99) sur ses heures productives "
+        "ou la part d'énergie au-dessus de la limite devient significative ({energy_above_pct})."
+    ),
+    "HOURLY_BRIDGING_RECOMMENDATION_NOT_AVAILABLE": (
+        "Aucune recommandation de bridage n'est disponible tant qu'une limite étudiée pertinente n'est pas définie."
+    ),
+
+    "HOURLY_CLIP_PCT_PRIMARY": "Part du clipping / production sans soutirage nocturne",
+    "HOURLY_CLIP_REFERENCE_PRIMARY": "Référence principale",
+    "HOURLY_CLIP_PCT_SECONDARY": "Part du clipping / énergie potentielle",
+    "HOURLY_CLIP_REFERENCE_SECONDARY": "Référence secondaire",
+    "HOURLY_CLIP_REFERENCE_PROD_WO_NIGHT": "Par rapport à la production sans soutirage nocturne",
+    "HOURLY_CLIP_REFERENCE_POTENTIAL_AC": "Par rapport à l'énergie potentielle avant clipping",
+
+    "HOURLY_PERFORMANCE_MONTHLY_TITLE": "Performance mensuelle",
+    "HOURLY_HELP_PERFORMANCE_MONTHLY_MD": (
+        "Cette table regroupe par mois l'irradiation incidente, l'irradiation effective, le ratio GlobEff/GlobInc, "
+        "le PR, le productible spécifique si disponible, et E_Grid. La dernière ligne donne un résumé annuel."
+    ),
+    "HOURLY_DETAILS_PERFORMANCE_TITLE": "Détails de la performance mensuelle",
+
+    "HOURLY_COL_GLOBINC": "GlobInc (kWh/m²)",
+    "HOURLY_COL_GLOBEFF": "GlobEff (kWh/m²)",
+    "HOURLY_COL_GLOBEFF_RATIO": "GlobEff / GlobInc",
+    "HOURLY_COL_PR": "PR",
+    "HOURLY_COL_PRODUCTIBLE": "Productible (kWh/kWc)",
+    "HOURLY_COL_EGRID_MWH": "E_Grid (MWh)",
+
+    "HOURLY_UTILIZATION_REFERENCE_P99": "Percentile P99 des valeurs positives",
+
+    "HOURLY_COL_GLOBHOR": "GlobHor (kWh/m²)",
+    "HOURLY_COL_TILT_GAIN": "Gain inclinaison",
+    "HOURLY_HELP_PERFORMANCE_MONTHLY_MD": (
+        "Cette table regroupe par mois l'irradiation horizontale (GlobHor), l'irradiation dans le plan des capteurs (GlobInc), "
+        "l'irradiation effective (GlobEff), le gain lié à l'inclinaison (GlobInc / GlobHor), le ratio optique (GlobEff / GlobInc), "
+        "le PR calculé sur les seules heures de production positive, le productible spécifique si disponible, et E_Grid. "
+        "Le ratio GlobEff / GlobInc représente la part de l'irradiation sur le plan capteurs qui reste effectivement exploitable "
+        "après IAM et ombrage."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_PERFORMANCE_NO_PRODUCTIBLE": (
+        "Le PR annuel moyen est de **{pr}**."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_OPTICS": (
+        "Le gain lié à l'inclinaison atteint **{tilt_gain}** entre le plan horizontal et le plan capteurs. "
+        "L'efficacité optique restante après IAM et ombrage est de **{optical_efficiency}**."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_UTILIZATION": (
+        "Le taux moyen de fonctionnement sur heures productives est de **{utilization_pct}**, "
+        "calculé par rapport à {ref_label}."
+    ),
+    "HOURLY_UTILIZATION_REFERENCE_P99": "le percentile P99 des puissances positives",
+    "HOURLY_DCAC_RECOMMENDATION_RELEVANT": (
+        "Une revue du ratio DC/AC paraît pertinente : les pertes de clipping restent très faibles et "
+        "le niveau de fonctionnement de la centrale demeure modéré sur ses heures productives."
+    ),
+    "HOURLY_DCAC_RECOMMENDATION_POSSIBLE": (
+        "Une revue du ratio DC/AC peut être envisagée : la centrale semble peu contrainte côté clipping "
+        "et son niveau de fonctionnement reste relativement limité."
+    ),
+    "HOURLY_DCAC_RECOMMENDATION_NOT_PRIORITY": (
+        "Une revue du ratio DC/AC ne paraît pas prioritaire à ce stade."
+    ),
+    "HOURLY_DCAC_RECOMMENDATION_NOT_AVAILABLE": (
+        "Aucune conclusion spécifique sur le ratio DC/AC n'est disponible."
+    ),
+
+    "HOURLY_SYSTEM_SENTENCE_OPTICS_FULL": (
+        "Le gain lié à l'inclinaison atteint **{tilt_gain}** entre le plan horizontal et le plan capteurs. "
+        "L'efficacité optique restante après IAM et ombrage est de **{optical_efficiency}**."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_OPTICS_ONLY": (
+        "L'efficacité optique restante après IAM et ombrage est de **{optical_efficiency}**."
+    ),
+    "HOURLY_SYSTEM_SENTENCE_PERFORMANCE_WITH_PRODUCTIBLE": (
+        "Le PR annuel moyen est de **{pr}**. "
+        "Le productible spécifique atteint **{productible}** kWh/kWc/an."
+    ),
+
 
     #TMY compare tool
     "TOOL_TMY_COMPARE_TITLE": "Comparaison de TMY",
