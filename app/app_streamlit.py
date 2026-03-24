@@ -31,7 +31,7 @@ bootstrap(render_sidebar_ui=False)
 
 pages = [
     st.Page(HOME_PAGE, title=t("PAGE_HOME_TITLE"), icon="🏠"),
-    st.Page(SETTINGS_PAGE, title=t("PAGE_SETTINGS_TITLE"), icon="⚙️"),
+    # st.Page(SETTINGS_PAGE, title=t("PAGE_SETTINGS_TITLE"), icon="⚙️"),
 ]
 
 # Pages outils (à plat, sans groupe)

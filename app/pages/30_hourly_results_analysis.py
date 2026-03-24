@@ -162,7 +162,7 @@ def _build_performance_display_table(perf: dict[str, Any]) -> pd.DataFrame:
         t("HOURLY_COL_MONTH"): pm["month_name"],
         t("HOURLY_COL_GLOBHOR"): pm["globhor_kwh_m2"].map(lambda v: _fmt_num(v, 1)),
         t("HOURLY_COL_GLOBINC"): pm["globinc_kwh_m2"].map(lambda v: _fmt_num(v, 1)),
-        t("HOURLY_COL_TILT_GAIN"): pm["globinc_over_globhor_pct"].map(lambda v: _fmt_pct(v, 1)),
+        t("HOURLY_COL_TILT_GAIN"): pm["tilt_gain_pct"].map(lambda v: _fmt_pct(v, 1)),
         t("HOURLY_COL_GLOBEFF"): pm["globeff_kwh_m2"].map(lambda v: _fmt_num(v, 1)),
         t("HOURLY_COL_GLOBEFF_RATIO"): pm["globeff_over_globinc_pct"].map(lambda v: _fmt_pct(v, 1)),
         t("HOURLY_COL_PR"): pm["pr_mean_prod"].map(lambda v: _fmt_pct(None if v is None else 100.0 * float(v), 1)),
@@ -175,7 +175,7 @@ def _build_performance_display_table(perf: dict[str, Any]) -> pd.DataFrame:
             t("HOURLY_COL_MONTH"): annual.get("month_name", "Annual"),
             t("HOURLY_COL_GLOBHOR"): _fmt_num(annual.get("globhor_kwh_m2"), 1),
             t("HOURLY_COL_GLOBINC"): _fmt_num(annual.get("globinc_kwh_m2"), 1),
-            t("HOURLY_COL_TILT_GAIN"): _fmt_pct(annual.get("globinc_over_globhor_pct"), 1),
+            t("HOURLY_COL_TILT_GAIN"): _fmt_pct(annual.get("tilt_gain_pct"), 1),
             t("HOURLY_COL_GLOBEFF"): _fmt_num(annual.get("globeff_kwh_m2"), 1),
             t("HOURLY_COL_GLOBEFF_RATIO"): _fmt_pct(annual.get("globeff_over_globinc_pct"), 1),
             t("HOURLY_COL_PR"): _fmt_pct(

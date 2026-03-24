@@ -582,8 +582,8 @@ def analyze_performance_monthly(context: AnalysisContext) -> None:
         axis=1,
     )
 
-    monthly["globinc_over_globhor_pct"] = monthly.apply(
-        lambda r: _safe_pct(r["globinc_kwh_m2"], r["globhor_kwh_m2"])
+    monthly["tilt_gain_pct"] = monthly.apply(
+        lambda r: _safe_pct(r["globinc_kwh_m2"], r["globhor_kwh_m2"]) - 100
         if pd.notna(r["globhor_kwh_m2"]) and r["globhor_kwh_m2"] not in (None, 0)
         else None,
         axis=1,
@@ -659,16 +659,10 @@ def analyze_performance_monthly(context: AnalysisContext) -> None:
     }
 
     if annual["globhor_kwh_m2"] not in (None, 0) and annual["globinc_kwh_m2"] is not None:
-        annual["globinc_over_globhor_pct"] = _safe_pct(
-            annual["globinc_kwh_m2"],
-            annual["globhor_kwh_m2"],
-        )
+        annual["tilt_gain_pct"] = _safe_pct(annual["globinc_kwh_m2"], annual["globhor_kwh_m2"], ) -100
 
     if annual["globinc_kwh_m2"] not in (None, 0) and annual["globeff_kwh_m2"] is not None:
-        annual["globeff_over_globinc_pct"] = _safe_pct(
-            annual["globeff_kwh_m2"],
-            annual["globinc_kwh_m2"],
-        )
+        annual["globeff_over_globinc_pct"] = _safe_pct(annual["globeff_kwh_m2"], annual["globinc_kwh_m2"], )
 
     context.results["performance_monthly"] = {
         "available": True,
@@ -683,7 +677,7 @@ def analyze_performance_monthly(context: AnalysisContext) -> None:
                 "globhor_kwh_m2",
                 "globinc_kwh_m2",
                 "globeff_kwh_m2",
-                "globinc_over_globhor_pct",
+                "tilt_gain_pct",
                 "globeff_over_globinc_pct",
                 "pr_mean_prod",
                 "productible_specific",
@@ -762,7 +756,7 @@ def analyze_system_summary(context: AnalysisContext) -> None:
         if row:
             globhor_annual = row.get("globhor_kwh_m2", None)
             globinc_annual = row.get("globinc_kwh_m2", None)
-            tilt_gain_pct = row.get("globinc_over_globhor_pct", None)
+            tilt_gain_pct = row.get("tilt_gain_pct", None)
             globeff_ratio_annual = row.get("globeff_over_globinc_pct", None)
             productible_specific = row.get("productible_specific", None)
 

@@ -65,5 +65,14 @@ TOOLS: List[ToolSpec] = [
         enabled=True,
         badge="",
     ),
+    ToolSpec(
+        tool_id="market_analysis",
+        page="pages/50_market_analysis.py",
+        icon="⚡",
+        title_key="MARKET_ANALYSIS_TITLE",
+        desc_key="MARKET_ANALYSIS_DESC",
+        enabled=True,
+        badge="",
+    ),
 ]
 

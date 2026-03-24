@@ -8,8 +8,7 @@ TEXTS = {
     "APP_TITLE": "PVInsight — Analyse PVSyst",
     "APP_VERSION_LABEL": "Version",
     "APP_DESCRIPTION": (
-        "Outil Streamlit (vide pour l’instant) destiné à accueillir des briques "
-        "d’analyse des exports PVSyst (hourly results, bilans mensuels, PR, pertes, etc.)."
+        "Outil Streamlit d’analyse de production de centrales solaires (hourly results, bilans mensuels, PR, pertes, etc.)."
     ),
 
     # =========================================================================
@@ -679,7 +678,7 @@ TEXTS = {
     "HOURLY_AVAIL_PERFORMANCE": "Performance mensuelle",
     "HOURLY_AVAIL_PERFORMANCE_DETAIL": "Table mensuelle de performance avec irradiation, PR, productible et E_Grid.",
 
-    "HOURLY_GLOBAL_PR": "PR annuel moyen",
+    "HOURLY_GLOBAL_PR": "PR bifacial annuel moyen",
 
     "HOURLY_SYSTEM_SUMMARY_TITLE": "Synthèse système",
     "HOURLY_HELP_SYSTEM_SUMMARY_MD": (
@@ -706,7 +705,7 @@ TEXTS = {
         "ce qui traduit des pertes optiques et/ou d'ombrage **{optics}**."
     ),
     "HOURLY_SYSTEM_SENTENCE_PERFORMANCE": (
-        "Le PR annuel moyen est de **{pr}**. "
+        "Le PR bifacial annuel moyen est de **{pr}**. "
         "Le productible spécifique atteint **{productible}** kWh/kWc/an lorsque la donnée est disponible."
     ),
     "HOURLY_SYSTEM_SENTENCE_STATE": "Globalement, la centrale présente un fonctionnement **{state}**.",
@@ -771,12 +770,12 @@ TEXTS = {
     "HOURLY_HELP_PERFORMANCE_MONTHLY_MD": (
         "Cette table regroupe par mois l'irradiation horizontale (GlobHor), l'irradiation dans le plan des capteurs (GlobInc), "
         "l'irradiation effective (GlobEff), le gain lié à l'inclinaison (GlobInc / GlobHor), le ratio optique (GlobEff / GlobInc), "
-        "le PR calculé sur les seules heures de production positive, le productible spécifique si disponible, et E_Grid. "
+        "le PR bifacial calculé sur les seules heures de production positive, le productible spécifique si disponible, et E_Grid. "
         "Le ratio GlobEff / GlobInc représente la part de l'irradiation sur le plan capteurs qui reste effectivement exploitable "
         "après IAM et ombrage."
     ),
     "HOURLY_SYSTEM_SENTENCE_PERFORMANCE_NO_PRODUCTIBLE": (
-        "Le PR annuel moyen est de **{pr}**."
+        "Le PR bifacial annuel moyen est de **{pr}**."
     ),
     "HOURLY_SYSTEM_SENTENCE_OPTICS": (
         "Le gain lié à l'inclinaison atteint **{tilt_gain}** entre le plan horizontal et le plan capteurs. "
@@ -810,7 +809,7 @@ TEXTS = {
         "L'efficacité optique restante après IAM et ombrage est de **{optical_efficiency}**."
     ),
     "HOURLY_SYSTEM_SENTENCE_PERFORMANCE_WITH_PRODUCTIBLE": (
-        "Le PR annuel moyen est de **{pr}**. "
+        "Le PR bifacial annuel moyen est de **{pr}**. "
         "Le productible spécifique atteint **{productible}** kWh/kWc/an."
     ),
 
@@ -1114,5 +1113,338 @@ TEXTS = {
   - Paramètre critique pour le dimensionnement des strings à basse température.
   """,
 
+# MARKET ANALYSIS TOOL
+
+    "MARKET_ANALYSIS_TITLE": "Analyse marché de l’électricité",
+    "MARKET_ANALYSIS_DESC": "Analyse des prix de marché de l’électricité, croisement avec résultats horaires PVSyst, comparaison de variantes et screening BESS.",
+
+    "MARKET_ANALYSIS_CONFIG_TITLE": "Configuration",
+    "MARKET_ANALYSIS_MARKET_SOURCE": "Source marché",
+    "MARKET_ANALYSIS_MARKET_SOURCE_API": "API Energy Charts",
+    "MARKET_ANALYSIS_MARKET_SOURCE_CSV": "CSV marché local",
+    "MARKET_ANALYSIS_ANALYSIS_MODE": "Mode d’analyse",
+    "MARKET_ANALYSIS_MODE_SINGLE": "Variante unique",
+    "MARKET_ANALYSIS_MODE_COMPARISON": "Comparaison 2 variantes",
+    "MARKET_ANALYSIS_ENABLE_BESS": "Activer l’analyse BESS",
+    "MARKET_ANALYSIS_MARKET_ZONE": "Pays / zone marché",
+    "MARKET_ANALYSIS_YEAR": "Année",
+    "MARKET_ANALYSIS_MARKET_CSV_UPLOAD": "CSV marché local",
+
+    "MARKET_ANALYSIS_PVSYST_SOURCES_TITLE": "Sources PVSyst",
+    "MARKET_ANALYSIS_PV_FILE_A": "Fichier horaire PVSyst - Variante A",
+    "MARKET_ANALYSIS_PV_LABEL_A": "Label variante A",
+    "MARKET_ANALYSIS_PV_FILE_B": "Fichier horaire PVSyst - Variante B",
+    "MARKET_ANALYSIS_PV_LABEL_B": "Label variante B",
+
+    "MARKET_ANALYSIS_BESS_PARAMS_TITLE": "Paramètres BESS (laisser vide pour utiliser les valeurs par défaut)",
+    "MARKET_ANALYSIS_BESS_PARAM_CAPACITY": "Capacité batterie (MWh)",
+    "MARKET_ANALYSIS_BESS_PARAM_CHARGE_POWER": "Puissance charge max (MW)",
+    "MARKET_ANALYSIS_BESS_PARAM_DISCHARGE_POWER": "Puissance décharge max (MW)",
+    "MARKET_ANALYSIS_BESS_PARAM_EFFICIENCY": "Rendement aller-retour (0-1)",
+    "MARKET_ANALYSIS_BESS_PARAM_CHARGE_THRESHOLD": "Seuil charge (EUR/MWh)",
+    "MARKET_ANALYSIS_BESS_PARAM_DISCHARGE_THRESHOLD": "Seuil décharge (EUR/MWh)",
+
+    "MARKET_ANALYSIS_RUN_BUTTON": "Lancer l’analyse",
+    "MARKET_ANALYSIS_RUNNING": "Analyse en cours...",
+    "MARKET_ANALYSIS_INFO_WAITING": "Charge les données puis lance l’analyse.",
+    "MARKET_ANALYSIS_ERROR_NEED_MARKET_CSV": "Veuillez charger un CSV marché.",
+    "MARKET_ANALYSIS_ERROR_NEED_PV_A": "Veuillez charger le fichier PVSyst de la variante A.",
+    "MARKET_ANALYSIS_ERROR_NEED_PV_B": "Veuillez charger le fichier PVSyst de la variante B.",
+    "MARKET_ANALYSIS_WARNINGS_TITLE": "Warnings",
+
+    "MARKET_ANALYSIS_TIME_SECTION_TITLE": "Temporalité et harmonisation",
+    "MARKET_ANALYSIS_TIME_SECTION_DESC": "Le calcul marché ↔ PV est effectué sur des données harmonisées, tout en conservant les données originales pour la traçabilité et les exports.",
+    "MARKET_ANALYSIS_TIME_EXPANDER": "Afficher les informations de temporalité et d’harmonisation",
+    "MARKET_ANALYSIS_TIME_MARKET_ORIGINAL": "Pas de temps marché (original)",
+    "MARKET_ANALYSIS_TIME_MARKET_ANALYSIS": "Pas de temps marché (analyse)",
+    "MARKET_ANALYSIS_TIME_PV_A_ORIGINAL": "Pas de temps PV A (original)",
+    "MARKET_ANALYSIS_TIME_PV_A_ANALYSIS": "Pas de temps PV A (analyse)",
+    "MARKET_ANALYSIS_TIME_PV_B_ORIGINAL": "Pas de temps PV B (original)",
+    "MARKET_ANALYSIS_TIME_PV_B_ANALYSIS": "Pas de temps PV B (analyse)",
+    "MARKET_ANALYSIS_TIME_ANALYSIS_STEP": "Pas de temps utilisé pour l’analyse",
+    "MARKET_ANALYSIS_TIME_MARKET_BLOCK": "Marché",
+    "MARKET_ANALYSIS_TIME_PV_BLOCK": "PVSyst",
+    "MARKET_ANALYSIS_TIME_ORIGINAL_ROWS": "Données originales conservées",
+    "MARKET_ANALYSIS_TIME_ANALYSIS_ROWS": "Données utilisées pour l’analyse",
+    "MARKET_ANALYSIS_TIME_RESAMPLED": "Resampling appliqué",
+    "MARKET_ANALYSIS_TIME_METHOD": "Méthode",
+    "MARKET_ANALYSIS_TIME_ENERGY_CONVERSION": "Conversion énergie",
+    "MARKET_ANALYSIS_TIME_ANALYSIS_NOTE": "Le calcul marché ↔ PV est effectué sur les données harmonisées.",
+
+    "MARKET_ANALYSIS_TAB_MAIN": "Principal",
+    "MARKET_ANALYSIS_TAB_DETAILED": "Détaillé",
+
+    "MARKET_ANALYSIS_EXEC_SUMMARY_TITLE": "Résumé exécutif",
+    "MARKET_ANALYSIS_HELP_BUTTON": "🔴 ? Aide",
+    "MARKET_ANALYSIS_HELP_TITLE": "Définitions et interprétation des grandeurs",
+    "MARKET_ANALYSIS_HELP_PRICE_MEAN": "Prix moyen annuel : moyenne simple des prix horaires du marché sur la période étudiée.",
+    "MARKET_ANALYSIS_HELP_NEGATIVE_HOURS": "Heures négatives : nombre d’heures où le prix de marché est inférieur à 0 €/MWh.",
+    "MARKET_ANALYSIS_HELP_ENERGY_INJECTED": "Énergie injectée : énergie effectivement injectée après application de la coupure sur les heures à prix négatif.",
+    "MARKET_ANALYSIS_HELP_MARKET_VALUE": "Valeur marché : valorisation théorique de l’énergie injectée en multipliant, heure par heure, l’énergie injectée par le prix de marché.",
+    "MARKET_ANALYSIS_HELP_CURTAILED_ENERGY": "Énergie coupée : énergie théorique produite pendant les heures à prix négatif et supposée non injectée.",
+    "MARKET_ANALYSIS_HELP_CAPTURE_PRICE": "Prix capté moyen : prix moyen effectivement capté par la production injectée. Il est calculé en divisant la valeur marché totale par l’énergie injectée.",
+    "MARKET_ANALYSIS_HELP_CAPTURE_RATE": "Indice de captation : rapport entre le prix capté moyen et le prix moyen du marché. Une valeur supérieure à 1 signifie que la production est injectée en moyenne sur des heures mieux valorisées que le marché moyen.",
+    "MARKET_ANALYSIS_HELP_CURTAILED_SHARE": "Part coupée : part de l’énergie théorique annuelle qui n’est pas injectée à cause des prix négatifs.",
+    "MARKET_ANALYSIS_HELP_BESS": "Analyse BESS : estimation simplifiée du potentiel de stockage de l’énergie coupée, puis de sa restitution sur des heures à prix plus élevé.",
+
+    "MARKET_ANALYSIS_KPI_PRICE_MEAN": "Prix moyen annuel",
+    "MARKET_ANALYSIS_KPI_NEGATIVE_HOURS": "Heures négatives",
+    "MARKET_ANALYSIS_KPI_ENERGY_INJECTED": "Énergie injectée",
+    "MARKET_ANALYSIS_KPI_MARKET_VALUE": "Valeur marché",
+    "MARKET_ANALYSIS_KPI_CURTAILED_ENERGY": "Énergie coupée",
+    "MARKET_ANALYSIS_KPI_CAPTURE_PRICE": "Prix capté moyen",
+    "MARKET_ANALYSIS_KPI_CAPTURE_RATE": "Indice de captation",
+    "MARKET_ANALYSIS_KPI_CURTAILED_SHARE": "Part coupée",
+
+    "MARKET_ANALYSIS_KPI_VARIANT_ENERGY": "Énergie {label}",
+    "MARKET_ANALYSIS_KPI_VARIANT_VALUE": "Valeur {label}",
+    "MARKET_ANALYSIS_KPI_VARIANT_CAPTURE_PRICE": "Prix capté moyen {label}",
+    "MARKET_ANALYSIS_KPI_VARIANT_CURTAILED": "Énergie coupée {label}",
+
+    "MARKET_ANALYSIS_CONCLUSIONS_TITLE": "Conclusions clés",
+    "MARKET_ANALYSIS_CONCLUSION_LOW_NEGATIVE": "L’exposition aux prix négatifs est **faible** avec seulement **{value:.2f} %** d’énergie coupée.",
+    "MARKET_ANALYSIS_CONCLUSION_MEDIUM_NEGATIVE": "L’exposition aux prix négatifs est **modérée** avec **{value:.2f} %** d’énergie coupée.",
+    "MARKET_ANALYSIS_CONCLUSION_HIGH_NEGATIVE": "L’exposition aux prix négatifs est **significative** avec **{value:.2f} %** d’énergie coupée.",
+    "MARKET_ANALYSIS_CONCLUSION_HIGH_PRICE_SHARE_HIGH": "Une part notable de la production tombe sur les heures chères, avec **{value:.2f} %** de l’énergie sur ces heures.",
+    "MARKET_ANALYSIS_CONCLUSION_HIGH_PRICE_SHARE_LOW": "La part de production sur les heures chères reste limitée, avec **{value:.2f} %** de l’énergie sur ces heures.",
+    "MARKET_ANALYSIS_CONCLUSION_CAPTURE_RATE_GOOD": "Le profil de production capte un prix moyen au moins égal au marché moyen, avec un indice de captation de **{value:.2f}**.",
+    "MARKET_ANALYSIS_CONCLUSION_CAPTURE_RATE_LOW": "Le profil de production capte un prix moyen inférieur au marché moyen, avec un indice de captation de **{value:.2f}**.",
+    "MARKET_ANALYSIS_CONCLUSION_MARKET_RESAMPLED": "Les prix marché ont été harmonisés au pas horaire pour l’analyse.",
+    "MARKET_ANALYSIS_CONCLUSION_PV_RESAMPLED": "Les données PVSyst ont été harmonisées au pas horaire pour l’analyse.",
+
+    "MARKET_ANALYSIS_MAIN_CHARTS_TITLE": "Graphiques principaux",
+
+    "MARKET_ANALYSIS_BESS_TITLE": "Screening BESS",
+    "MARKET_ANALYSIS_BESS_KPI_AVAILABLE": "Énergie stockable",
+    "MARKET_ANALYSIS_BESS_KPI_DISCHARGED": "Énergie restituée",
+    "MARKET_ANALYSIS_BESS_KPI_ADDED_VALUE": "Valeur ajoutée BESS",
+    "MARKET_ANALYSIS_BESS_KPI_EQ_CYCLES": "Cycles équivalents",
+
+    "MARKET_ANALYSIS_DETAIL_TITLE": "Hypothèses, métadonnées et pas de temps",
+    "MARKET_ANALYSIS_META_GLOBAL": "Meta globale",
+    "MARKET_ANALYSIS_META_MARKET": "Meta marché",
+    "MARKET_ANALYSIS_META_PV_A": "Meta PV A",
+    "MARKET_ANALYSIS_META_PV_B": "Meta PV B",
+    "MARKET_ANALYSIS_BESS_ASSUMPTIONS_TITLE": "Hypothèses BESS utilisées",
+
+    "MARKET_ANALYSIS_EXPORTS_TITLE": "Exports",
+    "MARKET_ANALYSIS_EXPORT_MARKET_ORIGINAL": "Télécharger marché original (CSV)",
+    "MARKET_ANALYSIS_EXPORT_MERGED": "Télécharger merged {label}",
+    "MARKET_ANALYSIS_EXPORT_ANNUAL_A": "Télécharger résumé annuel A",
+    "MARKET_ANALYSIS_EXPORT_MONTHLY_A": "Télécharger résumé mensuel A",
+    "MARKET_ANALYSIS_EXPORT_SEASONAL_A": "Télécharger résumé saisonnier A",
+
+    "MARKET_ANALYSIS_TABLES_TITLE": "Tableaux",
+    "MARKET_ANALYSIS_TABLE_ANNUAL_A": "Résumé annuel variante A",
+    "MARKET_ANALYSIS_TABLE_MONTHLY_A": "Résumé mensuel variante A",
+    "MARKET_ANALYSIS_TABLE_SEASONAL_A": "Résumé saisonnier variante A",
+    "MARKET_ANALYSIS_TABLE_MARKET_ONLY": "Résumé marché seul (analyse harmonisée)",
+    "MARKET_ANALYSIS_TABLE_MARKET_INDICATORS": "Indicateurs marché",
+    "MARKET_ANALYSIS_TABLE_PRICE_DISTRIBUTION": "Distribution des prix",
+    "MARKET_ANALYSIS_TABLE_MONTHLY_MARKET": "Résumé mensuel marché",
+    "MARKET_ANALYSIS_TABLE_SEASONAL_MARKET": "Résumé saisonnier marché",
+
+    "MARKET_ANALYSIS_TABLE_TYPICAL_PROFILES": "Profils journaliers détaillés",
+    "MARKET_ANALYSIS_TABLE_TYPICAL_PRICE": "Prix typique",
+    "MARKET_ANALYSIS_TABLE_TYPICAL_PV_A": "Production typique A",
+    "MARKET_ANALYSIS_TABLE_TYPICAL_PV_B": "Production typique B",
+
+    "MARKET_ANALYSIS_TABLE_ORIGINAL_VS_ANALYSIS": "Données originales vs données d’analyse",
+    "MARKET_ANALYSIS_TABLE_MARKET_ORIGINAL": "Marché original",
+    "MARKET_ANALYSIS_TABLE_MARKET_ANALYSIS": "Marché harmonisé pour l’analyse",
+    "MARKET_ANALYSIS_TABLE_PV_A_ORIGINAL": "PV A original",
+    "MARKET_ANALYSIS_TABLE_PV_A_ANALYSIS": "PV A harmonisé pour l’analyse",
+    "MARKET_ANALYSIS_TABLE_PV_B_ORIGINAL": "PV B original",
+    "MARKET_ANALYSIS_TABLE_PV_B_ANALYSIS": "PV B harmonisé pour l’analyse",
+
+    "MARKET_ANALYSIS_COMPARE_TITLE": "Comparaison variantes",
+    "MARKET_ANALYSIS_COMPARE_ANNUAL": "Résumé annuel comparaison",
+    "MARKET_ANALYSIS_COMPARE_MONTHLY": "Résumé mensuel comparaison",
+    "MARKET_ANALYSIS_COMPARE_SEASONAL": "Résumé saisonnier comparaison",
+    "MARKET_ANALYSIS_COMPARE_CONCLUSIONS": "Conclusions",
+
+    "MARKET_ANALYSIS_BESS_VARIANT_TITLE": "BESS - {label}",
+    "MARKET_ANALYSIS_BESS_ANNUAL": "Indicateurs annuels",
+    "MARKET_ANALYSIS_BESS_MONTHLY": "Résumé mensuel",
+    "MARKET_ANALYSIS_BESS_SEASONAL": "Résumé saisonnier",
+    "MARKET_ANALYSIS_BESS_HOURLY_HEAD": "Série horaire BESS (head)",
+
+    "MARKET_ANALYSIS_NA": "n/a",
+
+    "MARKET_ANALYSIS_HELP_GENERAL_RESULTS_TITLE": "Aide — résultats généraux",
+    "MARKET_ANALYSIS_HELP_GENERAL_RESULTS_BODY": """
+Les résultats généraux synthétisent la performance économique du profil de production face aux prix de marché.
+
+**Prix moyen annuel** : moyenne simple des prix horaires du marché sur la période étudiée.
+
+**Heures négatives** : nombre d’heures où le prix de marché est inférieur à 0 €/MWh.
+
+**Énergie injectée** : énergie effectivement injectée après application de l’hypothèse de coupure pendant les heures à prix négatif.
+
+**Valeur marché** : valorisation théorique de l’énergie injectée, calculée heure par heure comme :
+valeur = énergie injectée × prix de marché
+
+**Énergie coupée** : énergie théorique produite pendant les heures à prix négatif et supposée non injectée.
+
+**Prix capté moyen** : prix moyen effectivement capté par la production injectée.  
+Il est calculé comme :
+prix capté moyen = valeur marché / énergie injectée
+
+Il permet de savoir si la production tombe plutôt sur des heures bien valorisées ou non.
+
+**Indice de captation** : rapport entre le prix capté moyen et le prix moyen du marché.  
+Il est calculé comme :
+indice de captation = prix capté moyen / prix moyen du marché
+
+- **> 1** : la production est injectée, en moyenne, sur des heures mieux valorisées que le marché moyen.
+- **< 1** : la production est injectée, en moyenne, sur des heures moins valorisées que le marché moyen.
+""",
+
+    "MARKET_ANALYSIS_HELP_PROFILES_TITLE": "Aide — profils types",
+    "MARKET_ANALYSIS_HELP_PROFILES_BODY": """
+Les profils types représentent des courbes moyennes par heure de la journée, construites sur l’ensemble de l’année.
+
+**Courbe de production** : production théorique moyenne de la centrale à chaque heure.
+
+**Courbe d’injection** : énergie moyenne effectivement injectée à chaque heure après application de l’hypothèse de coupure pendant les heures à prix négatif.  
+L’écart entre la courbe de production et la courbe d’injection représente donc l’effet moyen des épisodes de prix négatifs.
+
+**Prix moyen** : prix moyen du marché pour chaque heure de la journée.
+
+**P25 / P75** :
+- **P25** : quartile inférieur ; 25 % des valeurs de prix sont en dessous
+- **P75** : quartile supérieur ; 75 % des valeurs de prix sont en dessous
+
+La bande **P25–P75** donne une idée de la variabilité habituelle du prix autour de sa moyenne horaire :
+- bande étroite = prix plus stable
+- bande large = prix plus variable
+""",
+
+"MARKET_ANALYSIS_HELP_CONFIG_TITLE": "Aide — configuration de l'analyse",
+
+"MARKET_ANALYSIS_HELP_CONFIG_BODY": """
+Cette section permet de configurer les données utilisées pour l'analyse croisée entre prix de marché et production PV.
+
+**Source des prix de marché** :
+- **API** : télécharge automatiquement les prix de marché (day-ahead) pour le pays et l’année sélectionnés.
+- **CSV** : permet d’utiliser un fichier local de prix (exporté depuis cet outil ou issu d’une autre source).
+
+**Zone de marché** :
+Correspond à la zone de prix sélectionnée (France, Allemagne, Espagne, etc.).  
+Les prix peuvent varier fortement d’un pays à l’autre.
+
+**Année** :
+Définit la période d’analyse des prix de marché.  
+La production PVSyst sera alignée sur cette année (par jour et heure uniquement).
+
+**Mode d’analyse** :
+- **Variante unique** : analyse d’un seul fichier PVSyst.
+- **Comparaison** : comparaison de deux variantes (ex : fixe vs tracker).
+
+**Fichiers PVSyst** :
+Importer un ou deux fichiers de résultats horaires PVSyst (.CSV ou .TXT).  
+Seule la colonne **E_Grid** est utilisée (énergie injectée).
+
+**Analyse stockage (optionnelle)** :
+Permet d’activer une estimation simplifiée du potentiel de stockage (BESS).  
+Si les paramètres sont laissés vides, des valeurs par défaut sont utilisées.
+
+👉 Recommandation :
+- utiliser une année représentative (ex : année récente)
+- vérifier la cohérence entre le climat (PVSyst) et le marché choisi
+""",
+
+    "MARKET_ANALYSIS_COL_MONTH": "Mois",
+    "MARKET_ANALYSIS_COL_SEASON": "Saison",
+    "MARKET_ANALYSIS_COL_HOUR": "Heure",
+    "MARKET_ANALYSIS_COL_TIMESTAMP": "Horodatage",
+    "MARKET_ANALYSIS_COL_DATE": "Date",
+    "MARKET_ANALYSIS_COL_YEAR": "Année",
+    "MARKET_ANALYSIS_COL_DAY": "Jour",
+    "MARKET_ANALYSIS_COL_BZN": "Zone de marché",
+    "MARKET_ANALYSIS_COL_SOURCE": "Source",
+    "MARKET_ANALYSIS_COL_SOURCE_MODE": "Mode source",
+    "MARKET_ANALYSIS_COL_VARIANT": "Variante",
+    "MARKET_ANALYSIS_COL_METRIC": "Indicateur",
+    "MARKET_ANALYSIS_COL_VALUE": "Valeur",
+
+    "MARKET_ANALYSIS_COL_PRICE": "Prix (EUR/MWh)",
+    "MARKET_ANALYSIS_COL_PRICE_MEAN": "Prix moyen (EUR/MWh)",
+    "MARKET_ANALYSIS_COL_PRICE_MEDIAN": "Prix médian (EUR/MWh)",
+    "MARKET_ANALYSIS_COL_PRICE_MIN": "Prix min (EUR/MWh)",
+    "MARKET_ANALYSIS_COL_PRICE_MAX": "Prix max (EUR/MWh)",
+    "MARKET_ANALYSIS_COL_PRICE_STD": "Écart-type prix (EUR/MWh)",
+    "MARKET_ANALYSIS_COL_PRICE_P10": "Prix P10 (EUR/MWh)",
+    "MARKET_ANALYSIS_COL_PRICE_P25": "Prix P25 (EUR/MWh)",
+    "MARKET_ANALYSIS_COL_PRICE_P75": "Prix P75 (EUR/MWh)",
+    "MARKET_ANALYSIS_COL_PRICE_P90": "Prix P90 (EUR/MWh)",
+    "MARKET_ANALYSIS_COL_PRICE_CV": "Coeff. variation prix (%)",
+
+    "MARKET_ANALYSIS_COL_NEGATIVE_HOURS": "Heures négatives",
+    "MARKET_ANALYSIS_COL_NEGATIVE_DAYS": "Jours négatifs",
+    "MARKET_ANALYSIS_COL_NEGATIVE_HOUR_SHARE": "Part d'heures négatives (%)",
+    "MARKET_ANALYSIS_COL_N_HOURS": "Nombre d'heures",
+
+    "MARKET_ANALYSIS_COL_ENERGY_THEORETICAL": "Énergie théorique (MWh)",
+    "MARKET_ANALYSIS_COL_ENERGY_INJECTED": "Énergie injectée (MWh)",
+    "MARKET_ANALYSIS_COL_ENERGY_CURTAILED": "Énergie coupée (MWh)",
+    "MARKET_ANALYSIS_COL_MARKET_VALUE": "Valeur marché (EUR)",
+    "MARKET_ANALYSIS_COL_MARKET_VALUE_RAW": "Valeur marché brute (EUR)",
+    "MARKET_ANALYSIS_COL_NEGATIVE_HOURS_MARKET": "Heures négatives marché",
+    "MARKET_ANALYSIS_COL_NEGATIVE_HOURS_WITH_GEN": "Heures négatives avec production",
+    "MARKET_ANALYSIS_COL_DAYS_IN_PERIOD": "Nombre de jours",
+    "MARKET_ANALYSIS_COL_NEGATIVE_DAYS_MARKET": "Jours négatifs marché",
+    "MARKET_ANALYSIS_COL_NEGATIVE_DAYS_WITH_GEN": "Jours négatifs avec production",
+    "MARKET_ANALYSIS_COL_ENERGY_HIGH_PRICE": "Énergie sur heures chères (MWh)",
+    "MARKET_ANALYSIS_COL_CAPTURE_PRICE": "Prix capté moyen (EUR/MWh)",
+    "MARKET_ANALYSIS_COL_CAPTURE_RATE": "Indice de captation",
+    "MARKET_ANALYSIS_COL_CURTAILED_SHARE": "Part coupée (%)",
+    "MARKET_ANALYSIS_COL_HIGH_PRICE_SHARE": "Part énergie sur heures chères (%)",
+    "MARKET_ANALYSIS_COL_AVG_CURTAILED_PER_DAY": "Énergie coupée moyenne par jour (MWh)",
+    "MARKET_ANALYSIS_COL_AVG_CURTAILED_PER_IMPACTED_DAY": "Énergie coupée moyenne par jour impacté (MWh)",
+
+    "MARKET_ANALYSIS_COL_PV_MEAN": "Production moyenne (MWh)",
+    "MARKET_ANALYSIS_COL_PV_MEDIAN": "Production médiane (MWh)",
+    "MARKET_ANALYSIS_COL_PV_P25": "Production P25 (MWh)",
+    "MARKET_ANALYSIS_COL_PV_P75": "Production P75 (MWh)",
+    "MARKET_ANALYSIS_COL_PV_INJECTED_MEAN": "Injection moyenne (MWh)",
+    "MARKET_ANALYSIS_COL_PV_INJECTED_MEDIAN": "Injection médiane (MWh)",
+    "MARKET_ANALYSIS_COL_PV_CURTAILED_MEAN": "Énergie coupée moyenne (MWh)",
+
+    "MARKET_ANALYSIS_COL_EGRID": "Production théorique (MWh)",
+    "MARKET_ANALYSIS_COL_EGRID_INJECTED": "Énergie injectée (MWh)",
+    "MARKET_ANALYSIS_COL_EGRID_CURTAILED": "Énergie coupée (MWh)",
+    "MARKET_ANALYSIS_COL_IS_NEGATIVE": "Prix négatif",
+    "MARKET_ANALYSIS_COL_IS_POSITIVE_GEN": "Production positive",
+    "MARKET_ANALYSIS_COL_HAS_NEG_AND_GEN": "Prix négatif avec production",
+    "MARKET_ANALYSIS_COL_IS_HIGH_PRICE": "Heure chère",
+
+    "MARKET_ANALYSIS_COL_BESS_ENERGY_AVAILABLE": "Énergie stockable (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_CHARGED_SOURCE": "Énergie chargée depuis la source (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_DISCHARGED": "Énergie restituée (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_LOSSES": "Pertes totales (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_ADDED_VALUE": "Valeur ajoutée BESS (EUR)",
+    "MARKET_ANALYSIS_COL_BESS_MAX_SOC": "SOC max (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_CHARGE_HOURS": "Heures de charge",
+    "MARKET_ANALYSIS_COL_BESS_DISCHARGE_HOURS": "Heures de décharge",
+    "MARKET_ANALYSIS_COL_BESS_RECOVERY_RATIO": "Taux de récupération",
+    "MARKET_ANALYSIS_COL_BESS_SOC_BEFORE": "SOC avant (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_SOC_AFTER": "SOC après (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_CHARGE_SOURCE": "Charge depuis source (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_CHARGE_BATTERY": "Charge en batterie (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_DISCHARGE_BATTERY": "Décharge batterie (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_DISCHARGE_GRID": "Décharge réseau (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_CHARGE_LOSSES": "Pertes de charge (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_DISCHARGE_LOSSES": "Pertes de décharge (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_TOTAL_LOSSES": "Pertes totales BESS (MWh)",
+    "MARKET_ANALYSIS_COL_BESS_MARKET_VALUE": "Valeur BESS (EUR)",
+    "MARKET_ANALYSIS_COL_BESS_IS_CHARGING": "En charge",
+    "MARKET_ANALYSIS_COL_BESS_IS_DISCHARGING": "En décharge",
+    "MARKET_ANALYSIS_COL_MARKET_VALUE_WITH_BESS": "Valeur marché avec BESS (EUR)",
+
+    "MARKET_ANALYSIS_SEASON_WINTER": "Hiver",
+    "MARKET_ANALYSIS_SEASON_SPRING": "Printemps",
+    "MARKET_ANALYSIS_SEASON_SUMMER": "Été",
+    "MARKET_ANALYSIS_SEASON_AUTUMN": "Automne",
 
 }
