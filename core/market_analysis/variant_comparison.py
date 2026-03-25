@@ -119,42 +119,75 @@ def _compare_grouped_tables(
     return merged
 
 
-def _generate_conclusions(annual_a: Dict[str, Any], annual_b: Dict[str, Any]) -> List[str]:
-    conclusions: List[str] = []
+def _generate_conclusions(
+    annual_a: Dict[str, Any],
+    annual_b: Dict[str, Any],
+    *,
+    label_a: str,
+    label_b: str,
+) -> List[Dict[str, Any]]:
+    conclusions: List[Dict[str, Any]] = []
 
     a_value = annual_a.get("market_value_eur")
     b_value = annual_b.get("market_value_eur")
     if a_value is not None and b_value is not None:
         if b_value > a_value:
-            conclusions.append("La variante B crée plus de valeur marché que la variante A.")
+            conclusions.append({
+                "key": "MARKET_ANALYSIS_COMPARE_CONCLUSION_BETTER_MARKET_VALUE",
+                "params": {"better": label_b, "other": label_a},
+            })
         elif b_value < a_value:
-            conclusions.append("La variante A crée plus de valeur marché que la variante B.")
+            conclusions.append({
+                "key": "MARKET_ANALYSIS_COMPARE_CONCLUSION_BETTER_MARKET_VALUE",
+                "params": {"better": label_a, "other": label_b},
+            })
         else:
-            conclusions.append("Les deux variantes créent une valeur marché équivalente.")
+            conclusions.append({
+                "key": "MARKET_ANALYSIS_COMPARE_CONCLUSION_EQUAL_MARKET_VALUE",
+                "params": {"label_a": label_a, "label_b": label_b},
+            })
 
     a_cap = annual_a.get("capture_price_eur_per_mwh")
     b_cap = annual_b.get("capture_price_eur_per_mwh")
     if a_cap is not None and b_cap is not None:
         if b_cap > a_cap:
-            conclusions.append("La variante B présente un meilleur capture price.")
+            conclusions.append({
+                "key": "MARKET_ANALYSIS_COMPARE_CONCLUSION_BETTER_CAPTURE_PRICE",
+                "params": {"better": label_b, "other": label_a},
+            })
         elif b_cap < a_cap:
-            conclusions.append("La variante A présente un meilleur capture price.")
+            conclusions.append({
+                "key": "MARKET_ANALYSIS_COMPARE_CONCLUSION_BETTER_CAPTURE_PRICE",
+                "params": {"better": label_a, "other": label_b},
+            })
 
     a_neg = annual_a.get("energy_curtailed_negative_mwh")
     b_neg = annual_b.get("energy_curtailed_negative_mwh")
     if a_neg is not None and b_neg is not None:
         if b_neg < a_neg:
-            conclusions.append("La variante B réduit l’exposition aux prix négatifs.")
+            conclusions.append({
+                "key": "MARKET_ANALYSIS_COMPARE_CONCLUSION_BETTER_NEGATIVE_EXPOSURE",
+                "params": {"better": label_b, "other": label_a},
+            })
         elif b_neg > a_neg:
-            conclusions.append("La variante A réduit l’exposition aux prix négatifs.")
+            conclusions.append({
+                "key": "MARKET_ANALYSIS_COMPARE_CONCLUSION_BETTER_NEGATIVE_EXPOSURE",
+                "params": {"better": label_a, "other": label_b},
+            })
 
     a_hp = annual_a.get("high_price_energy_share_pct")
     b_hp = annual_b.get("high_price_energy_share_pct")
     if a_hp is not None and b_hp is not None:
         if b_hp > a_hp:
-            conclusions.append("La variante B produit davantage sur les heures chères.")
+            conclusions.append({
+                "key": "MARKET_ANALYSIS_COMPARE_CONCLUSION_BETTER_HIGH_PRICE_ALIGNMENT",
+                "params": {"better": label_b, "other": label_a},
+            })
         elif b_hp < a_hp:
-            conclusions.append("La variante A produit davantage sur les heures chères.")
+            conclusions.append({
+                "key": "MARKET_ANALYSIS_COMPARE_CONCLUSION_BETTER_HIGH_PRICE_ALIGNMENT",
+                "params": {"better": label_a, "other": label_b},
+            })
 
     a_energy = annual_a.get("energy_theoretical_mwh")
     b_energy = annual_b.get("energy_theoretical_mwh")
@@ -164,19 +197,23 @@ def _generate_conclusions(annual_a: Dict[str, Any], annual_b: Dict[str, Any]) ->
         if energy_delta_pct is not None and value_delta_pct is not None:
             if b_energy > a_energy and b_value > a_value:
                 if value_delta_pct >= energy_delta_pct:
-                    conclusions.append(
-                        "Le gain énergétique de la variante B se traduit pleinement, voire davantage, en gain de valeur marché."
-                    )
+                    conclusions.append({
+                        "key": "MARKET_ANALYSIS_COMPARE_CONCLUSION_ENERGY_TO_VALUE_FULL",
+                        "params": {"better": label_b, "other": label_a},
+                    })
                 else:
-                    conclusions.append(
-                        "Le gain énergétique de la variante B ne se traduit que partiellement en gain de valeur marché."
-                    )
+                    conclusions.append({
+                        "key": "MARKET_ANALYSIS_COMPARE_CONCLUSION_ENERGY_TO_VALUE_PARTIAL",
+                        "params": {"better": label_b, "other": label_a},
+                    })
 
     if not conclusions:
-        conclusions.append("Aucune conclusion comparative forte n’a pu être dégagée.")
+        conclusions.append({
+            "key": "MARKET_ANALYSIS_COMPARE_CONCLUSION_NONE",
+            "params": {},
+        })
 
     return conclusions
-
 
 # =============================================================================
 # Main comparison
@@ -285,7 +322,12 @@ def compare_market_pv_variants(
         )
     )
 
-    conclusions = _generate_conclusions(annual_a, annual_b)
+    conclusions = _generate_conclusions(
+        annual_a,
+        annual_b,
+        label_a=label_a,
+        label_b=label_b,
+    )
 
     meta = {
         "schema_version": SCHEMA_VERSION,

@@ -1447,4 +1447,16 @@ Si les paramètres sont laissés vides, des valeurs par défaut sont utilisées.
     "MARKET_ANALYSIS_SEASON_SUMMER": "Été",
     "MARKET_ANALYSIS_SEASON_AUTUMN": "Automne",
 
+    "MARKET_ANALYSIS_COMPARE_CONCLUSION_BETTER_MARKET_VALUE": "La variante {better} crée plus de valeur marché que la variante {other}.",
+    "MARKET_ANALYSIS_COMPARE_CONCLUSION_EQUAL_MARKET_VALUE": "{label_a} et {label_b} créent une valeur marché équivalente.",
+
+    "MARKET_ANALYSIS_COMPARE_CONCLUSION_BETTER_CAPTURE_PRICE": "La variante {better} présente un meilleur prix capté moyen que la variante {other}.",
+    "MARKET_ANALYSIS_COMPARE_CONCLUSION_BETTER_NEGATIVE_EXPOSURE": "La variante {better} réduit davantage l’exposition aux prix négatifs que la variante {other}.",
+    "MARKET_ANALYSIS_COMPARE_CONCLUSION_BETTER_HIGH_PRICE_ALIGNMENT": "La variante {better} produit davantage sur les heures chères que la variante {other}.",
+
+    "MARKET_ANALYSIS_COMPARE_CONCLUSION_ENERGY_TO_VALUE_FULL": "Le gain énergétique de la variante {better} se traduit pleinement, voire davantage, en gain de valeur marché par rapport à la variante {other}.",
+    "MARKET_ANALYSIS_COMPARE_CONCLUSION_ENERGY_TO_VALUE_PARTIAL": "Le gain énergétique de la variante {better} ne se traduit que partiellement en gain de valeur marché par rapport à la variante {other}.",
+
+    "MARKET_ANALYSIS_COMPARE_CONCLUSION_NONE": "Aucune conclusion comparative forte n’a pu être dégagée.",
+
 }

@@ -891,8 +891,8 @@ with tab_main:
         with concl2:
             _help_popover("MARKET_ANALYSIS_HELP_TITLE", "MARKET_ANALYSIS_HELP_CAPTURE_RATE")
 
-        for txt in comp.conclusions:
-            st.markdown(f"- {txt}")
+        for item in comp.conclusions:
+            st.markdown(f"- {t(item['key']).format(**item['params'])}")
 
         st.markdown(f"### {t('MARKET_ANALYSIS_MAIN_CHARTS_TITLE')}")
         fig1 = plot_market_heatmap(result.market_result.data_analysis)
@@ -1057,14 +1057,18 @@ with tab_detail:
     if result.analysis_result_b is not None and result.comparison_result is not None:
         with st.expander(t("MARKET_ANALYSIS_COMPARE_TITLE"), expanded=True):
             st.write(f"**{t('MARKET_ANALYSIS_COMPARE_ANNUAL')}**")
-            st.dataframe(pd.DataFrame(_styled_df(result.comparison_result.annual_comparison["metrics_table"])), width="stretch")
+            annual_comp_df = pd.DataFrame(result.comparison_result.annual_comparison["metrics_table"])
+            st.dataframe(_styled_df(annual_comp_df), width="stretch")
+
             st.write(f"**{t('MARKET_ANALYSIS_COMPARE_MONTHLY')}**")
             st.dataframe(_styled_df(result.comparison_result.monthly_comparison), width="stretch")
+
             st.write(f"**{t('MARKET_ANALYSIS_COMPARE_SEASONAL')}**")
             st.dataframe(_styled_df(result.comparison_result.seasonal_comparison), width="stretch")
+
             st.write(f"**{t('MARKET_ANALYSIS_COMPARE_CONCLUSIONS')}**")
-            for txt in result.comparison_result.conclusions:
-                st.write(f"- {txt}")
+            for item in result.comparison_result.conclusions:
+                st.write(f"- {t(item['key']).format(**item['params'])}")
 
     if result.bess_result_a is not None:
         with st.expander(t("MARKET_ANALYSIS_BESS_VARIANT_TITLE").format(label=result.meta["variant_label_a"]), expanded=False):
