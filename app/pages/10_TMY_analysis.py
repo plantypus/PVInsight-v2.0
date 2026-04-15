@@ -9,17 +9,17 @@ import pandas as pd
 import streamlit as st
 
 from app.bootstrap import configure_page, bootstrap
-from ui.tool_layout import tool_header, section
+from config.tools_registry import get_tool_icon
+from ui.tool_layout import tool_header_from_registry, section
 from ui.tool_state import init_tool_state, get, set_
 from ui.i18n import t
 
 from core.meteo.tmy_analysis import analyze_tmy_source
 
+TOOL_ID = "tmy_analysis"
 
 # NOTE: page_title should stay static (not translated) for Streamlit config behavior.
-configure_page(page_title="TMY Analysis", page_icon="*", layout="wide")
-
-TOOL_ID = "tmy_analysis"
+configure_page(page_title="TMY Analysis", page_icon=get_tool_icon(TOOL_ID, "🌤️"), layout="wide")
 
 # Bootstrap global (state + css) + paths
 paths = bootstrap(render_sidebar_ui=True)
@@ -37,8 +37,8 @@ init_tool_state(
     },
 )
 
-# Header standard
-tool_header(icon="TMY", title_key="TOOL_TMY_ANALYSIS_TITLE", desc_key="TOOL_TMY_ANALYSIS_DESC", badge="NEW")
+# Header standard (from registry)
+tool_header_from_registry(TOOL_ID)
 
 def _download_button_from_bytes(label: str, data: bytes, file_name: str, mime: str) -> None:
     if not data:

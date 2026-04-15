@@ -13,7 +13,8 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from app.bootstrap import configure_page, bootstrap
-from ui.tool_layout import tool_header, section
+from config.tools_registry import get_tool_icon
+from ui.tool_layout import tool_header_from_registry, section
 from ui.tool_state import init_tool_state, get, set_
 from ui.i18n import t
 
@@ -23,10 +24,9 @@ from core.production.hourly_export_pdf import export_pdf
 
 from utils import format_number
 
-
-configure_page(page_title="Hourly Results Analysis", page_icon="*", layout="wide")
-
 TOOL_ID = "hourly_results_analysis"
+
+configure_page(page_title="Hourly Results Analysis", page_icon=get_tool_icon(TOOL_ID, "📈"), layout="wide")
 
 paths = bootstrap(render_sidebar_ui=True)
 
@@ -45,12 +45,7 @@ init_tool_state(
     },
 )
 
-tool_header(
-    icon="HR",
-    title_key="TOOL_HOURLY_RESULTS_TITLE",
-    desc_key="TOOL_HOURLY_RESULTS_DESC",
-    badge="NEW",
-)
+tool_header_from_registry(TOOL_ID)
 
 
 @dataclass

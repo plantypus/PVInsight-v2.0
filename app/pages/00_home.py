@@ -10,7 +10,7 @@ from ui.i18n import t
 
 
 # page_title should stay static (not translated) for Streamlit config behavior.
-configure_page(page_title="Home", page_icon="*", layout="wide")
+configure_page(page_title="Home", page_icon="🏠", layout="wide")
 
 # Global bootstrap (state + css) + paths
 paths = bootstrap(render_sidebar_ui=True)

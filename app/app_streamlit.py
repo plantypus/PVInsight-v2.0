@@ -21,13 +21,13 @@ from config.tools_registry import TOOLS  # noqa: E402
 from ui.i18n import t  # noqa: E402
 
 # page_title must stay static (not translated) for Streamlit page config behavior.
-configure_page(page_title="PVInsight", page_icon="*", layout="wide")
+configure_page(page_title="PVInsight", page_icon="☀️", layout="wide")
 
 # Global bootstrap (state + css).
 bootstrap(render_sidebar_ui=False)
 
 pages = [
-    st.Page(HOME_PAGE, title=t("PAGE_HOME_TITLE")),
+    st.Page(HOME_PAGE, title=t("PAGE_HOME_TITLE"), icon="🏠"),
 ]
 
 # Tool pages (flat, no groups)
@@ -37,6 +37,7 @@ for tool in TOOLS:
             st.Page(
                 tool.page,
                 title=t(tool.title_key),
+                icon=tool.icon,
             )
         )
 

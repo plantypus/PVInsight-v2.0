@@ -10,17 +10,18 @@ import pandas as pd
 import streamlit as st
 
 from app.bootstrap import configure_page, bootstrap
-from ui.tool_layout import tool_header, section
+from config.tools_registry import get_tool_icon
+from ui.tool_layout import tool_header_from_registry, section
 from ui.tool_state import init_tool_state, get, set_
 from ui.i18n import t
 
 from core.module.compare_pan_to_ds import compare_pan_to_ds
 from core.module.iam_plot import extract_iam_profile
 
-# NOTE: page_title should stay static (not translated) for Streamlit config behavior.
-configure_page(page_title="Compare PAN vs Datasheet", page_icon="*", layout="wide")
-
 TOOL_ID = "compare_pan_to_ds"
+
+# NOTE: page_title should stay static (not translated) for Streamlit config behavior.
+configure_page(page_title="Compare PAN vs Datasheet", page_icon=get_tool_icon(TOOL_ID, "🧾"), layout="wide")
 
 paths = bootstrap(render_sidebar_ui=True)
 
@@ -34,7 +35,7 @@ init_tool_state(
     },
 )
 
-tool_header(icon="PAN", title_key="COMPARE_PAN_DS_TITLE", desc_key="COMPARE_PAN_DS_DESC", badge="NEW")
+tool_header_from_registry(TOOL_ID)
 
 
 DS_MFR = [
