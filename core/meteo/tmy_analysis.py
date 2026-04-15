@@ -196,10 +196,7 @@ def generate_pdf_onepage(
     # --- File info ---
     ax0 = fig.add_axes([0.06, 0.87, 0.88, 0.075])
     ax0.axis("off")
-    header = (
-        f"File: {file_label}\n"
-        f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-    )
+    header = f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     ax0.text(0.0, 0.6, header, ha="left", va="center", fontsize=10, family="monospace")
 
     # --- Data quality ---
@@ -311,24 +308,24 @@ def analyze_tmy_source(
     ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S") if add_timestamp_to_outputs else ""
     suffix = f"__{ts}" if ts else ""
 
-    pdf_path = run.reports_dir / f"{Path(source_name).stem}__TMY_Report{suffix}.pdf"
+    pdf_path = run.reports_dir / f"tmy_report{suffix}.pdf"
     generate_pdf_onepage(
         dataset.df,
         stats,
         energy,
         dataset.units_by_col,
         dataset.quality,
-        file_label=dataset.source_name,
+        file_label="Confidential source",
         output_pdf=pdf_path,
         source_kind=reader_name.upper(),
     )
 
-    log_path = run.logs_dir / f"{Path(source_name).stem}__TMY_Analysis{suffix}.log"
+    log_path = run.logs_dir / f"tmy_analysis{suffix}.log"
     write_run_log(
         log_path=log_path,
         tool_name=tool_name,
-        sources=[source_name],
-        header_info=dataset.header_info,
+        sources=["confidential_input"],
+        header_info=None,
         units_by_col=dataset.units_by_col,
         time_step_minutes=dataset.time_step_minutes,
         quality=dataset.quality,
@@ -341,7 +338,7 @@ def analyze_tmy_source(
         units_by_col=dataset.units_by_col,
         time_step_minutes=dataset.time_step_minutes,
         quality=dataset.quality,
-        source_name=dataset.source_name,
+        source_name="confidential_input",
         warnings=dataset_warnings,
     )
 

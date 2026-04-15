@@ -568,12 +568,12 @@ def compare_tmy_sources(
 
     # --- PDF
     ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    pdf_path = run.reports_dir / f"TMY_Comparison__{Path(name_a).stem}__VS__{Path(name_b).stem}__{ts}.pdf"
+    pdf_path = run.reports_dir / f"tmy_comparison__{ts}.pdf"
     generate_compare_pdf_onepage(
         df_a=df_a_aligned,
         df_b=df_b_aligned,
-        label_a=ds_a.source_name,
-        label_b=ds_b.source_name,
+        label_a="Dataset A",
+        label_b="Dataset B",
         reader_a=reader_a,
         reader_b=reader_b,
         step_a_min=int(ds_a_native.time_step_minutes),
@@ -591,16 +591,14 @@ def compare_tmy_sources(
     )
 
     # --- Log
-    log_path = run.logs_dir / f"TMY_Compare__{Path(name_a).stem}__VS__{Path(name_b).stem}__{ts}.log"
+    log_path = run.logs_dir / f"tmy_compare__{ts}.log"
     write_run_log(
         log_path=log_path,
         tool_name=tool_name,
-        sources=[name_a, name_b],
+        sources=["confidential_input_a", "confidential_input_b"],
         header_info={
             "reader_a": reader_a,
             "reader_b": reader_b,
-            "file_a": ds_a.source_name,
-            "file_b": ds_b.source_name,
             "step_a_min": int(ds_a.time_step_minutes),
             "step_b_min": int(ds_b.time_step_minutes),
             "used_step_min": force_hourly_step_minutes,
@@ -623,7 +621,7 @@ def compare_tmy_sources(
         units_by_col=ds_a.units_by_col,
         time_step_minutes=ds_a.time_step_minutes,
         quality=ds_a.quality,
-        source_name=ds_a.source_name,
+        source_name="Dataset A",
         warnings=warnings_all,
     )
     ds_b_out = TMYDataset(
@@ -632,7 +630,7 @@ def compare_tmy_sources(
         units_by_col=ds_b.units_by_col,
         time_step_minutes=ds_b.time_step_minutes,
         quality=ds_b.quality,
-        source_name=ds_b.source_name,
+        source_name="Dataset B",
         warnings=warnings_all,
     )
 

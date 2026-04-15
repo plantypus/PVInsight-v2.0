@@ -47,10 +47,7 @@ def _export_summary(writer, context: AnalysisContext, gp_res: dict, thr_res: dic
     df = pd.DataFrame({
         "Key": [
             "PVSyst version",
-            "Input file",
             "Simulation date",
-            "Project",
-            "Variant",
             "Threshold column",
             "Threshold value",
             "Night disconnection",
@@ -70,10 +67,7 @@ def _export_summary(writer, context: AnalysisContext, gp_res: dict, thr_res: dic
         ],
         "Value": [
             context.general_info.get("PVSyst_version", ""),
-            context.input_file.name,
             context.general_info.get("Simulation_date", ""),
-            context.general_info.get("Project_name", ""),
-            context.general_info.get("Variant_name", ""),
             thr.get("threshold_column", ""),
             format_number(thr.get("threshold_value", 0.0), 2),
             str(bool(thr.get("night_disconnection", False))),

@@ -27,15 +27,14 @@ def write_run_log(
     warnings: Optional[List[str]] = None,
 ) -> None:
     log_path.parent.mkdir(parents=True, exist_ok=True)
+    redacted_keywords = ("file", "project", "author", "engineer", "variant", "name")
 
     lines: List[str] = []
     lines.append("=" * 70)
     lines.append(f"{tool_name} — PVInsight")
     lines.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     lines.append("=" * 70)
-    lines.append("Sources:")
-    for s in sources:
-        lines.append(f"  - {s}")
+    lines.append("Sources: confidential (redacted)")
     lines.append("")
 
     if time_step_minutes is not None:
@@ -43,10 +42,17 @@ def write_run_log(
         lines.append("")
 
     if header_info:
-        lines.append("Header info:")
+        safe_items = []
         for k, v in header_info.items():
-            lines.append(f"  {k}: {v}")
-        lines.append("")
+            key = str(k)
+            if any(token in key.lower() for token in redacted_keywords):
+                continue
+            safe_items.append((key, v))
+        if safe_items:
+            lines.append("Header info:")
+            for k, v in safe_items:
+                lines.append(f"  {k}: {v}")
+            lines.append("")
 
     if units_by_col:
         lines.append("Units by column:")

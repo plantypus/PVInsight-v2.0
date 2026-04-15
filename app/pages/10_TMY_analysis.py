@@ -1,7 +1,8 @@
-# app/pages/10_TMY_analysis.py
+﻿# app/pages/10_TMY_analysis.py
 from __future__ import annotations
 
 from pathlib import Path
+import tempfile
 
 import altair as alt
 import pandas as pd
@@ -15,41 +16,38 @@ from ui.i18n import t
 from core.meteo.tmy_analysis import analyze_tmy_source
 
 
-# NOTE: page_title doit rester statique (pas t(...)) pour éviter le piège Streamlit
-configure_page(page_title="TMY Analysis", page_icon="🌤️", layout="wide")
+# NOTE: page_title doit rester statique (pas t(...)) pour Ã©viter le piÃ¨ge Streamlit
+configure_page(page_title="TMY Analysis", page_icon="ðŸŒ¤ï¸", layout="wide")
 
 TOOL_ID = "tmy_analysis"
 
 # Bootstrap global (state + css) + paths
 paths = bootstrap(render_sidebar_ui=True)
-OUTPUTS_DIR = paths.outputs
 
 # Defaults (par outil)
 init_tool_state(
     TOOL_ID,
     defaults={
-        "target_irradiance_unit": "W/m²",
-        "energy_unit": "kWh/m²",
+        "target_irradiance_unit": "W/mÂ²",
+        "energy_unit": "kWh/mÂ²",
         "resample_hourly_if_subhourly": True,
         "add_timestamp_to_outputs": True,
-        "last_pdf": "",
-        "last_log": "",
+        "last_pdf_bytes": b"",
+        "last_log_bytes": b"",
     },
 )
 
 # Header standard
-tool_header(icon="🌤️", title_key="TOOL_TMY_ANALYSIS_TITLE", desc_key="TOOL_TMY_ANALYSIS_DESC", badge="NEW")
+tool_header(icon="ðŸŒ¤ï¸", title_key="TOOL_TMY_ANALYSIS_TITLE", desc_key="TOOL_TMY_ANALYSIS_DESC", badge="NEW")
 
-OUTPUTS_DIR = OUTPUTS_DIR = paths.outputs
-
-def _download_button_from_path(label: str, path: Path, mime: str) -> None:
-    if not path.exists():
-        st.warning(f"{label}: {path}")
+def _download_button_from_bytes(label: str, data: bytes, file_name: str, mime: str) -> None:
+    if not data:
+        st.info(t("TMY_NO_OUTPUTS_YET"))
         return
     st.download_button(
         label=label,
-        data=path.read_bytes(),
-        file_name=path.name,
+        data=data,
+        file_name=file_name,
         mime=mime,
         width="stretch",
     )
@@ -86,7 +84,7 @@ def _interactive_histogram(df: pd.DataFrame, col: str, x_title: str, bin_step: i
 
 
 # 1) Inputs
-with section("SECTION_INPUTS", icon="🧾"):
+with section("SECTION_INPUTS", icon="ðŸ§¾"):
     uploaded = st.file_uploader(
         t("TMY_UPLOAD_LABEL"),
         type=["csv", "txt"],
@@ -97,16 +95,16 @@ with section("SECTION_INPUTS", icon="🧾"):
     with c1:
         target_irradiance_unit = st.selectbox(
             t("TMY_TARGET_IRR_UNIT"),
-            options=["W/m²", "kW/m²"],
-            index=0 if get(TOOL_ID, "target_irradiance_unit", "kW/m²") == "W/m²" else 1,
+            options=["W/mÂ²", "kW/mÂ²"],
+            index=0 if get(TOOL_ID, "target_irradiance_unit", "kW/mÂ²") == "W/mÂ²" else 1,
         )
         set_(TOOL_ID, "target_irradiance_unit", target_irradiance_unit)
 
     with c2:
         energy_unit = st.selectbox(
             t("TMY_ENERGY_UNIT"),
-            options=["Wh/m²", "kWh/m²"],
-            index=0 if get(TOOL_ID, "energy_unit", "kWh/m²") == "Wh/m²" else 1,
+            options=["Wh/mÂ²", "kWh/mÂ²"],
+            index=0 if get(TOOL_ID, "energy_unit", "kWh/mÂ²") == "Wh/mÂ²" else 1,
         )
         set_(TOOL_ID, "energy_unit", energy_unit)
 
@@ -124,7 +122,7 @@ with section("SECTION_INPUTS", icon="🧾"):
 
 
 # 2) Run
-with section("SECTION_RUN", icon="▶️"):
+with section("SECTION_RUN", icon="â–¶ï¸"):
     st.markdown('<div class="pv-run">', unsafe_allow_html=True)
     run_btn = st.button(
         t("TMY_RUN_ANALYSIS"),
@@ -135,28 +133,30 @@ with section("SECTION_RUN", icon="▶️"):
 
 
 # 3) Results
-with section("SECTION_RESULTS", icon="📊"):
+with section("SECTION_RESULTS", icon="ðŸ“Š"):
     if run_btn:
         if uploaded is None:
             st.warning(t("TMY_UPLOAD_LABEL"))
         else:
             with st.spinner(t("TMY_RUNNING")):
-                result = analyze_tmy_source(
-                    source=uploaded.getvalue(),
-                    source_name=uploaded.name,
-                    outputs_dir=OUTPUTS_DIR,
-                    output_mode="flat",
-                    target_irradiance_unit=get(TOOL_ID, "target_irradiance_unit", "W/m²"),
-                    energy_unit=get(TOOL_ID, "energy_unit", "kWh/m²"),
-                    resample_hourly_if_subhourly=get(TOOL_ID, "resample_hourly_if_subhourly", True),
-                    add_timestamp_to_outputs=get(TOOL_ID, "add_timestamp_to_outputs", True),
-                )
-
+                with tempfile.TemporaryDirectory(prefix="pvinsight_tmy_") as tmpdir:
+                    result = analyze_tmy_source(
+                        source=uploaded.getvalue(),
+                        source_name="uploaded_tmy.csv",
+                        outputs_dir=Path(tmpdir),
+                        output_mode="flat",
+                        target_irradiance_unit=get(TOOL_ID, "target_irradiance_unit", "W/mÂ²"),
+                        energy_unit=get(TOOL_ID, "energy_unit", "kWh/mÂ²"),
+                        resample_hourly_if_subhourly=get(TOOL_ID, "resample_hourly_if_subhourly", True),
+                        add_timestamp_to_outputs=get(TOOL_ID, "add_timestamp_to_outputs", True),
+                    )
+                    pdf_bytes = result.report_pdf.read_bytes() if result.report_pdf.exists() else b""
+                    log_bytes = result.log_path.read_bytes() if result.log_path.exists() else b""
             st.success(t("TMY_DONE"))
 
             # store for Export (PDF/log only)
-            set_(TOOL_ID, "last_pdf", str(result.report_pdf))
-            set_(TOOL_ID, "last_log", str(result.log_path))
+            set_(TOOL_ID, "last_pdf_bytes", pdf_bytes)
+            set_(TOOL_ID, "last_log_bytes", log_bytes)
 
             df = result.dataset.df.copy()
             df["datetime"] = pd.to_datetime(df.get("datetime"), errors="coerce")
@@ -166,7 +166,6 @@ with section("SECTION_RESULTS", icon="📊"):
             st.subheader(t("TMY_SUMMARY"))
             st.write(
                 {
-                    "source_name": result.dataset.source_name,
                     "time_step_minutes": result.dataset.time_step_minutes,
                     "rows": result.dataset.quality.n_rows,
                     "period_start": str(result.dataset.quality.start),
@@ -266,21 +265,30 @@ with section("SECTION_RESULTS", icon="📊"):
                 for w in result.dataset.warnings:
                     st.warning(w)
 
-            st.caption(f"outputs: {result.run_dir}")
-
     else:
         st.info(t("TMY_NO_OUTPUTS_YET"))
 
 
 # 4) Export (PDF + log only)
-with section("SECTION_EXPORT", icon="📤"):
-    pdf_s = get(TOOL_ID, "last_pdf", "")
-    log_s = get(TOOL_ID, "last_log", "")
+with section("SECTION_EXPORT", icon="ðŸ“¤"):
+    pdf_b = get(TOOL_ID, "last_pdf_bytes", b"") or b""
+    log_b = get(TOOL_ID, "last_log_bytes", b"") or b""
 
-    if not pdf_s and not log_s:
+    if not pdf_b and not log_b:
         st.info(t("TMY_NO_OUTPUTS_YET"))
     else:
-        if pdf_s:
-            _download_button_from_path(t("TMY_DOWNLOAD_PDF"), Path(pdf_s), mime="application/pdf")
-        if log_s:
-            _download_button_from_path(t("TMY_DOWNLOAD_LOG"), Path(log_s), mime="text/plain")
+        if pdf_b:
+            _download_button_from_bytes(
+                t("TMY_DOWNLOAD_PDF"),
+                pdf_b,
+                file_name="tmy_report.pdf",
+                mime="application/pdf",
+            )
+        if log_b:
+            _download_button_from_bytes(
+                t("TMY_DOWNLOAD_LOG"),
+                log_b,
+                file_name="tmy_analysis.log",
+                mime="text/plain",
+            )
+

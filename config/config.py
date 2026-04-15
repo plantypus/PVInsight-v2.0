@@ -2,7 +2,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 
 # =============================================================================
@@ -18,8 +18,8 @@ LOGO_ICO = ASSETS_DIR / "logo.ico"
 # =============================================================================
 # App identity
 # =============================================================================
-APP_NAME = "PVInsight — PV Data Analyzer"
-APP_VERSION = "2.4"
+APP_NAME = "PVInsight - PV Data Analyzer"
+APP_VERSION = "2.5"
 
 
 # =============================================================================
@@ -37,6 +37,7 @@ REPORTS_SUBDIR = "reports"
 FIGURES_SUBDIR = "figures"
 LOGS_SUBDIR = "logs"
 
+
 # =============================================================================
 # Tools registry (HOME buttons + descriptions)
 # =============================================================================
@@ -49,5 +50,3 @@ class ToolCard:
     desc_key: str              # i18n key
     enabled: bool = True
     badge: Optional[str] = None
-
-

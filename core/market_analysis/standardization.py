@@ -600,14 +600,9 @@ def _build_pv_meta(
         "schema_version": SCHEMA_VERSION_PV,
         "source": "pvsyst_hourly_results",
         "source_mode": source_name,
-        "variant_label": variant_label or general_info.get("Variant_name", ""),
+        "variant_label": variant_label or "Variant",
         "pvsyst_version": general_info.get("PVSyst_version", ""),
         "simulation_date": general_info.get("Simulation_date", ""),
-        "project_file": general_info.get("Project_file", ""),
-        "project_code": general_info.get("Project_code", ""),
-        "site_name": general_info.get("Site_name", ""),
-        "meteo_name": general_info.get("Meteo_name", ""),
-        "variant_name": general_info.get("Variant_name", ""),
         "units_map": units_map,
         "backend_energy_unit": BACKEND_ENERGY_UNIT,
         "e_grid_unit_raw": e_grid_unit_raw,
@@ -660,7 +655,7 @@ def standardize_pvsyst_hourly_from_bytes(
     tmp["timestamp"] = pd.to_datetime(tmp["timestamp"], errors="coerce")
     tmp = tmp.dropna(subset=["timestamp"]).copy()
 
-    tmp["variant_label"] = variant_label or general_info.get("Variant_name", "")
+    tmp["variant_label"] = variant_label or "Variant"
     tmp["source"] = "pvsyst_hourly_results"
 
     if tmp.empty:

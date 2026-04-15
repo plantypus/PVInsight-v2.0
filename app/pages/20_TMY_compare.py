@@ -1,7 +1,8 @@
-# app/pages/20_TMY_compare.py
+﻿# app/pages/20_TMY_compare.py
 from __future__ import annotations
 
 from pathlib import Path
+import tempfile
 
 import altair as alt
 import pandas as pd
@@ -15,42 +16,41 @@ from ui.i18n import t
 from core.meteo.tmy_compare import compare_tmy_sources
 
 
-# NOTE: page_title doit rester statique (pas t(...)) pour éviter le piège Streamlit
-configure_page(page_title="TMY Compare", page_icon="⚖️", layout="wide")
+# NOTE: page_title doit rester statique (pas t(...)) pour Ã©viter le piÃ¨ge Streamlit
+configure_page(page_title="TMY Compare", page_icon="âš–ï¸", layout="wide")
 
 TOOL_ID = "tmy_compare"
 
 # Bootstrap global (state + css) + paths
 paths = bootstrap(render_sidebar_ui=True)
-OUTPUTS_DIR = paths.outputs
 
 # Defaults (par outil)
 init_tool_state(
     TOOL_ID,
     defaults={
-        "target_irradiance_unit": "W/m²",
-        "energy_unit": "kWh/m²",
+        "target_irradiance_unit": "W/mÂ²",
+        "energy_unit": "kWh/mÂ²",
         "resample_hourly_if_subhourly": True,
         "threshold_mean_pct": 5.0,
-        "last_pdf": "",
+        "last_pdf_bytes": b"",
     },
 )
 
 # Header standard
-tool_header(icon="⚖️", title_key="TOOL_TMY_COMPARE_TITLE", desc_key="TOOL_TMY_COMPARE_DESC", badge="NEW")
+tool_header(icon="âš–ï¸", title_key="TOOL_TMY_COMPARE_TITLE", desc_key="TOOL_TMY_COMPARE_DESC", badge="NEW")
 
 
 # -----------------------------------------------------------------------------
 # Downloads
 # -----------------------------------------------------------------------------
-def _download_button_from_path(label: str, path: Path, mime: str) -> None:
-    if not path.exists():
-        st.warning(f"{label}: {path}")
+def _download_button_from_bytes(label: str, data: bytes, file_name: str, mime: str) -> None:
+    if not data:
+        st.info(t("TMY_COMPARE_NO_OUTPUTS_YET"))
         return
     st.download_button(
         label=label,
-        data=path.read_bytes(),
-        file_name=path.name,
+        data=data,
+        file_name=file_name,
         mime=mime,
         width="stretch",
     )
@@ -142,7 +142,7 @@ def _build_long_series(df_a: pd.DataFrame, df_b: pd.DataFrame, var: str) -> tupl
 # =============================================================================
 # 1) Inputs
 # =============================================================================
-with section("SECTION_INPUTS", icon="🧾"):
+with section("SECTION_INPUTS", icon="ðŸ§¾"):
     cA, cB = st.columns(2)
     with cA:
         uploaded_a = st.file_uploader(
@@ -163,16 +163,16 @@ with section("SECTION_INPUTS", icon="🧾"):
     with c1:
         target_irradiance_unit = st.selectbox(
             t("TMY_COMPARE_TARGET_IRR_UNIT"),
-            options=["W/m²", "kW/m²"],
-            index=0 if get(TOOL_ID, "target_irradiance_unit", "W/m²") == "W/m²" else 1,
+            options=["W/mÂ²", "kW/mÂ²"],
+            index=0 if get(TOOL_ID, "target_irradiance_unit", "W/mÂ²") == "W/mÂ²" else 1,
         )
         set_(TOOL_ID, "target_irradiance_unit", target_irradiance_unit)
 
     with c2:
         energy_unit = st.selectbox(
             t("TMY_COMPARE_ENERGY_UNIT"),
-            options=["Wh/m²", "kWh/m²"],
-            index=0 if get(TOOL_ID, "energy_unit", "kWh/m²") == "Wh/m²" else 1,
+            options=["Wh/mÂ²", "kWh/mÂ²"],
+            index=0 if get(TOOL_ID, "energy_unit", "kWh/mÂ²") == "Wh/mÂ²" else 1,
         )
         set_(TOOL_ID, "energy_unit", energy_unit)
 
@@ -195,7 +195,7 @@ with section("SECTION_INPUTS", icon="🧾"):
 # =============================================================================
 # 2) Run
 # =============================================================================
-with section("SECTION_RUN", icon="▶️"):
+with section("SECTION_RUN", icon="â–¶ï¸"):
     st.markdown('<div class="pv-run">', unsafe_allow_html=True)
     run_btn = st.button(
         t("TMY_COMPARE_RUN"),
@@ -207,32 +207,34 @@ with section("SECTION_RUN", icon="▶️"):
 # =============================================================================
 # 3) Results
 # =============================================================================
-with section("SECTION_RESULTS", icon="📊"):
+with section("SECTION_RESULTS", icon="ðŸ“Š"):
     if run_btn:
         if uploaded_a is None or uploaded_b is None:
             st.warning(t("TMY_COMPARE_NEED_TWO_FILES"))
         else:
             try:
                 with st.spinner(t("TMY_COMPARE_RUNNING")):
-                    result = compare_tmy_sources(
-                        source_a=uploaded_a.getvalue(),
-                        name_a=uploaded_a.name,
-                        source_b=uploaded_b.getvalue(),
-                        name_b=uploaded_b.name,
-                        outputs_dir=OUTPUTS_DIR,
-                        output_mode="runs",
-                        target_irradiance_unit=get(TOOL_ID, "target_irradiance_unit", "W/m²"),
-                        energy_unit=get(TOOL_ID, "energy_unit", "kWh/m²"),
-                        resample_hourly_if_subhourly=get(TOOL_ID, "resample_hourly_if_subhourly", True),
-                        threshold_mean_pct=float(get(TOOL_ID, "threshold_mean_pct", 5.0)),
-                        force_hourly_step_minutes=60,
-                    )
+                    with tempfile.TemporaryDirectory(prefix="pvinsight_tmy_compare_") as tmpdir:
+                        result = compare_tmy_sources(
+                            source_a=uploaded_a.getvalue(),
+                            name_a="dataset_a.csv",
+                            source_b=uploaded_b.getvalue(),
+                            name_b="dataset_b.csv",
+                            outputs_dir=Path(tmpdir),
+                            output_mode="runs",
+                            target_irradiance_unit=get(TOOL_ID, "target_irradiance_unit", "W/mÂ²"),
+                            energy_unit=get(TOOL_ID, "energy_unit", "kWh/mÂ²"),
+                            resample_hourly_if_subhourly=get(TOOL_ID, "resample_hourly_if_subhourly", True),
+                            threshold_mean_pct=float(get(TOOL_ID, "threshold_mean_pct", 5.0)),
+                            force_hourly_step_minutes=60,
+                        )
+                        pdf_bytes = result.report_pdf.read_bytes() if result.report_pdf.exists() else b""
             except Exception as e:
                 st.error(t("TMY_COMPARE_ERROR_READ"))
-                st.exception(e)
+                st.error(str(e))
             else:
                 st.success(t("TMY_COMPARE_DONE"))
-                set_(TOOL_ID, "last_pdf", str(result.report_pdf))
+                set_(TOOL_ID, "last_pdf_bytes", pdf_bytes)
 
                 # --- Summary
                 st.subheader(t("TMY_COMPARE_SUMMARY"))
@@ -243,8 +245,8 @@ with section("SECTION_RESULTS", icon="📊"):
 
                 st.write(
                     {
-                        t("TMY_COMPARE_UPLOAD_A"): result.ds_a.source_name,
-                        t("TMY_COMPARE_UPLOAD_B"): result.ds_b.source_name,
+                        t("TMY_COMPARE_UPLOAD_A"): "A",
+                        t("TMY_COMPARE_UPLOAD_B"): "B",
                         t("TMY_COMPARE_STEP_NATIVE_A"): f"{native_step_a} min",
                         t("TMY_COMPARE_STEP_NATIVE_B"): f"{native_step_b} min",
                         t("TMY_COMPARE_STEP_USED"): f"{used_step} min",
@@ -345,9 +347,15 @@ with section("SECTION_RESULTS", icon="📊"):
 # =============================================================================
 # 4) Export (PDF only)
 # =============================================================================
-with section("SECTION_EXPORT", icon="📤"):
-    pdf_s = get(TOOL_ID, "last_pdf", "")
-    if not pdf_s:
+with section("SECTION_EXPORT", icon="ðŸ“¤"):
+    pdf_b = get(TOOL_ID, "last_pdf_bytes", b"") or b""
+    if not pdf_b:
         st.info(t("TMY_COMPARE_NO_OUTPUTS_YET"))
     else:
-        _download_button_from_path(t("TMY_COMPARE_DOWNLOAD_PDF"), Path(pdf_s), mime="application/pdf")
+        _download_button_from_bytes(
+            t("TMY_COMPARE_DOWNLOAD_PDF"),
+            pdf_b,
+            file_name="tmy_comparison_report.pdf",
+            mime="application/pdf",
+        )
+

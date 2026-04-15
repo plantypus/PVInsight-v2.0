@@ -1,8 +1,9 @@
-# app/pages/40_compare_pan_to_ds.py
+﻿# app/pages/40_compare_pan_to_ds.py
 from __future__ import annotations
 
 from pathlib import Path
 from datetime import datetime
+import tempfile
 
 import altair as alt
 import pandas as pd
@@ -16,29 +17,24 @@ from ui.i18n import t
 from core.module.compare_pan_to_ds import compare_pan_to_ds
 from core.module.iam_plot import extract_iam_profile
 
-# NOTE: page_title doit rester statique (pas t(...)) pour éviter le piège Streamlit
-configure_page(page_title="Compare PAN vs Datasheet", page_icon="🧾", layout="wide")
+# NOTE: page_title doit rester statique (pas t(...)) pour Ã©viter le piÃ¨ge Streamlit
+configure_page(page_title="Compare PAN vs Datasheet", page_icon="ðŸ§¾", layout="wide")
 
 TOOL_ID = "compare_pan_to_ds"
 
 paths = bootstrap(render_sidebar_ui=True)
-OUTPUTS_DIR = paths.outputs
 
 
 init_tool_state(
     TOOL_ID,
     defaults={
         "manufacturer": "dmegc",
-        "add_timestamp_to_outputs": True,
-        "last_pdf": "",
-        "last_log": "",
-        "project_name": "",
-        "project_no": "",
-        "solar_engineer": "",
+        "last_pdf_bytes": b"",
+        "last_log_bytes": b"",
     },
 )
 
-tool_header(icon="🧾", title_key="COMPARE_PAN_DS_TITLE", desc_key="COMPARE_PAN_DS_DESC", badge="NEW")
+tool_header(icon="ðŸ§¾", title_key="COMPARE_PAN_DS_TITLE", desc_key="COMPARE_PAN_DS_DESC", badge="NEW")
 
 
 DS_MFR = [
@@ -53,14 +49,14 @@ DS_MFR = [
 # -----------------------------------------------------------------------------
 # Utils UI
 # -----------------------------------------------------------------------------
-def _download_button_from_path(label: str, path: Path, mime: str) -> None:
-    if not path.exists():
-        st.warning(f"{label}: {path}")
+def _download_button_from_bytes(label: str, data: bytes, file_name: str, mime: str) -> None:
+    if not data:
+        st.info(t("COMPARE_PAN_DS_NO_OUTPUTS_YET"))
         return
     st.download_button(
         label=label,
-        data=path.read_bytes(),
-        file_name=path.name,
+        data=data,
+        file_name=file_name,
         mime=mime,
         width="stretch",
     )
@@ -68,12 +64,12 @@ def _download_button_from_path(label: str, path: Path, mime: str) -> None:
 
 def _fmt_number(x, *, decimals: int = 3) -> str:
     if x is None or (isinstance(x, float) and pd.isna(x)):
-        return "–"
+        return "â€“"
     try:
         v = float(x)
     except Exception:
         s = str(x).strip()
-        return s if s else "–"
+        return s if s else "â€“"
 
     # 1000-sep with narrow no-break space (French-friendly)
     s = f"{v:,.{decimals}f}"
@@ -85,25 +81,25 @@ def _fmt_number(x, *, decimals: int = 3) -> str:
 
 
 def _fmt_unit_value(x, unit: str) -> str:
-    if unit in ("W/m²", "V", "A", "W", "mm", "Ohm"):
+    if unit in ("W/mÂ²", "V", "A", "W", "mm", "Ohm"):
         # numeric formats
         dec = 0 if unit in ("W", "mm", "Ohm") else 3
         return _fmt_number(x, decimals=dec)
-    if unit in ("%/°C",):
+    if unit in ("%/Â°C",):
         return _fmt_number(x, decimals=3)
-    if unit in ("mA/°C", "mV/°C"):
+    if unit in ("mA/Â°C", "mV/Â°C"):
         return _fmt_number(x, decimals=2)
     # fallback
-    return str(x) if x is not None else "–"
+    return str(x) if x is not None else "â€“"
 
 
 def _fmt_pct(x) -> str:
     if x is None or (isinstance(x, float) and pd.isna(x)):
-        return "–"
+        return "â€“"
     try:
         v = float(x)
     except Exception:
-        return "–"
+        return "â€“"
     # percent display with 1-2 decimals
     s = _fmt_number(v, decimals=2)
     return f"{s} %"
@@ -112,15 +108,15 @@ def _fmt_pct(x) -> str:
 def _fmt_status(s: str) -> str:
     s = str(s or "").upper().strip()
     if s == "OK":
-        return "✅ OK"
+        return "âœ… OK"
     if s == "WARN":
-        return "⚠️ WARN"
-    return "—"
+        return "âš ï¸ WARN"
+    return "â€”"
 
 
 def _format_analysis_date(iso_dt: str | None) -> str:
     if not iso_dt:
-        return "–"
+        return "â€“"
     # iso like "2026-02-12T17:03:22"
     try:
         dt = datetime.fromisoformat(str(iso_dt))
@@ -214,7 +210,7 @@ def _iam_table_df(df: pd.DataFrame) -> pd.DataFrame:
 # =============================================================================
 # 1) Inputs
 # =============================================================================
-with section("SECTION_INPUTS", icon="🧾"):
+with section("SECTION_INPUTS", icon="ðŸ§¾"):
     st.markdown(f"**{t('COMPARE_PAN_DS_INPUTS_HELP')}**")
 
     mfr_codes = [k for k, _ in DS_MFR]
@@ -248,24 +244,10 @@ with section("SECTION_INPUTS", icon="🧾"):
             accept_multiple_files=False,
         )
 
-    # Optional project info
-    with st.expander(t("COMPARE_PAN_DS_PROJECT_EXPANDER"), expanded=True):
-        set_(TOOL_ID, "project_name", st.text_input(t("COMPARE_PAN_DS_PROJECT_NAME"), value=str(get(TOOL_ID, "project_name", ""))))
-        set_(TOOL_ID, "project_no", st.text_input(t("COMPARE_PAN_DS_PROJECT_NO"), value=str(get(TOOL_ID, "project_no", ""))))
-        set_(TOOL_ID, "solar_engineer", st.text_input(t("COMPARE_PAN_DS_SOLAR_ENGINEER"), value=str(get(TOOL_ID, "solar_engineer", ""))))
-
-    add_timestamp_to_outputs = st.checkbox(
-        t("COMPARE_PAN_DS_TIMESTAMP_OUTPUTS"),
-        value=bool(get(TOOL_ID, "add_timestamp_to_outputs", True)),
-        help=t("COMPARE_PAN_DS_TIMESTAMP_HELP"),
-    )
-    set_(TOOL_ID, "add_timestamp_to_outputs", add_timestamp_to_outputs)
-
-
 # =============================================================================
 # 2) Run
 # =============================================================================
-with section("SECTION_RUN", icon="▶️"):
+with section("SECTION_RUN", icon="â–¶ï¸"):
     st.markdown('<div class="pv-run">', unsafe_allow_html=True)
     run_btn = st.button(t("COMPARE_PAN_DS_RUN"), type="primary", help=t("COMPARE_PAN_DS_RUN_HELP"))
     st.markdown("</div>", unsafe_allow_html=True)
@@ -274,13 +256,13 @@ with section("SECTION_RUN", icon="▶️"):
 # =============================================================================
 # 3) Explanations
 # =============================================================================
-#with section("COMPARE_PAN_DS_ELEC_EXPLAINER_SECION", icon="📘",expanded=False):
-with st.expander(t("COMPARE_PAN_DS_ELEC_EXPLAINER_TITLE"), icon="📘", expanded=False):
+#with section("COMPARE_PAN_DS_ELEC_EXPLAINER_SECION", icon="ðŸ“˜",expanded=False):
+with st.expander(t("COMPARE_PAN_DS_ELEC_EXPLAINER_TITLE"), icon="ðŸ“˜", expanded=False):
     st.markdown(t("COMPARE_PAN_DS_ELEC_EXPLAINER_TEXT"))
 # =============================================================================
 # 3) Results
 # =============================================================================
-with section("SECTION_RESULTS", icon="📊"):
+with section("SECTION_RESULTS", icon="ðŸ“Š"):
     if run_btn:
         if pan_file is None or ds_file is None:
             st.warning(t("COMPARE_PAN_DS_NEED_FILES"))
@@ -288,33 +270,31 @@ with section("SECTION_RESULTS", icon="📊"):
 
         try:
             with st.spinner(t("COMPARE_PAN_DS_RUNNING")):
-                result = compare_pan_to_ds(
-                    pan=pan_file.getvalue(),
-                    ds=ds_file.getvalue(),
-                    manufacturer_code=str(get(TOOL_ID, "manufacturer", "jinko")),
-                    outputs_dir=OUTPUTS_DIR,
-                    pan_source_name=pan_file.name,
-                    ds_source_name=ds_file.name,
-                    cleanup_tmp_files=False,
-                    project_info={
-                        "project_name": str(get(TOOL_ID, "project_name", "")),
-                        "project_no": str(get(TOOL_ID, "project_no", "")),
-                        "solar_engineer": str(get(TOOL_ID, "solar_engineer", "")),
-                    },
-                )
+                with tempfile.TemporaryDirectory(prefix="pvinsight_pan_ds_") as tmpdir:
+                    result = compare_pan_to_ds(
+                        pan=pan_file.getvalue(),
+                        ds=ds_file.getvalue(),
+                        manufacturer_code=str(get(TOOL_ID, "manufacturer", "jinko")),
+                        outputs_dir=Path(tmpdir),
+                        pan_source_name="module.pan",
+                        ds_source_name="datasheet.pdf",
+                        cleanup_tmp_files=True,
+                    )
+                    exports = (result.get("exports") or {}) if isinstance(result, dict) else {}
+                    pdf_path = Path(str(exports.get("pdf_path") or ""))
+                    log_path = Path(str(exports.get("log_path") or ""))
+                    pdf_bytes = pdf_path.read_bytes() if pdf_path.exists() else b""
+                    log_bytes = log_path.read_bytes() if log_path.exists() else b""
         except Exception as e:
             st.error(t("COMPARE_PAN_DS_ERROR"))
-            st.exception(e)
+            st.error(str(e))
             st.stop()
 
         st.success(t("COMPARE_PAN_DS_DONE"))
 
-        # store exports immediately so Section 4 works
-        exports = (result.get("exports") or {}) if isinstance(result, dict) else {}
-        pdf_path = str(exports.get("pdf_path") or "")
-        log_path = str(exports.get("log_path") or "")
-        set_(TOOL_ID, "last_pdf", pdf_path)
-        set_(TOOL_ID, "last_log", log_path)
+        # store exports in memory only
+        set_(TOOL_ID, "last_pdf_bytes", pdf_bytes)
+        set_(TOOL_ID, "last_log_bytes", log_bytes)
 
         # -----------------------------------------------------------------
         # Warnings (global)
@@ -334,8 +314,6 @@ with section("SECTION_RESULTS", icon="📊"):
             {
                 t("COMPARE_PAN_DS_GEN_DATE"): _format_analysis_date(gen.get("analysis_datetime")),
                 t("COMPARE_PAN_DS_GEN_MFR"): gen.get("manufacturer_code"),
-                t("COMPARE_PAN_DS_GEN_PAN_FILE"): gen.get("pan_file"),
-                t("COMPARE_PAN_DS_GEN_DS_FILE"): gen.get("datasheet_file"),
                 t("COMPARE_PAN_DS_GEN_PAN_MODEL"): gen.get("pan_model"),
                 t("COMPARE_PAN_DS_GEN_PAN_POWER"): gen.get("pan_power_w_int"),
                 t("COMPARE_PAN_DS_GEN_DS_VARIANT"): gen.get("datasheet_variant_id"),
@@ -372,7 +350,7 @@ with section("SECTION_RESULTS", icon="📊"):
                 st.dataframe(df.rename(columns=rename), width="stretch", hide_index=True)
 
         # -----------------------------------------------------------------
-        # Graphs — IAM
+        # Graphs â€” IAM
         # -----------------------------------------------------------------
         st.subheader(t("COMPARE_PAN_DS_GRAPHS_TITLE"), help=t("COMPARE_PAN_DS_HELP_IAM"))
 
@@ -421,7 +399,7 @@ with section("SECTION_RESULTS", icon="📊"):
                 st.subheader(t("COMPARE_PAN_DS_IAM_STATS_TITLE"))
                 st.write(iam_res.stats)
 
-        if pdf_path or log_path:
+        if pdf_bytes or log_bytes:
             st.caption(t("COMPARE_PAN_DS_EXPORTS_READY"))
 
     else:
@@ -431,16 +409,27 @@ with section("SECTION_RESULTS", icon="📊"):
 # =============================================================================
 # 4) Export (PDF + log only)
 # =============================================================================
-with section("SECTION_EXPORT", icon="📤"):
+with section("SECTION_EXPORT", icon="ðŸ“¤"):
     st.subheader(t("COMPARE_PAN_DS_EXPORT_TITLE"), help=t("COMPARE_PAN_DS_HELP_EXPORTS"))
 
-    pdf_s = str(get(TOOL_ID, "last_pdf", "") or "")
-    log_s = str(get(TOOL_ID, "last_log", "") or "")
+    pdf_b = get(TOOL_ID, "last_pdf_bytes", b"") or b""
+    log_b = get(TOOL_ID, "last_log_bytes", b"") or b""
 
-    if not pdf_s and not log_s:
+    if not pdf_b and not log_b:
         st.info(t("COMPARE_PAN_DS_NO_OUTPUTS_YET"))
     else:
-        if pdf_s:
-            _download_button_from_path(t("COMPARE_PAN_DS_DOWNLOAD_PDF"), Path(pdf_s), mime="application/pdf")
-        if log_s:
-            _download_button_from_path(t("COMPARE_PAN_DS_DOWNLOAD_LOG"), Path(log_s), mime="text/plain")
+        if pdf_b:
+            _download_button_from_bytes(
+                t("COMPARE_PAN_DS_DOWNLOAD_PDF"),
+                pdf_b,
+                file_name="pan_vs_datasheet_report.pdf",
+                mime="application/pdf",
+            )
+        if log_b:
+            _download_button_from_bytes(
+                t("COMPARE_PAN_DS_DOWNLOAD_LOG"),
+                log_b,
+                file_name="pan_vs_datasheet_log.txt",
+                mime="text/plain",
+            )
+

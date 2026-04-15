@@ -696,7 +696,7 @@ if run_btn:
                 )
             st.session_state["market_analysis_result"] = result
     except Exception as exc:
-        st.exception(exc)
+        st.error(str(exc))
 
 result = st.session_state.get("market_analysis_result")
 
@@ -974,7 +974,7 @@ with tab_detail:
         st.download_button(
             t("MARKET_ANALYSIS_EXPORT_MERGED").format(label=result.meta["variant_label_a"]),
             data=_df_to_csv_bytes(result.analysis_result_a.merged_data),
-            file_name=f"merged_{result.meta['variant_label_a']}.csv",
+            file_name="merged_variant_a.csv",
             mime="text/csv",
         )
     with exp3:
@@ -982,7 +982,7 @@ with tab_detail:
             st.download_button(
                 t("MARKET_ANALYSIS_EXPORT_MERGED").format(label=result.meta["variant_label_b"]),
                 data=_df_to_csv_bytes(result.analysis_result_b.merged_data),
-                file_name=f"merged_{result.meta['variant_label_b']}.csv",
+                file_name="merged_variant_b.csv",
                 mime="text/csv",
             )
 

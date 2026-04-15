@@ -1,137 +1,69 @@
-# 🌞 PVInsight 2.0
+# PVInsight 2.5
 
-**PVInsight 2.0** est une plateforme modulaire d’analyse, de visualisation et d’aide à la décision pour les projets photovoltaïques.  
-Elle combine **Python**, **Streamlit** et des scripts métiers spécialisés pour couvrir l’ensemble du cycle d’analyse :  
-données météo (TMY), production, PR, contraintes réseau, géométrie 3D, CFD, et analyses avancées.
+PVInsight est une application Streamlit modulaire pour l'analyse de donnees photovoltaiques.
+Le projet est organise pour separer clairement la logique metier (`core/`) et l'interface (`app/`).
 
-> 🎯 Objectif : proposer des **outils robustes, maintenables et bilingues (FR/EN)**, pensés pour un usage interne professionnel et évolutif.
+## Objectif
 
----
+- Centraliser plusieurs outils d'analyse dans une interface unique.
+- Produire des resultats exploitables (tableaux, graphiques, exports).
+- Garder une base de code maintenable et evolutive.
 
-## ✨ Principes clés
+## Outils principaux
 
-- 🧩 **Architecture modulaire** (un outil = un module clair)
-- 🌍 **Interface Streamlit unifiée**
-- 🌐 **Internationalisation (i18n) FR / EN**
-- 🧠 **Séparation stricte métier / interface**
-- 📦 **Exports standards** (Excel, images, données structurées)
-- 🚀 **Scalabilité** : ajout d’outils sans refactor global
+- TMY Analysis
+- TMY Compare
+- Hourly Results Analysis
+- PAN vs Datasheet Compare
+- Market Analysis
 
----
+## Architecture
 
-## 🔧 Séparation des responsabilités
+- `app/`: pages Streamlit, navigation, UI, i18n.
+- `core/`: calculs metier et pipelines d'analyse.
+- `utils/`: lecteurs, formatage, helpers transverses.
+- `assets/`: logo et ressources de traduction.
+- `config/`: configuration globale et registre des outils.
 
-### `core/` – Logique métier
-- Calculs
-- Lecture de fichiers
-- Analyses
-- Génération de données
-- **Aucun affichage Streamlit**
-- Langue **anglais uniquement**
+## Confidentialite et gestion des donnees
 
-### `app/` – Interface utilisateur
-- Streamlit
-- Mise en page
-- Navigation
-- i18n
-- États de session
-- UX / UI
+Le projet applique les principes suivants:
 
----
+- Pas d'affichage des noms de fichiers uploades dans les sorties utilisateurs.
+- Redaction des informations sensibles (noms de projet, auteur, variantes) dans les logs applicatifs.
+- Generation des exports via fichiers temporaires et conservation en memoire pour telechargement.
+- Aucune persistance volontaire des fichiers uploades dans les pages d'analyse actives.
 
-## 🧰 Outils disponibles (exemples)
+Important:
 
-- 🌤️ **TMY Analysis**
-  - Lecture automatique multi-sources (PVSyst, SolarGIS, etc.)
-  - Harmonisation unités
-  - Comparaison de fichiers météo
+- Sur Streamlit Community Cloud, `st.file_uploader` fournit les fichiers en memoire (RAM).
+- Les logs Cloud restent accessibles aux mainteneurs de l'application: ne pas y imprimer de donnees sensibles.
 
-- 📊 **Hourly Results Analysis**
-  - Analyse des résultats horaires PVSyst
-  - Production, PR, limitations, synthèses temporelles
+## Installation
 
-- 🌬️ **Geometry / CFD Tools**
-  - Génération de géométrie PV
-  - Visualisation interne PyVista
-  - Pré-traitement CFD
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-*(La liste évolue avec le projet)*
-
----
-
-## 🌍 Internationalisation (i18n)
-
-- Toutes les chaînes UI passent par les dictionnaires `i18n/fr.py` et `i18n/en.py`
-- Les scripts métiers (`core/`) restent **neutres et indépendants de la langue**
-- Commutation de langue globale via l’état Streamlit
-
----
-
-## ➕ Ajouter un nouvel outil
-
-1. **Créer le script métier**
-core/<domaine>/<mon_outil>.py
-
-2. **Créer la page Streamlit**
-app/pages/XX_mon_outil.py
-
-3. **Déclarer l’outil**
-config/tools_registry.py
-
-4. **Ajouter les clés i18n**
-app/i18n/fr.py
-app/i18n/en.py
-
-
-👉 Aucun impact sur les autres outils.
-
----
-
-## ▶️ Lancer l’application
+## Lancement
 
 ```bash
 streamlit run app/app_streamlit.py
 ```
 
-Le script bootstrap.py s’occupe automatiquement :
- - de l’initialisation des chemins,
- - du chargement des styles,
- - de la mise en place de l’état global.
+## Ajouter un outil
 
-## 📦 Dépendances
+1. Creer la logique metier dans `core/<domaine>/`.
+2. Creer la page Streamlit dans `app/pages/`.
+3. Declarer l'outil dans `config/tools_registry.py`.
+4. Ajouter les cles de traduction dans `assets/i18n/fr.py` et `assets/i18n/en.py`.
 
-Voir le fichier `requirements.txt`.
+## Version
 
-Principales librairies utilisées :
+Version courante: **2.5**
 
-  - streamlit
+## Statut
 
-  - pandas
-
-  - numpy
-
-  - matplotlib
-
-## 🧠 Philosophie du projet
-
-PVInsight 2.0 est pensé comme :
-
-  - un socle technique durable,
-
-  - un outil métier avant tout,
-
-  - une boîte à outils évolutive,
-
-  - un projet où la lisibilité prime sur la magie,
-
-  - une base saine pour des analyses photovoltaïques avancées.
-
-## 👤 Auteur
-
-Simon Demarche
-Développement interne – Innovations territoriales / Photovoltaïque
-
-## 📌 Statut
-
-🚧 En développement actif
-Architecture stabilisée – outils ajoutés progressivement.
+Projet en developpement actif (usage interne).

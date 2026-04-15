@@ -1,8 +1,9 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Any, Optional
+import tempfile
 
 import calendar
 import numpy as np
@@ -20,21 +21,14 @@ from core.production.hourly_pipeline import analyze_hourly_source
 from core.production.hourly_export_excel import export_excel
 from core.production.hourly_export_pdf import export_pdf
 
-from config import REPORTS_SUBDIR, LOGS_SUBDIR
 from utils import format_number
 
 
-configure_page(page_title="Hourly Results Analysis", page_icon="📈", layout="wide")
+configure_page(page_title="Hourly Results Analysis", page_icon="ðŸ“ˆ", layout="wide")
 
 TOOL_ID = "hourly_results_analysis"
 
 paths = bootstrap(render_sidebar_ui=True)
-OUTPUTS_DIR = paths.outputs
-
-REPORTS_DIR = OUTPUTS_DIR / REPORTS_SUBDIR
-LOGS_DIR = OUTPUTS_DIR / LOGS_SUBDIR
-REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 init_tool_state(
     TOOL_ID,
@@ -44,15 +38,15 @@ init_tool_state(
         "threshold_value": 0.0,
         "night_disconnection": True,
         "grid_capacity_kw": 0.0,
-        "last_excel": "",
-        "last_pdf": "",
-        "last_log": "",
+        "last_excel_bytes": b"",
+        "last_pdf_bytes": b"",
+        "last_log_bytes": b"",
         "has_context": False,
     },
 )
 
 tool_header(
-    icon="📈",
+    icon="ðŸ“ˆ",
     title_key="TOOL_HOURLY_RESULTS_TITLE",
     desc_key="TOOL_HOURLY_RESULTS_DESC",
     badge="NEW",
@@ -67,14 +61,14 @@ class ToolResult:
     context: Any = None
 
 
-def _download_from_path(label: str, path: Path, mime: str) -> None:
-    if not path.exists():
-        st.warning(f"{label}: {path}")
+def _download_from_bytes(label: str, data: bytes, file_name: str, mime: str) -> None:
+    if not data:
+        st.info(t("HOURLY_NO_OUTPUTS_YET"))
         return
     st.download_button(
         label=label,
-        data=path.read_bytes(),
-        file_name=path.name,
+        data=data,
+        file_name=file_name,
         mime=mime,
         width="stretch",
     )
@@ -86,13 +80,6 @@ def _ts_suffix(enabled: bool) -> str:
     return pd.Timestamp.now().strftime("_%Y%m%d_%H%M%S")
 
 
-def _write_log(path: Path, lines: list[str]) -> None:
-    try:
-        path.write_text("\n".join(lines), encoding="utf-8")
-    except Exception:
-        pass
-
-
 def _get_ctx() -> Any | None:
     return st.session_state.get(f"tool.{TOOL_ID}.context") if bool(get(TOOL_ID, "has_context", False)) else None
 
@@ -100,29 +87,29 @@ def _get_ctx() -> Any | None:
 def _fmt_num(v: Any, digits: int = 0, suffix: str = "") -> str:
     try:
         if v is None or (isinstance(v, float) and pd.isna(v)):
-            return "—"
+            return "â€”"
         txt = format_number(v, digits)
         return f"{txt}{suffix}" if suffix else txt
     except Exception:
-        return "—"
+        return "â€”"
 
 
 def _fmt_pct(v: Any, digits: int = 1) -> str:
     try:
         if v is None or (isinstance(v, float) and pd.isna(v)):
-            return "—"
+            return "â€”"
         return f"{float(v):.{digits}f} %"
     except Exception:
-        return "—"
+        return "â€”"
 
 
 def _fmt_mwh_from_kwh(v: Any, digits: int = 1) -> str:
     try:
         if v is None or (isinstance(v, float) and pd.isna(v)):
-            return "—"
+            return "â€”"
         return format_number(float(v) / 1000.0, digits)
     except Exception:
-        return "—"
+        return "â€”"
 
 
 def _centered_plot(fig, *, key: str | None = None, ratio=(1, 3, 1), height: int | None = None) -> None:
@@ -139,7 +126,7 @@ def _subheader_with_help(title_key: str, help_key: str | None = None) -> None:
         st.subheader(t(title_key))
     if help_key:
         with cols[1]:
-            with st.popover("❓"):
+            with st.popover("â“"):
                 st.markdown(t(help_key))
 
 
@@ -297,7 +284,7 @@ def _combo_performance_chart(df: pd.DataFrame):
                 x=plot_df["month_name"],
                 y=plot_df["globinc_kwh_m2"],
                 mode="lines+markers",
-                name="GlobInc (kWh/m²)",
+                name="GlobInc (kWh/mÂ²)",
                 yaxis="y2",
             )
         )
@@ -320,7 +307,7 @@ def _combo_performance_chart(df: pd.DataFrame):
         barmode="group",
         yaxis=dict(title="E_Grid (MWh)"),
         yaxis2=dict(
-            title="GlobInc (kWh/m²)",
+            title="GlobInc (kWh/mÂ²)",
             overlaying="y",
             side="right",
         ),
@@ -518,7 +505,7 @@ def _build_system_summary_markdown(ctx: Any) -> str | None:
     return "\n\n".join(lines)
 
 
-with section("SECTION_INPUTS", icon="🧾"):
+with section("SECTION_INPUTS", icon="ðŸ§¾"):
     st.markdown(f"**{t('HOURLY_INPUTS_GUIDE_TITLE')}**")
     st.markdown(
         "- " + t("HOURLY_INPUTS_GUIDE_LIMIT_VALUE") + "\n"
@@ -572,13 +559,13 @@ with section("SECTION_INPUTS", icon="🧾"):
     set_(TOOL_ID, "grid_capacity_kw", float(grid_capacity_kw))
 
 
-with section("SECTION_RUN", icon="▶️"):
+with section("SECTION_RUN", icon="â–¶ï¸"):
     st.markdown('<div class="pv-run">', unsafe_allow_html=True)
     run_btn = st.button(t("HOURLY_RUN"), type="primary")
     st.markdown("</div>", unsafe_allow_html=True)
 
 
-with section("SECTION_RESULTS", icon="📊"):
+with section("SECTION_RESULTS", icon="ðŸ“Š"):
     if run_btn:
         if uploaded is None:
             st.warning(t("HOURLY_UPLOAD_LABEL"))
@@ -590,7 +577,7 @@ with section("SECTION_RESULTS", icon="📊"):
 
                     ctx = analyze_hourly_source(
                         source=uploaded.getvalue(),
-                        source_name=uploaded.name,
+                        source_name="uploaded_hourly.csv",
                         threshold_value=float(get(TOOL_ID, "threshold_value", 0.0)),
                         threshold_column=str(get(TOOL_ID, "threshold_column", "E_Grid")),
                         night_disconnection=bool(get(TOOL_ID, "night_disconnection", False)),
@@ -598,10 +585,10 @@ with section("SECTION_RESULTS", icon="📊"):
                     )
                     set_(TOOL_ID, "has_context", True)
                     st.session_state[f"tool.{TOOL_ID}.context"] = ctx
-                    result = ToolResult(ok=True, meta={"source_name": uploaded.name}, context=ctx)
+                    result = ToolResult(ok=True, meta={"source_name": "confidential_input"}, context=ctx)
                 except Exception as e:
                     set_(TOOL_ID, "has_context", False)
-                    result = ToolResult(ok=False, message=str(e), meta={"source_name": uploaded.name})
+                    result = ToolResult(ok=False, message=str(e), meta={"source_name": "confidential_input"})
 
             if result.ok:
                 st.success(t("HOURLY_DONE"))
@@ -641,13 +628,10 @@ with section("SECTION_RESULTS", icon="📊"):
 
             _subheader_with_help("HOURLY_SUMMARY", "HOURLY_HELP_FILE_SUMMARY_MD")
             st.write({
-                t("HOURLY_SUMMARY_FILE"): ctx.input_file.name,
-                t("HOURLY_GLOBAL_PROJECT"): ctx.general_info.get("Project_name", "") or "-",
-                t("HOURLY_GLOBAL_PROJECT_FILE"): ctx.general_info.get("Project_file", "") or "-",
-                t("HOURLY_GLOBAL_VARIANT"): ctx.general_info.get("Variant_name", "") or "-",
+                t("HOURLY_SUMMARY_FILE"): "confidential_input.csv",
                 t("HOURLY_SUMMARY_PVSYST_VERSION"): ctx.general_info.get("PVSyst_version", "") or "-",
                 t("HOURLY_SUMMARY_SIM_DATE"): ctx.general_info.get("Simulation_date", "") or "-",
-                t("HOURLY_SUMMARY_PERIOD"): f"{df.index.min()} → {df.index.max()}",
+                t("HOURLY_SUMMARY_PERIOD"): f"{df.index.min()} â†’ {df.index.max()}",
                 t("HOURLY_SUMMARY_ROWS"): int(len(df)),
                 t("HOURLY_GLOBAL_TIMESTEP"): f"{dt_hours:g} h",
                 t("HOURLY_GLOBAL_TIMESTEP_QUALITY"): f"{(1.0 - irregular) * 100:.1f} %",
@@ -772,7 +756,7 @@ with section("SECTION_RESULTS", icon="📊"):
                         if method == "measured"
                         else t("HOURLY_LIMIT_METHOD_ESTIMATED")
                         if method == "estimated_from_capacity"
-                        else "—"
+                        else "â€”"
                     ),
                     t("HOURLY_GRID_LOST_ENERGY") + " (kWh)": _fmt_num(gl_s.get("lost_kwh"), 0),
                     t("HOURLY_GRID_LOST_PCT"): _fmt_pct(gl_s.get("lost_pct"), 2),
@@ -786,7 +770,7 @@ with section("SECTION_RESULTS", icon="📊"):
             if thr and thr.get("available", False):
                 thr_s = thr.get("summary", {})
                 st.write({
-                    t("HOURLY_LIMIT_COLUMN_LABEL"): thr_s.get("threshold_column", "—"),
+                    t("HOURLY_LIMIT_COLUMN_LABEL"): thr_s.get("threshold_column", "â€”"),
                     t("HOURLY_LIMIT_VALUE_LABEL"): _fmt_num(thr_s.get("threshold_value"), 2),
                     t("HOURLY_THR_HOURS_ABOVE"): f"{_fmt_num(thr_s.get('hours_above'), 1)} h",
                     t("HOURLY_THR_SHARE_ABOVE"): _fmt_pct(thr_s.get("pct_above_operating_time"), 1),
@@ -816,7 +800,7 @@ with section("SECTION_RESULTS", icon="📊"):
                     t("HOURLY_LF_S_APPARENT") + " (kWh)": _fmt_num(lf_s.get("S_kWh_equiv"), 0),
                     t("HOURLY_LF_COSPHI"): _fmt_num(lf_s.get("cosphi"), 3),
                     t("HOURLY_LF_Q_SHARE"): (
-                        f"{100.0 * float(lf_s.get('q_share')):.2f} %" if lf_s.get("q_share") is not None else "—"
+                        f"{100.0 * float(lf_s.get('q_share')):.2f} %" if lf_s.get("q_share") is not None else "â€”"
                     ),
                 })
 
@@ -1018,9 +1002,9 @@ with section("SECTION_RESULTS", icon="📊"):
                     t("HOURLY_COL_MONTH"): lm["month_name"],
                     t("HOURLY_LF_S_APPARENT"): lm["S_kWh_equiv"].map(lambda v: format_number(v, 0)),
                     t("HOURLY_LF_Q_REACTIVE"): lm["Q_kWh_equiv"].map(lambda v: format_number(v, 0)),
-                    t("HOURLY_LF_P_ACTIVE"): lm["P_kWh"].map(lambda v: format_number(v, 0) if v is not None else "—"),
-                    t("HOURLY_LF_COSPHI"): lm["cosphi"].map(lambda v: f"{float(v):.3f}" if v is not None else "—"),
-                    t("HOURLY_LF_Q_SHARE"): lm["q_share"].map(lambda v: f"{100.0 * float(v):.2f} %" if v is not None else "—"),
+                    t("HOURLY_LF_P_ACTIVE"): lm["P_kWh"].map(lambda v: format_number(v, 0) if v is not None else "â€”"),
+                    t("HOURLY_LF_COSPHI"): lm["cosphi"].map(lambda v: f"{float(v):.3f}" if v is not None else "â€”"),
+                    t("HOURLY_LF_Q_SHARE"): lm["q_share"].map(lambda v: f"{100.0 * float(v):.2f} %" if v is not None else "â€”"),
                 })
                 st.dataframe(lm_disp, width="stretch", hide_index=True)
 
@@ -1053,13 +1037,11 @@ with section("SECTION_RESULTS", icon="📊"):
                 })
                 st.dataframe(d_disp, width="stretch", hide_index=True)
 
-        st.caption(f"outputs: {OUTPUTS_DIR}")
 
-
-with section("SECTION_EXPORT", icon="📤"):
-    last_excel = get(TOOL_ID, "last_excel", "")
-    last_pdf = get(TOOL_ID, "last_pdf", "")
-    last_log = get(TOOL_ID, "last_log", "")
+with section("SECTION_EXPORT", icon="ðŸ“¤"):
+    last_excel_b = get(TOOL_ID, "last_excel_bytes", b"") or b""
+    last_pdf_b = get(TOOL_ID, "last_pdf_bytes", b"") or b""
+    last_log_b = get(TOOL_ID, "last_log_bytes", b"") or b""
 
     ctx = _get_ctx()
     if ctx is None:
@@ -1069,28 +1051,26 @@ with section("SECTION_EXPORT", icon="📤"):
 
         with c1:
             if st.button(t("HOURLY_GENERATE_EXCEL"), width="stretch"):
-                suffix = _ts_suffix(bool(get(TOOL_ID, "add_timestamp_to_outputs", True)))
-                out = REPORTS_DIR / f"hourly_results_analysis{suffix}.xlsx"
-                export_excel(ctx, out)
-                set_(TOOL_ID, "last_excel", str(out))
+                with tempfile.TemporaryDirectory(prefix="pvinsight_hourly_excel_") as tmpdir:
+                    out = Path(tmpdir) / "hourly_results_analysis.xlsx"
+                    export_excel(ctx, out)
+                    excel_bytes = out.read_bytes() if out.exists() else b""
+                set_(TOOL_ID, "last_excel_bytes", excel_bytes)
                 st.success(t("HOURLY_EXCEL_READY"))
 
         with c2:
             if st.button(t("HOURLY_GENERATE_PDF"), width="stretch"):
-                suffix = _ts_suffix(bool(get(TOOL_ID, "add_timestamp_to_outputs", True)))
-                out = REPORTS_DIR / f"hourly_results_analysis{suffix}.pdf"
-                export_pdf(ctx, out)
-                set_(TOOL_ID, "last_pdf", str(out))
+                with tempfile.TemporaryDirectory(prefix="pvinsight_hourly_pdf_") as tmpdir:
+                    out = Path(tmpdir) / "hourly_results_analysis.pdf"
+                    export_pdf(ctx, out)
+                    pdf_bytes = out.read_bytes() if out.exists() else b""
+                set_(TOOL_ID, "last_pdf_bytes", pdf_bytes)
                 st.success(t("HOURLY_PDF_READY"))
 
         if st.button(t("HOURLY_GENERATE_LOG"), width="stretch"):
-            suffix = _ts_suffix(bool(get(TOOL_ID, "add_timestamp_to_outputs", True)))
-            out = LOGS_DIR / f"hourly_results_analysis{suffix}.txt"
             df = ctx.df_raw
             lines = [
-                f"file={ctx.input_file.name}",
-                f"project={ctx.general_info.get('Project_name','')}",
-                f"variant={ctx.general_info.get('Variant_name','')}",
+                "data_scope=confidential",
                 f"pvsyst_version={ctx.general_info.get('PVSyst_version','')}",
                 f"simulation_date={ctx.general_info.get('Simulation_date','')}",
                 f"period_start={df.index.min()}",
@@ -1102,20 +1082,31 @@ with section("SECTION_EXPORT", icon="📤"):
                 f"grid_capacity_kw={getattr(ctx.options, 'grid_capacity_kw', None)}",
                 f"available_analyses={','.join(ctx.results.keys())}",
             ]
-            _write_log(out, lines)
-            set_(TOOL_ID, "last_log", str(out))
+            log_bytes = "\n".join(lines).encode("utf-8")
+            set_(TOOL_ID, "last_log_bytes", log_bytes)
             st.success(t("HOURLY_LOG_READY"))
 
-        if not last_excel and not last_pdf and not last_log:
+        if not last_excel_b and not last_pdf_b and not last_log_b:
             st.info(t("HOURLY_NO_EXPORTS_YET"))
         else:
-            if last_excel:
-                _download_from_path(
+            if last_excel_b:
+                _download_from_bytes(
                     t("HOURLY_DOWNLOAD_EXCEL"),
-                    Path(last_excel),
+                    last_excel_b,
+                    file_name="hourly_results_analysis.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 )
-            if last_pdf:
-                _download_from_path(t("HOURLY_DOWNLOAD_PDF"), Path(last_pdf), mime="application/pdf")
-            if last_log:
-                _download_from_path(t("HOURLY_DOWNLOAD_LOG"), Path(last_log), mime="text/plain")
+            if last_pdf_b:
+                _download_from_bytes(
+                    t("HOURLY_DOWNLOAD_PDF"),
+                    last_pdf_b,
+                    file_name="hourly_results_analysis.pdf",
+                    mime="application/pdf",
+                )
+            if last_log_b:
+                _download_from_bytes(
+                    t("HOURLY_DOWNLOAD_LOG"),
+                    last_log_b,
+                    file_name="hourly_results_analysis.log",
+                    mime="text/plain",
+                )

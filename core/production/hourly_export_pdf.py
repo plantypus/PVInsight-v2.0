@@ -102,10 +102,7 @@ def export_pdf(context: AnalysisContext, pdf_path: Path) -> None:
 
         synth = [
             ["PVSyst version", context.general_info.get("PVSyst_version", "")],
-            ["Input file", context.input_file.name],
             ["Simulation date", context.general_info.get("Simulation_date", "")],
-            ["Project", context.general_info.get("Project_name", "")],
-            ["Variant", context.general_info.get("Variant_name", "")],
 
             ["Threshold column", thr.get("threshold_column", "")],
             ["Threshold value", format_number(thr.get("threshold_value", 0.0), 2)],

@@ -712,8 +712,6 @@ def _write_log_txt(path: Path, result: Dict[str, Any]) -> None:
     for k in (
         "analysis_datetime",
         "manufacturer_code",
-        "pan_file",
-        "datasheet_file",
         "pan_manufacturer",
         "pan_model",
         "pan_power_w_int",
@@ -723,13 +721,6 @@ def _write_log_txt(path: Path, result: Dict[str, Any]) -> None:
     ):
         if k in gen:
             lines.append(f"- {k}: {gen.get(k)}")
-
-    proj = gen.get("project") or {}
-    if isinstance(proj, dict) and proj:
-        lines.append("\n[PROJECT]")
-        for k in ("project_name", "project_no", "solar_engineer"):
-            if proj.get(k):
-                lines.append(f"- {k}: {proj.get(k)}")
 
     warns = result.get("warnings") or []
     if warns:
@@ -765,7 +756,7 @@ def _write_pdf_report(path: Path, result: Dict[str, Any]) -> None:
     PDF report — QC Inspection (PAN vs Datasheet)
     - Title: "Quality Control Inspection - Module PAN File"
     - Logo: assets/logo_company.png (top-right, small)
-    - Generalities: Project info first + Date (dd/mm/yyyy) + Manufacturer + Module Type
+    - Generalities: Date (dd/mm/yyyy) + Manufacturer + Module Type
     - Table: direct checklist rows (with units), header with background
     - IAM chart: Matplotlib PNG (bottom), with a title above
     """
@@ -898,23 +889,12 @@ def _write_pdf_report(path: Path, result: Dict[str, Any]) -> None:
     # Generalities (reduced, project first)
     # ----------------------------
     gen = result.get("generalities", {}) or {}
-    proj = gen.get("project") or {}
-    if not isinstance(proj, dict):
-        proj = {}
-
-    project_name = proj.get("project_name") or proj.get("project") or proj.get("name") or ""
-    project_code = proj.get("project_code") or proj.get("project_no") or proj.get("code") or ""
-    solar_engineer = proj.get("solar_engineer") or proj.get("engineer") or proj.get("user_name") or ""
-
     # Manufacturer: prefer PAN manufacturer if present
     manufacturer = (gen.get("datasheet_manufacturer") or gen.get("pan_manufacturer") or gen.get("manufacturer_code")) or "-"
     module_type = gen.get("pan_model") or "-"
     date_str = _fmt_date_ddmmyyyy(gen.get("analysis_datetime"))
 
     y = _center_section_title("GENERALITIES", y)
-    y = _draw_kv_line("Project Name", project_name, y)
-    y = _draw_kv_line("Project Code", project_code, y)
-    y = _draw_kv_line("Solar Engineer", solar_engineer, y)
     y = _draw_kv_line("Date", date_str, y)
     y = _draw_kv_line("Manufacturer", manufacturer, y)
     y = _draw_kv_line("Module Type", module_type, y)
@@ -1115,8 +1095,7 @@ def compare_pan_to_ds(
     outputs_dir: Union[str, Path],
     pan_source_name: str = "module.PAN",
     ds_source_name: str = "datasheet.pdf",
-    cleanup_tmp_files: bool = False,
-    project_info: Optional[Dict[str, str]] = None,  # {"project_name","project_no","solar_engineer"}
+    cleanup_tmp_files: bool = True,
 ) -> Dict[str, Any]:
     """
     STRICT tool:
@@ -1209,12 +1188,9 @@ def compare_pan_to_ds(
     generalities = {
         "analysis_datetime": datetime.now().isoformat(timespec="seconds"),
         "manufacturer_code": manufacturer_code,
-        "pan_file": pan_source_name,
-        "datasheet_file": ds_source_name,
         "pan_manufacturer": pan_manufacturer,
         "pan_model": pan_model,
         "pan_power_w_int": pan_power_w_int,
-        "project": project_info or {},
     }
 
     # ---- PAN-only package (always available)  ✅ FIXED
