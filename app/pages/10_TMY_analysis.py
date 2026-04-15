@@ -16,8 +16,8 @@ from ui.i18n import t
 from core.meteo.tmy_analysis import analyze_tmy_source
 
 
-# NOTE: page_title doit rester statique (pas t(...)) pour Ã©viter le piÃ¨ge Streamlit
-configure_page(page_title="TMY Analysis", page_icon="ðŸŒ¤ï¸", layout="wide")
+# NOTE: page_title should stay static (not translated) for Streamlit config behavior.
+configure_page(page_title="TMY Analysis", page_icon="*", layout="wide")
 
 TOOL_ID = "tmy_analysis"
 
@@ -28,8 +28,8 @@ paths = bootstrap(render_sidebar_ui=True)
 init_tool_state(
     TOOL_ID,
     defaults={
-        "target_irradiance_unit": "W/mÂ²",
-        "energy_unit": "kWh/mÂ²",
+        "target_irradiance_unit": "W/m2",
+        "energy_unit": "kWh/m2",
         "resample_hourly_if_subhourly": True,
         "add_timestamp_to_outputs": True,
         "last_pdf_bytes": b"",
@@ -38,7 +38,7 @@ init_tool_state(
 )
 
 # Header standard
-tool_header(icon="ðŸŒ¤ï¸", title_key="TOOL_TMY_ANALYSIS_TITLE", desc_key="TOOL_TMY_ANALYSIS_DESC", badge="NEW")
+tool_header(icon="TMY", title_key="TOOL_TMY_ANALYSIS_TITLE", desc_key="TOOL_TMY_ANALYSIS_DESC", badge="NEW")
 
 def _download_button_from_bytes(label: str, data: bytes, file_name: str, mime: str) -> None:
     if not data:
@@ -84,7 +84,7 @@ def _interactive_histogram(df: pd.DataFrame, col: str, x_title: str, bin_step: i
 
 
 # 1) Inputs
-with section("SECTION_INPUTS", icon="ðŸ§¾"):
+with section("SECTION_INPUTS"):
     uploaded = st.file_uploader(
         t("TMY_UPLOAD_LABEL"),
         type=["csv", "txt"],
@@ -95,16 +95,16 @@ with section("SECTION_INPUTS", icon="ðŸ§¾"):
     with c1:
         target_irradiance_unit = st.selectbox(
             t("TMY_TARGET_IRR_UNIT"),
-            options=["W/mÂ²", "kW/mÂ²"],
-            index=0 if get(TOOL_ID, "target_irradiance_unit", "kW/mÂ²") == "W/mÂ²" else 1,
+            options=["W/m2", "kW/m2"],
+            index=0 if get(TOOL_ID, "target_irradiance_unit", "kW/m2") == "W/m2" else 1,
         )
         set_(TOOL_ID, "target_irradiance_unit", target_irradiance_unit)
 
     with c2:
         energy_unit = st.selectbox(
             t("TMY_ENERGY_UNIT"),
-            options=["Wh/mÂ²", "kWh/mÂ²"],
-            index=0 if get(TOOL_ID, "energy_unit", "kWh/mÂ²") == "Wh/mÂ²" else 1,
+            options=["Wh/m2", "kWh/m2"],
+            index=0 if get(TOOL_ID, "energy_unit", "kWh/m2") == "Wh/m2" else 1,
         )
         set_(TOOL_ID, "energy_unit", energy_unit)
 
@@ -122,7 +122,7 @@ with section("SECTION_INPUTS", icon="ðŸ§¾"):
 
 
 # 2) Run
-with section("SECTION_RUN", icon="â–¶ï¸"):
+with section("SECTION_RUN"):
     st.markdown('<div class="pv-run">', unsafe_allow_html=True)
     run_btn = st.button(
         t("TMY_RUN_ANALYSIS"),
@@ -133,7 +133,7 @@ with section("SECTION_RUN", icon="â–¶ï¸"):
 
 
 # 3) Results
-with section("SECTION_RESULTS", icon="ðŸ“Š"):
+with section("SECTION_RESULTS"):
     if run_btn:
         if uploaded is None:
             st.warning(t("TMY_UPLOAD_LABEL"))
@@ -145,8 +145,8 @@ with section("SECTION_RESULTS", icon="ðŸ“Š"):
                         source_name="uploaded_tmy.csv",
                         outputs_dir=Path(tmpdir),
                         output_mode="flat",
-                        target_irradiance_unit=get(TOOL_ID, "target_irradiance_unit", "W/mÂ²"),
-                        energy_unit=get(TOOL_ID, "energy_unit", "kWh/mÂ²"),
+                        target_irradiance_unit=get(TOOL_ID, "target_irradiance_unit", "W/m2"),
+                        energy_unit=get(TOOL_ID, "energy_unit", "kWh/m2"),
                         resample_hourly_if_subhourly=get(TOOL_ID, "resample_hourly_if_subhourly", True),
                         add_timestamp_to_outputs=get(TOOL_ID, "add_timestamp_to_outputs", True),
                     )
@@ -270,7 +270,7 @@ with section("SECTION_RESULTS", icon="ðŸ“Š"):
 
 
 # 4) Export (PDF + log only)
-with section("SECTION_EXPORT", icon="ðŸ“¤"):
+with section("SECTION_EXPORT"):
     pdf_b = get(TOOL_ID, "last_pdf_bytes", b"") or b""
     log_b = get(TOOL_ID, "last_log_bytes", b"") or b""
 

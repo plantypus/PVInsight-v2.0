@@ -16,8 +16,8 @@ from ui.i18n import t
 from core.meteo.tmy_compare import compare_tmy_sources
 
 
-# NOTE: page_title doit rester statique (pas t(...)) pour Ã©viter le piÃ¨ge Streamlit
-configure_page(page_title="TMY Compare", page_icon="âš–ï¸", layout="wide")
+# NOTE: page_title should stay static (not translated) for Streamlit config behavior.
+configure_page(page_title="TMY Compare", page_icon="*", layout="wide")
 
 TOOL_ID = "tmy_compare"
 
@@ -28,8 +28,8 @@ paths = bootstrap(render_sidebar_ui=True)
 init_tool_state(
     TOOL_ID,
     defaults={
-        "target_irradiance_unit": "W/mÂ²",
-        "energy_unit": "kWh/mÂ²",
+        "target_irradiance_unit": "W/m2",
+        "energy_unit": "kWh/m2",
         "resample_hourly_if_subhourly": True,
         "threshold_mean_pct": 5.0,
         "last_pdf_bytes": b"",
@@ -37,7 +37,7 @@ init_tool_state(
 )
 
 # Header standard
-tool_header(icon="âš–ï¸", title_key="TOOL_TMY_COMPARE_TITLE", desc_key="TOOL_TMY_COMPARE_DESC", badge="NEW")
+tool_header(icon="CMP", title_key="TOOL_TMY_COMPARE_TITLE", desc_key="TOOL_TMY_COMPARE_DESC", badge="NEW")
 
 
 # -----------------------------------------------------------------------------
@@ -142,7 +142,7 @@ def _build_long_series(df_a: pd.DataFrame, df_b: pd.DataFrame, var: str) -> tupl
 # =============================================================================
 # 1) Inputs
 # =============================================================================
-with section("SECTION_INPUTS", icon="ðŸ§¾"):
+with section("SECTION_INPUTS"):
     cA, cB = st.columns(2)
     with cA:
         uploaded_a = st.file_uploader(
@@ -163,16 +163,16 @@ with section("SECTION_INPUTS", icon="ðŸ§¾"):
     with c1:
         target_irradiance_unit = st.selectbox(
             t("TMY_COMPARE_TARGET_IRR_UNIT"),
-            options=["W/mÂ²", "kW/mÂ²"],
-            index=0 if get(TOOL_ID, "target_irradiance_unit", "W/mÂ²") == "W/mÂ²" else 1,
+            options=["W/m2", "kW/m2"],
+            index=0 if get(TOOL_ID, "target_irradiance_unit", "W/m2") == "W/m2" else 1,
         )
         set_(TOOL_ID, "target_irradiance_unit", target_irradiance_unit)
 
     with c2:
         energy_unit = st.selectbox(
             t("TMY_COMPARE_ENERGY_UNIT"),
-            options=["Wh/mÂ²", "kWh/mÂ²"],
-            index=0 if get(TOOL_ID, "energy_unit", "kWh/mÂ²") == "Wh/mÂ²" else 1,
+            options=["Wh/m2", "kWh/m2"],
+            index=0 if get(TOOL_ID, "energy_unit", "kWh/m2") == "Wh/m2" else 1,
         )
         set_(TOOL_ID, "energy_unit", energy_unit)
 
@@ -195,7 +195,7 @@ with section("SECTION_INPUTS", icon="ðŸ§¾"):
 # =============================================================================
 # 2) Run
 # =============================================================================
-with section("SECTION_RUN", icon="â–¶ï¸"):
+with section("SECTION_RUN"):
     st.markdown('<div class="pv-run">', unsafe_allow_html=True)
     run_btn = st.button(
         t("TMY_COMPARE_RUN"),
@@ -207,7 +207,7 @@ with section("SECTION_RUN", icon="â–¶ï¸"):
 # =============================================================================
 # 3) Results
 # =============================================================================
-with section("SECTION_RESULTS", icon="ðŸ“Š"):
+with section("SECTION_RESULTS"):
     if run_btn:
         if uploaded_a is None or uploaded_b is None:
             st.warning(t("TMY_COMPARE_NEED_TWO_FILES"))
@@ -222,8 +222,8 @@ with section("SECTION_RESULTS", icon="ðŸ“Š"):
                             name_b="dataset_b.csv",
                             outputs_dir=Path(tmpdir),
                             output_mode="runs",
-                            target_irradiance_unit=get(TOOL_ID, "target_irradiance_unit", "W/mÂ²"),
-                            energy_unit=get(TOOL_ID, "energy_unit", "kWh/mÂ²"),
+                            target_irradiance_unit=get(TOOL_ID, "target_irradiance_unit", "W/m2"),
+                            energy_unit=get(TOOL_ID, "energy_unit", "kWh/m2"),
                             resample_hourly_if_subhourly=get(TOOL_ID, "resample_hourly_if_subhourly", True),
                             threshold_mean_pct=float(get(TOOL_ID, "threshold_mean_pct", 5.0)),
                             force_hourly_step_minutes=60,
@@ -347,7 +347,7 @@ with section("SECTION_RESULTS", icon="ðŸ“Š"):
 # =============================================================================
 # 4) Export (PDF only)
 # =============================================================================
-with section("SECTION_EXPORT", icon="ðŸ“¤"):
+with section("SECTION_EXPORT"):
     pdf_b = get(TOOL_ID, "last_pdf_bytes", b"") or b""
     if not pdf_b:
         st.info(t("TMY_COMPARE_NO_OUTPUTS_YET"))

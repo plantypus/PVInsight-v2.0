@@ -9,8 +9,8 @@ from config.tools_registry import TOOLS
 from ui.i18n import t
 
 
-# NOTE: page_title doit rester statique (pas t(...))
-configure_page(page_title="Home", page_icon="🏠", layout="wide")
+# page_title should stay static (not translated) for Streamlit config behavior.
+configure_page(page_title="Home", page_icon="*", layout="wide")
 
 # Global bootstrap (state + css) + paths
 paths = bootstrap(render_sidebar_ui=True)
@@ -18,7 +18,6 @@ paths = bootstrap(render_sidebar_ui=True)
 # Header
 cols = st.columns([1, 4])
 with cols[0]:
-    # Logo (priorité: config.LOGO_PNG, sinon assets/logo.png)
     logo = LOGO_PNG
     if not logo.exists():
         cand = paths.assets / "logo.png"
@@ -30,7 +29,7 @@ with cols[0]:
 
 with cols[1]:
     st.markdown(f"<div class='pv-title'>{t('APP_TITLE')}</div>", unsafe_allow_html=True)
-    st.caption(f"{APP_NAME} — v{APP_VERSION}")
+    st.caption(f"{APP_NAME} - v{APP_VERSION}")
     st.markdown(f"<div class='pv-subtitle'>{t('APP_DESCRIPTION')}</div>", unsafe_allow_html=True)
 
 st.divider()
@@ -45,9 +44,9 @@ else:
     for tool in enabled:
         c1, c2 = st.columns([1, 3], vertical_alignment="center")
         with c1:
-            label = f"{tool.icon} {t(tool.title_key)}"
+            label = f"{tool.icon} {t(tool.title_key)}".strip()
             if tool.badge:
-                label += f" · {tool.badge}"
+                label += f" - {tool.badge}"
 
             if st.button(label, width="stretch", key=f"home_{tool.tool_id}"):
                 st.switch_page(tool.page)

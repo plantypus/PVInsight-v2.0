@@ -17,8 +17,8 @@ from ui.i18n import t
 from core.module.compare_pan_to_ds import compare_pan_to_ds
 from core.module.iam_plot import extract_iam_profile
 
-# NOTE: page_title doit rester statique (pas t(...)) pour Ã©viter le piÃ¨ge Streamlit
-configure_page(page_title="Compare PAN vs Datasheet", page_icon="ðŸ§¾", layout="wide")
+# NOTE: page_title should stay static (not translated) for Streamlit config behavior.
+configure_page(page_title="Compare PAN vs Datasheet", page_icon="*", layout="wide")
 
 TOOL_ID = "compare_pan_to_ds"
 
@@ -34,7 +34,7 @@ init_tool_state(
     },
 )
 
-tool_header(icon="ðŸ§¾", title_key="COMPARE_PAN_DS_TITLE", desc_key="COMPARE_PAN_DS_DESC", badge="NEW")
+tool_header(icon="PAN", title_key="COMPARE_PAN_DS_TITLE", desc_key="COMPARE_PAN_DS_DESC", badge="NEW")
 
 
 DS_MFR = [
@@ -64,12 +64,12 @@ def _download_button_from_bytes(label: str, data: bytes, file_name: str, mime: s
 
 def _fmt_number(x, *, decimals: int = 3) -> str:
     if x is None or (isinstance(x, float) and pd.isna(x)):
-        return "â€“"
+        return "-"
     try:
         v = float(x)
     except Exception:
         s = str(x).strip()
-        return s if s else "â€“"
+    return s if s else "-"
 
     # 1000-sep with narrow no-break space (French-friendly)
     s = f"{v:,.{decimals}f}"
@@ -81,25 +81,25 @@ def _fmt_number(x, *, decimals: int = 3) -> str:
 
 
 def _fmt_unit_value(x, unit: str) -> str:
-    if unit in ("W/mÂ²", "V", "A", "W", "mm", "Ohm"):
+    if unit in ("W/m2", "V", "A", "W", "mm", "Ohm"):
         # numeric formats
         dec = 0 if unit in ("W", "mm", "Ohm") else 3
         return _fmt_number(x, decimals=dec)
-    if unit in ("%/Â°C",):
+    if unit in ("%/degC",):
         return _fmt_number(x, decimals=3)
-    if unit in ("mA/Â°C", "mV/Â°C"):
+    if unit in ("mA/degC", "mV/degC"):
         return _fmt_number(x, decimals=2)
     # fallback
-    return str(x) if x is not None else "â€“"
+    return str(x) if x is not None else "-"
 
 
 def _fmt_pct(x) -> str:
     if x is None or (isinstance(x, float) and pd.isna(x)):
-        return "â€“"
+        return "-"
     try:
         v = float(x)
     except Exception:
-        return "â€“"
+        return "-"
     # percent display with 1-2 decimals
     s = _fmt_number(v, decimals=2)
     return f"{s} %"
@@ -108,15 +108,15 @@ def _fmt_pct(x) -> str:
 def _fmt_status(s: str) -> str:
     s = str(s or "").upper().strip()
     if s == "OK":
-        return "âœ… OK"
+        return "OK"
     if s == "WARN":
-        return "âš ï¸ WARN"
-    return "â€”"
+        return "WARN"
+    return "-"
 
 
 def _format_analysis_date(iso_dt: str | None) -> str:
     if not iso_dt:
-        return "â€“"
+        return "-"
     # iso like "2026-02-12T17:03:22"
     try:
         dt = datetime.fromisoformat(str(iso_dt))
@@ -210,7 +210,7 @@ def _iam_table_df(df: pd.DataFrame) -> pd.DataFrame:
 # =============================================================================
 # 1) Inputs
 # =============================================================================
-with section("SECTION_INPUTS", icon="ðŸ§¾"):
+with section("SECTION_INPUTS"):
     st.markdown(f"**{t('COMPARE_PAN_DS_INPUTS_HELP')}**")
 
     mfr_codes = [k for k, _ in DS_MFR]
@@ -247,7 +247,7 @@ with section("SECTION_INPUTS", icon="ðŸ§¾"):
 # =============================================================================
 # 2) Run
 # =============================================================================
-with section("SECTION_RUN", icon="â–¶ï¸"):
+with section("SECTION_RUN"):
     st.markdown('<div class="pv-run">', unsafe_allow_html=True)
     run_btn = st.button(t("COMPARE_PAN_DS_RUN"), type="primary", help=t("COMPARE_PAN_DS_RUN_HELP"))
     st.markdown("</div>", unsafe_allow_html=True)
@@ -256,13 +256,13 @@ with section("SECTION_RUN", icon="â–¶ï¸"):
 # =============================================================================
 # 3) Explanations
 # =============================================================================
-#with section("COMPARE_PAN_DS_ELEC_EXPLAINER_SECION", icon="ðŸ“˜",expanded=False):
-with st.expander(t("COMPARE_PAN_DS_ELEC_EXPLAINER_TITLE"), icon="ðŸ“˜", expanded=False):
+# with section("COMPARE_PAN_DS_ELEC_EXPLAINER_SECION", expanded=False):
+with st.expander(t("COMPARE_PAN_DS_ELEC_EXPLAINER_TITLE"), expanded=False):
     st.markdown(t("COMPARE_PAN_DS_ELEC_EXPLAINER_TEXT"))
 # =============================================================================
 # 3) Results
 # =============================================================================
-with section("SECTION_RESULTS", icon="ðŸ“Š"):
+with section("SECTION_RESULTS"):
     if run_btn:
         if pan_file is None or ds_file is None:
             st.warning(t("COMPARE_PAN_DS_NEED_FILES"))
@@ -350,7 +350,7 @@ with section("SECTION_RESULTS", icon="ðŸ“Š"):
                 st.dataframe(df.rename(columns=rename), width="stretch", hide_index=True)
 
         # -----------------------------------------------------------------
-        # Graphs â€” IAM
+        # Graphs - IAM
         # -----------------------------------------------------------------
         st.subheader(t("COMPARE_PAN_DS_GRAPHS_TITLE"), help=t("COMPARE_PAN_DS_HELP_IAM"))
 
@@ -409,7 +409,7 @@ with section("SECTION_RESULTS", icon="ðŸ“Š"):
 # =============================================================================
 # 4) Export (PDF + log only)
 # =============================================================================
-with section("SECTION_EXPORT", icon="ðŸ“¤"):
+with section("SECTION_EXPORT"):
     st.subheader(t("COMPARE_PAN_DS_EXPORT_TITLE"), help=t("COMPARE_PAN_DS_HELP_EXPORTS"))
 
     pdf_b = get(TOOL_ID, "last_pdf_bytes", b"") or b""
