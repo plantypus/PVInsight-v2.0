@@ -54,16 +54,21 @@ def export_pdf(context: AnalysisContext, pdf_path: Path) -> None:
     - Monthly share above threshold
     - Power distribution (if available)
     """
-    thr_res = context.results.get("threshold")
-    if not thr_res or not thr_res.get("available", False):
-        raise ValueError("Missing 'threshold' analysis — cannot generate PDF.")
-    thr = thr_res["summary"]
+    thr_res = context.results.get("threshold", {}) or {}
+    thr_available = bool(thr_res.get("available", False))
+    thr = thr_res.get("summary", {}) or {}
+    if not thr:
+        thr = {
+            "threshold_column": getattr(context.options, "threshold_column", ""),
+            "threshold_value": float(getattr(context.options, "threshold_value", 0.0) or 0.0),
+            "night_disconnection": bool(getattr(context.options, "night_disconnection", False)),
+        }
 
     gp_res = context.results.get("global_production", {})
     gp = gp_res.get("summary", {}) if gp_res and gp_res.get("available", False) else {}
 
-    monthly = thr_res.get("monthly")
-    monthly_pct = thr_res.get("monthly_pct")
+    monthly = thr_res.get("monthly") if thr_available else None
+    monthly_pct = thr_res.get("monthly_pct") if thr_available else None
 
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir = Path(tmpdir)
@@ -118,8 +123,8 @@ def export_pdf(context: AnalysisContext, pdf_path: Path) -> None:
 
             # Threshold
             ["Hours above threshold", format_number(thr.get("hours_above", 0.0), 0)],
-            ["Share above threshold (%)", f"{thr.get('pct_above_operating_time', 0.0):.1f}"],
-            ["Energy above threshold (kWh)", format_number(thr.get("energy_above_kwh", 0.0), 0)],
+            ["Lost share vs production w/o import (%)", f"{thr.get('lost_pct_of_production', 0.0):.1f}"],
+            ["Lost energy due to studied limit (kWh)", format_number(thr.get("lost_kwh", thr.get("energy_above_kwh", 0.0)), 0)],
             ["Night import hours", format_number(thr.get("night_import_hours", 0.0), 0)],
             ["Night consumption (kWh)", format_number(thr.get("night_consumption_kwh", 0.0), 0)],
         ]
@@ -132,12 +137,12 @@ def export_pdf(context: AnalysisContext, pdf_path: Path) -> None:
         elems.append(Spacer(1, 6))
 
         if monthly is not None and not monthly.empty:
-            monthly_data = [["Month", "Hours above", "Energy above (kWh)"]]
+            monthly_data = [["Month", "Hours above", "Lost energy (kWh)"]]
             for _, row in monthly.iterrows():
                 monthly_data.append([
                     row["month_name"],
                     format_number(row["hours_above"], 0),
-                    format_number(row["energy_above_kwh"], 0),
+                    format_number(row.get("lost_kwh", row.get("energy_above_kwh", 0.0)), 0),
                 ])
             elems.append(_styled_table(monthly_data, [4.5 * cm, 4.5 * cm, 4.5 * cm]))
             elems.append(Spacer(1, 8))

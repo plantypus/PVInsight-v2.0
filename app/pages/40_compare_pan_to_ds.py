@@ -70,7 +70,7 @@ def _fmt_number(x, *, decimals: int = 3) -> str:
         v = float(x)
     except Exception:
         s = str(x).strip()
-    return s if s else "-"
+        return s if s else "-"
 
     # 1000-sep with narrow no-break space (French-friendly)
     s = f"{v:,.{decimals}f}"

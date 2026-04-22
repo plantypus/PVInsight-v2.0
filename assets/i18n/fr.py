@@ -163,6 +163,7 @@ TEXTS = {
   "HOURLY_RESULTS_CLIPPING": "Étude : Clipping onduleur",
 
   "HOURLY_THRESHOLD_NOT_AVAILABLE": "L’étude Seuil est indisponible (colonne manquante).",
+    "HOURLY_THRESHOLD_DISABLED_ZERO": "La limite etudiee est a 0: l'analyse complementaire n'est pas calculee.",
   "HOURLY_DISTRIBUTION_NOT_AVAILABLE": "L’étude Distribution est indisponible (colonne manquante).",
   "HOURLY_CLIPPING_NOT_AVAILABLE": "L’étude Clipping est indisponible (colonnes manquantes).",
   "HOURLY_CLIPPING_NOT_RUN": "Aucune donnée de clipping.",
@@ -173,7 +174,7 @@ TEXTS = {
 
   "HOURLY_THR_OPERATING_HOURS": "Heures de fonctionnement (>0)",
   "HOURLY_THR_HOURS_ABOVE": "Heures > seuil",
-  "HOURLY_THR_SHARE_ABOVE": "% du temps de fonctionnement > seuil",
+  "HOURLY_THR_SHARE_ABOVE": "Part perdue / production sans soutirage",
   "HOURLY_THR_SUM_ABOVE": "Somme > seuil",
 
   "HOURLY_CLIP_HOURS": "Heures de clipping",
@@ -247,11 +248,11 @@ TEXTS = {
   "HOURLY_CHART_MONTHLY_ENERGY_ABOVE": "Énergie > seuil — mensuel",
   "HOURLY_Y_ENERGY_KWH": "Énergie (kWh)",
 
-  "HOURLY_COL_ENERGY_ABOVE_KWH": "Énergie > seuil (kWh)",
+  "HOURLY_COL_ENERGY_ABOVE_KWH": "Énergie perdue (kWh)",
   "HOURLY_COL_HOURS": "Heures",
   "HOURLY_COL_ENERGY_KWH": "Énergie (kWh)",
 
-  "HOURLY_THR_ENERGY_ABOVE": "Énergie > seuil",
+  "HOURLY_THR_ENERGY_ABOVE": "Énergie perdue par limitation",
 
   "HOURLY_INPUTS_GUIDE_GRID_CAPACITY": "Capacité réseau (optionnel) : permet de calculer un facteur de charge annuel/mensuel lorsque disponible.",
 
@@ -426,7 +427,7 @@ TEXTS = {
     "HOURLY_LIMIT_METHOD": "Méthode",
     "HOURLY_LIMIT_METHOD_MEASURED": "Mesurée dans le fichier",
     "HOURLY_LIMIT_METHOD_ESTIMATED": "Estimée à partir de la capacité renseignée",
-
+    "HOURLY_LIMIT_DETECTED_COLUMN": "Colonne utilisee", 
     "HOURLY_CHART_DURATION_CURVE_THRESHOLD": "Courbe de durée avec seuil",
     "HOURLY_X_DURATION_RANK": "Rang",
     "HOURLY_Y_POWER_OR_ENERGY": "Valeur",
@@ -564,6 +565,7 @@ TEXTS = {
     "HOURLY_LIMIT_METHOD": "Méthode",
     "HOURLY_LIMIT_METHOD_MEASURED": "Mesurée dans le fichier",
     "HOURLY_LIMIT_METHOD_ESTIMATED": "Estimée à partir de la capacité renseignée",
+    "HOURLY_LIMIT_DETECTED_COLUMN": "Colonne utilisee",
     "HOURLY_GRID_LOST_ENERGY": "Énergie perdue par bridage",
     "HOURLY_GRID_LOST_PCT": "Part perdue",
     "HOURLY_GRID_HOURS_LIMITED": "Durée bridée",
@@ -572,17 +574,33 @@ TEXTS = {
 
     "HOURLY_LIMIT_COMPLEMENTARY_STUDY_TITLE": "Étude complémentaire de limitation",
     "HOURLY_THR_HOURS_ABOVE": "Durée au-dessus de la limite",
-    "HOURLY_THR_SHARE_ABOVE": "Part du temps de fonctionnement au-dessus",
-    "HOURLY_THR_ENERGY_ABOVE": "Énergie au-dessus de la limite",
+    "HOURLY_THR_SHARE_ABOVE": "Part perdue / production sans soutirage",
+    "HOURLY_THR_ENERGY_ABOVE": "Énergie perdue par limitation",
     "HOURLY_THRESHOLD_NOT_AVAILABLE": "Étude de limitation non disponible.",
-
+    "HOURLY_THRESHOLD_DISABLED_ZERO": "La limite etudiee est a 0: l'analyse complementaire n'est pas calculee.",
     "HOURLY_SECTION_LOAD_FACTOR_TITLE": "Analyse active / réactive réseau",
-    "HOURLY_HELP_LOAD_FACTOR_MD": "Cette section présente les grandeurs active, réactive et apparente ainsi qu'un indicateur cos(phi) lorsque les colonnes nécessaires sont disponibles.",
+    "HOURLY_HELP_LOAD_FACTOR_MD": "Cette section presente les grandeurs active, reactive et apparente avec un indicateur cos(phi) annuel. Elle inclut aussi une analyse complementaire de tan(phi)=0.25 a 0.35 pour estimer la perte d'energie active et la puissance active minimale a declarer en injection (MW) pour ne pas impacter la production.",
     "HOURLY_LF_P_ACTIVE": "Énergie active",
     "HOURLY_LF_Q_REACTIVE": "Énergie réactive",
     "HOURLY_LF_S_APPARENT": "Énergie apparente",
     "HOURLY_LF_COSPHI": "cos(phi)",
     "HOURLY_LF_Q_SHARE": "Part réactive",
+    "HOURLY_LF_ACTIVE_LOSS_KWH": "Perte active théorique due au facteur de puissance",
+    "HOURLY_LF_ACTIVE_LOSS_PCT": "Part de perte active théorique",
+    "HOURLY_LF_REFERENCE_DECLARED_POWER": "Puissance active de reference",
+    "HOURLY_LF_REFERENCE_SOURCE": "Source de la puissance de référence",
+    "HOURLY_LF_REFERENCE_SOURCE_INPUT": "Capacité réseau renseignée",
+    "HOURLY_LF_REFERENCE_SOURCE_PEAK": "Pic de puissance active observé",
+    "HOURLY_LF_SCENARIOS_TITLE": "Scénarios tan(phi) 0.25 à 0.35",
+    "HOURLY_LF_COL_CASE": "Cas",
+    "HOURLY_LF_CASE_BEST": "Meilleur cas (tan(phi)=0.25)",
+    "HOURLY_LF_CASE_WORST": "Pire cas (tan(phi)=0.35)",
+    "HOURLY_LF_COL_TANPHI": "tan(phi)",
+    "HOURLY_LF_COL_COSPHI": "cos(phi)",
+    "HOURLY_LF_COL_ACTIVE_LIMIT_KW": "Limite active sous contrainte (MW)",
+    "HOURLY_LF_COL_LOSS_KWH": "Énergie active perdue (kWh)",
+    "HOURLY_LF_COL_LOSS_PCT": "Perte vs sans contrainte",
+    "HOURLY_LF_COL_MIN_DECLARED_KVA": "Puissance active minimale a declarer sans impact (MW)",
     "HOURLY_LOAD_FACTOR_ESTIMABLE": "La simulation active / réactive détaillée n'est pas présente dans le fichier, mais un impact potentiel pourra être estimé dans une évolution ultérieure.",
     "HOURLY_LOAD_FACTOR_NOT_AVAILABLE": "Analyse active / réactive non disponible.",
 
@@ -590,7 +608,7 @@ TEXTS = {
     "HOURLY_TABLE_THRESHOLD_MONTHLY": "Tableau mensuel de limitation",
     "HOURLY_COL_MONTH": "Mois",
     "HOURLY_COL_HOURS_ABOVE": "Heures au-dessus",
-    "HOURLY_COL_ENERGY_ABOVE_KWH": "Énergie au-dessus (kWh)",
+    "HOURLY_COL_ENERGY_ABOVE_KWH": "Énergie perdue (kWh)",
     "HOURLY_TABLE_THRESHOLD_SEASONAL": "Tableau saisonnier de limitation",
     "HOURLY_COL_SEASON": "Saison",
 
@@ -630,7 +648,7 @@ TEXTS = {
         "Critères d'état système : très peu contraint < 1 %, faiblement contraint de 1 à < 3 %, "
         "modérément contraint de 3 à < 6 %, fortement contraint ≥ 6 % de pertes totales rapportées "
         "à la production sans soutirage nocturne. "
-        "La recommandation de bridage s'appuie sur l'énergie au-dessus de la limite étudiée "
+        "La recommandation de bridage s'appuie sur l'énergie perdue liée à la limite étudiée "
         "et sur le taux moyen de fonctionnement sur heures productives, calculé par rapport à la "
         "valeur maximale positive observée."
     ),
@@ -650,18 +668,18 @@ TEXTS = {
     "HOURLY_SYSTEM_STATE_HIGH_CONSTRAINT": "fortement contraint",
     "HOURLY_BRIDGING_RECOMMENDATION_FAVORABLE": (
         "Un bridage semble envisageable : la centrale fonctionne en moyenne à **{utilization_pct}** "
-        "de sa valeur maximale observée sur ses heures productives, et la part d'énergie au-dessus "
-        "de la limite reste limitée ({energy_above_pct})."
+        "de sa valeur maximale observée sur ses heures productives, et la part d'énergie perdue "
+        "reste limitée ({energy_above_pct})."
     ),
     "HOURLY_BRIDGING_RECOMMENDATION_CAUTION": (
         "Un bridage peut être envisagé avec prudence : la centrale fonctionne en moyenne à **{utilization_pct}** "
         "de sa valeur maximale observée sur ses heures productives, avec **{energy_above_pct}** d'énergie "
-        "au-dessus de la limite étudiée."
+        "perdue liée à la limite étudiée."
     ),
     "HOURLY_BRIDGING_RECOMMENDATION_NOT_RECOMMENDED": (
         "Un bridage n'est pas particulièrement recommandé à ce niveau : la centrale fonctionne déjà à "
         "**{utilization_pct}** de sa valeur maximale observée sur ses heures productives ou la part d'énergie "
-        "au-dessus de la limite devient significative ({energy_above_pct})."
+        "perdue devient significative ({energy_above_pct})."
     ),
     "HOURLY_BRIDGING_RECOMMENDATION_NOT_AVAILABLE": (
         "Aucune recommandation de bridage n'est disponible tant qu'une limite étudiée pertinente n'est pas définie."
@@ -687,7 +705,7 @@ TEXTS = {
         "Critères d'état système : très peu contraint < 1 %, faiblement contraint de 1 à < 3 %, "
         "modérément contraint de 3 à < 6 %, fortement contraint ≥ 6 % de pertes totales rapportées "
         "à la production sans soutirage nocturne. La recommandation de bridage s'appuie sur l'énergie "
-        "au-dessus de la limite étudiée et sur le taux moyen de fonctionnement sur heures productives, "
+        "perdue liée à la limite étudiée et sur le taux moyen de fonctionnement sur heures productives, "
         "calculé par rapport au percentile P99 des valeurs positives observées."
     ),
     "HOURLY_SYSTEM_SENTENCE_GENERAL": "La centrale produit **{prod_mwh}** MWh/an hors soutirage nocturne.",
@@ -726,17 +744,17 @@ TEXTS = {
     "HOURLY_BRIDGING_RECOMMENDATION_FAVORABLE": (
         "Un bridage semble envisageable : la centrale fonctionne en moyenne à **{utilization_pct}** "
         "de son niveau de haut fonctionnement habituel (P99) sur ses heures productives, "
-        "et la part d'énergie au-dessus de la limite reste limitée ({energy_above_pct})."
+        "et la part d'énergie perdue reste limitée ({energy_above_pct})."
     ),
     "HOURLY_BRIDGING_RECOMMENDATION_CAUTION": (
         "Un bridage peut être envisagé avec prudence : la centrale fonctionne en moyenne à **{utilization_pct}** "
         "de son niveau de haut fonctionnement habituel (P99) sur ses heures productives, "
-        "avec **{energy_above_pct}** d'énergie au-dessus de la limite étudiée."
+        "avec **{energy_above_pct}** d'énergie perdue liée à la limite étudiée."
     ),
     "HOURLY_BRIDGING_RECOMMENDATION_NOT_RECOMMENDED": (
         "Un bridage n'est pas particulièrement recommandé à ce niveau : la centrale fonctionne déjà à "
         "**{utilization_pct}** de son niveau de haut fonctionnement habituel (P99) sur ses heures productives "
-        "ou la part d'énergie au-dessus de la limite devient significative ({energy_above_pct})."
+        "ou la part d'énergie perdue devient significative ({energy_above_pct})."
     ),
     "HOURLY_BRIDGING_RECOMMENDATION_NOT_AVAILABLE": (
         "Aucune recommandation de bridage n'est disponible tant qu'une limite étudiée pertinente n'est pas définie."
@@ -1459,4 +1477,378 @@ Si les paramètres sont laissés vides, des valeurs par défaut sont utilisées.
 
     "MARKET_ANALYSIS_COMPARE_CONCLUSION_NONE": "Aucune conclusion comparative forte n’a pu être dégagée.",
 
+    "TOOL_BESS_SIZING_TITLE": "Dimensionnement BESS PV",
+    "TOOL_BESS_SIZING_DESC": "Screening de dimensionnement MW x MWh d'un BESS couple au PV avec optimisation horaire sur prix day-ahead.",
+
+    "BESS_SIZING_INPUT_GUIDE_TITLE": "Configuration V1 - batterie couplee au PV",
+    "BESS_SIZING_INPUT_GUIDE_BODY": (
+        "- Charger le fichier PV annuel, le fichier TMY et la source prix (API recommandee).\n"
+        "- Verifier ou corriger le mapping des colonnes detectees automatiquement.\n"
+        "- Definir la grille de puissance et duree, puis lancer le screening."
+    ),
+    "BESS_SIZING_UPLOAD_PV": "Fichier production PV (annuel)",
+    "BESS_SIZING_UPLOAD_TMY": "Fichier meteo TMY (horaire ou 15 min)",
+    "BESS_SIZING_MARKET_SOURCE": "Source des prix day-ahead",
+    "BESS_SIZING_MARKET_SOURCE_API": "API outil marche (recommande)",
+    "BESS_SIZING_MARKET_SOURCE_CSV": "Fichier CSV prix",
+    "BESS_SIZING_MARKET_BZN": "Zone de marche (BZN)",
+    "BESS_SIZING_MARKET_YEAR": "Annee de prix",
+    "BESS_SIZING_UPLOAD_MARKET": "Fichier prix day-ahead",
+
+    "BESS_SIZING_COL_TIMESTAMP_PV": "Colonne timestamp PV",
+    "BESS_SIZING_COL_VALUE_PV": "Colonne energie/puissance PV",
+    "BESS_SIZING_COL_TIMESTAMP_TMY": "Colonne timestamp TMY",
+    "BESS_SIZING_COL_VALUE_TMY": "Colonne signal TMY (coherence)",
+    "BESS_SIZING_COL_TIMESTAMP_MARKET": "Colonne timestamp prix",
+    "BESS_SIZING_COL_VALUE_MARKET": "Colonne prix",
+    "BESS_SIZING_UNIT_PV": "Unite PV",
+    "BESS_SIZING_UNIT_MARKET": "Unite prix",
+    "BESS_SIZING_DETECTED_UNIT": "Unite detectee",
+
+    "BESS_SIZING_SIZING_PARAMS_TITLE": "Parametres de screening",
+    "BESS_SIZING_ANALYSIS_STRATEGY_INFO": (
+        "Strategie V2: l'outil calcule systematiquement l'optimisation marginale et l'analyse CAPEX/OPEX "
+        "(valeurs par defaut ou modifiees), puis compare la config optimisee au gain brut maximal."
+    ),
+    "BESS_SIZING_INPUT_TAB_TECH": "Technique",
+    "BESS_SIZING_INPUT_TAB_ECON": "CAPEX / OPEX",
+    "BESS_SIZING_POWER_MIN": "Puissance min (MW)",
+    "BESS_SIZING_POWER_MAX": "Puissance max (MW)",
+    "BESS_SIZING_POWER_STEP": "Pas puissance (MW)",
+    "BESS_SIZING_DURATIONS": "Durees a tester (h)",
+    "BESS_SIZING_DURATIONS_HELP": "Valeurs utility-scale recommandees: 2h, 4h, 6h, 8h, 10h.",
+    "BESS_SIZING_SOC_MIN": "SOC min (0-1)",
+    "BESS_SIZING_SOC_MAX": "SOC max (0-1)",
+    "BESS_SIZING_SOC_INITIAL": "SOC initial (0-1)",
+    "BESS_SIZING_ROUNDTRIP": "Rendement aller-retour cible (0-1)",
+    "BESS_SIZING_ENFORCE_TERMINAL_SOC": "Imposer SOC final = SOC initial",
+    "BESS_SIZING_SOLVER_MODE": "Solveur dispatch",
+    "BESS_SIZING_SOLVER_AUTO": "LP si disponible (sinon heuristique)",
+    "BESS_SIZING_SOLVER_HEURISTIC": "Heuristique uniquement",
+    "BESS_SIZING_SOLVER_MODE_HELP": (
+        "LP (lineaire) cherche l'optimum global sous contraintes horaires et est plus robuste. "
+        "Heuristique applique des regles simples plus rapides mais potentiellement sous-optimales."
+    ),
+    "BESS_SIZING_RUN_SECTION_TITLE": "Execution du screening",
+    "BESS_SIZING_EXPORT_SECTION_TITLE": "Exports",
+
+    "BESS_SIZING_RUN_BUTTON": "Lancer le screening BESS",
+    "BESS_SIZING_RUNNING": "Calcul en cours...",
+    "BESS_SIZING_DONE": "Screening termine.",
+    "BESS_SIZING_NO_RESULTS": "Aucun resultat pour le moment.",
+    "BESS_SIZING_WARNINGS": "Avertissements",
+    "BESS_SIZING_WARNINGS_EMPTY": "Aucun avertissement detecte.",
+    "BESS_SIZING_TAB_MAIN": "Resultats principaux",
+    "BESS_SIZING_TAB_SECONDARY": "Diagnostic et hypotheses",
+
+    "BESS_SIZING_EXEC_SUMMARY": "Resume executif",
+    "BESS_SIZING_KPI_BEST_CONFIG": "Configuration gain brut max",
+    "BESS_SIZING_KPI_GAIN_ABS": "Gain annuel absolu",
+    "BESS_SIZING_KPI_GAIN_REL": "Gain annuel relatif",
+    "BESS_SIZING_KPI_CYCLES": "Cycles equivalents",
+    "BESS_SIZING_TABLE_TITLE": "Tableau de synthese",
+    "BESS_SIZING_CHARTS_TITLE": "Visualisations",
+    "BESS_SIZING_CHART_SCORE_MATRIX_TITLE": "Matrice de score MW x duree",
+    "BESS_SIZING_CHART_GAIN_POWER_TITLE": "Gain annuel vs puissance",
+    "BESS_SIZING_CHART_GAIN_DURATION_TITLE": "Gain annuel vs duree",
+    "BESS_SIZING_CHART_COMPARISON_TITLE": "Comparaison PV seul vs PV + BESS",
+    "BESS_SIZING_CONFIG_SECTION_TITLE": "Configuration analysee",
+    "BESS_SIZING_SELECT_CONFIG": "Configuration detaillee",
+    "BESS_SIZING_TIMESERIES_TITLE": "Serie temporelle detaillee",
+    "BESS_SIZING_START_DATE": "Debut periode",
+    "BESS_SIZING_END_DATE": "Fin periode",
+    "BESS_SIZING_EMPTY_PERIOD": "Aucune donnee sur la periode selectionnee.",
+    "BESS_SIZING_HEATMAP_TITLE": "Heatmap charge/decharge",
+    "BESS_SIZING_TMY_COHERENCE_TITLE": "Coherence TMY (V1)",
+    "BESS_SIZING_TMY_NO_DATA": "Aucune donnee TMY exploitable.",
+    "BESS_SIZING_TMY_COVERAGE": "Couverture TMY",
+    "BESS_SIZING_TMY_MATCHED": "Heures alignees",
+    "BESS_SIZING_TMY_TOTAL": "Heures PV totales",
+    "BESS_SIZING_TMY_CORR": "Correlation PV/TMY",
+    "BESS_SIZING_ASSUMPTIONS_TITLE": "Hypotheses modele V1",
+
+    "BESS_SIZING_COL_CONFIG": "Configuration batterie",
+    "BESS_SIZING_COL_POWER": "Puissance (MW)",
+    "BESS_SIZING_COL_DURATION": "Duree (h)",
+    "BESS_SIZING_COL_ENERGY": "Energie nominale (MWh)",
+    "BESS_SIZING_COL_REVENUE_PV_ONLY": "Revenu PV seul (EUR/an)",
+    "BESS_SIZING_COL_REVENUE_PV_BESS": "Revenu PV + BESS (EUR/an)",
+    "BESS_SIZING_COL_GAIN_ABS": "Gain annuel absolu (EUR/an)",
+    "BESS_SIZING_COL_GAIN_REL": "Gain annuel relatif (%)",
+    "BESS_SIZING_COL_CAPTURE_PV_ONLY": "Capture price PV seul (EUR/MWh)",
+    "BESS_SIZING_COL_CAPTURE_PV_BESS": "Capture price PV + BESS (EUR/MWh)",
+    "BESS_SIZING_COL_ENERGY_CHARGED": "Energie chargee (MWh/an)",
+    "BESS_SIZING_COL_ENERGY_DISCHARGED": "Energie dechargee (MWh/an)",
+    "BESS_SIZING_COL_LOSSES": "Pertes (MWh/an)",
+    "BESS_SIZING_COL_THROUGHPUT": "Throughput (MWh/an)",
+    "BESS_SIZING_COL_CYCLES": "Cycles equivalents (an)",
+    "BESS_SIZING_COL_UTILIZATION": "Taux d'utilisation (%)",
+    "BESS_SIZING_COL_HOURS_POWER_SAT": "Heures saturation puissance",
+    "BESS_SIZING_COL_HOURS_ENERGY_SAT": "Heures saturation energie",
+    "BESS_SIZING_COL_SOLVER": "Solveur",
+    "BESS_SIZING_COL_ENERGY_CHARGED_PV": "Energie chargee depuis PV (MWh/an)",
+    "BESS_SIZING_COL_ENERGY_CHARGED_GRID": "Energie chargee depuis reseau (MWh/an)",
+    "BESS_SIZING_COL_GAIN_SHARE_MAX": "Part du gain max atteinte (%)",
+    "BESS_SIZING_COL_MARGINAL_MW": "Gain marginal (EUR/MW add.)",
+    "BESS_SIZING_COL_MARGINAL_MWH": "Gain marginal (EUR/MWh add.)",
+    "BESS_SIZING_COL_USED_CAPACITY": "Capacite utile mobilisee (%)",
+    "BESS_SIZING_COL_UNDERUTILIZED": "Capacite peu utilisee (%)",
+    "BESS_SIZING_COL_POWER_SAT_RATE": "Saturation puissance (%)",
+    "BESS_SIZING_COL_ENERGY_SAT_RATE": "Saturation energie (%)",
+    "BESS_SIZING_COL_NET_MARGIN": "Marge nette annualisee (EUR/an)",
+    "BESS_SIZING_COL_NET_REVENUE": "Revenu net annuel (EUR/an)",
+    "BESS_SIZING_COL_ANNUALIZED_COST": "Cout annualise total (EUR/an)",
+    "BESS_SIZING_COL_CAPEX": "CAPEX total (EUR)",
+    "BESS_SIZING_COL_OPEX": "OPEX annuel total (EUR/an)",
+    "BESS_SIZING_COL_PAYBACK": "Temps de retour simple (ans)",
+    "BESS_SIZING_COL_NPV": "VAN simplifiee (EUR)",
+
+    "BESS_SIZING_TECH_EXTRA_TITLE": "Options techniques V2",
+    "BESS_SIZING_HELP_TECH_EXTRA": (
+        "Options de couplage et contraintes reseau: charge reseau, limite d'injection, cout de degradation, pertes auxiliaires."
+    ),
+    "BESS_SIZING_ALLOW_GRID_CHARGING": "Autoriser la charge depuis le reseau",
+    "BESS_SIZING_HELP_ALLOW_GRID_CHARGING": (
+        "Si active, la batterie peut charger sur le marche en plus du PV. Sinon, charge uniquement via le PV."
+    ),
+    "BESS_SIZING_USE_GRID_LIMIT": "Appliquer une limite d'injection reseau",
+    "BESS_SIZING_HELP_GRID_LIMIT": (
+        "Limite d'export au point de raccordement (MW). Permet d'analyser les cas de contrainte reseau."
+    ),
+    "BESS_SIZING_GRID_LIMIT_VALUE": "Limite d'injection (MW)",
+    "BESS_SIZING_DEGRAD_COST": "Cout degradation variable (EUR/MWh throughput)",
+    "BESS_SIZING_AUX_LOSSES": "Pertes auxiliaires (MWh/h)",
+    "BESS_SIZING_ECON_TAB_TITLE": "Detail CAPEX / OPEX",
+    "BESS_SIZING_HELP_ECON_TAB": (
+        "Hypotheses economiques modifiables par l'utilisateur. Si elles ne sont pas modifiees, "
+        "les valeurs par defaut chargees depuis la configuration sont utilisees."
+    ),
+    "BESS_SIZING_ECON_TAB_NOTE": (
+        "Ces hypotheses pilotent la recommandation techno-economique (methode du coude cout-revenu)."
+    ),
+    "BESS_SIZING_RESET_ECON_DEFAULTS": "Reinitialiser CAPEX/OPEX par defaut",
+
+    "BESS_SIZING_MODE_SECTION_TITLE": "Mode d'analyse V2",
+    "BESS_SIZING_HELP_ANALYSIS_MODES": (
+        "Mode A: techno-economique avec vos CAPEX/OPEX. "
+        "Mode B: techno-economique avec hypotheses par defaut. "
+        "Mode C: optimisation marginale sans CAPEX/OPEX."
+    ),
+    "BESS_SIZING_MODE_SELECTOR": "Choisir le mode d'analyse",
+    "BESS_SIZING_MODE_A_LABEL": "Mode A - CAPEX/OPEX utilisateur",
+    "BESS_SIZING_MODE_B_LABEL": "Mode B - CAPEX/OPEX par defaut",
+    "BESS_SIZING_MODE_C_LABEL": "Mode C - Optimisation marginale",
+    "BESS_SIZING_MODE_B_WARNING": "Mode B: hypotheses economiques simplifiees chargees depuis le fichier de configuration.",
+    "BESS_SIZING_TARGET_SHARE": "Part cible du gain brut maximal (%)",
+    "BESS_SIZING_HELP_TARGET_SHARE": (
+        "Le mode C recommande la plus petite configuration atteignant au moins cette part du gain brut maximal."
+    ),
+    "BESS_SIZING_CAPEX_POWER": "CAPEX puissance (EUR/kW)",
+    "BESS_SIZING_CAPEX_ENERGY": "CAPEX energie (EUR/kWh)",
+    "BESS_SIZING_CAPEX_FIXED": "CAPEX fixe (EUR)",
+    "BESS_SIZING_OPEX_FIXED_PCT": "OPEX fixe (% CAPEX/an)",
+    "BESS_SIZING_OPEX_FIXED": "OPEX fixe (EUR/an)",
+    "BESS_SIZING_OPEX_VARIABLE": "OPEX variable (EUR/MWh throughput)",
+    "BESS_SIZING_PROJECT_LIFE": "Duree de vie projet (ans)",
+    "BESS_SIZING_DISCOUNT_RATE": "Taux d'actualisation",
+    "BESS_SIZING_REPLACEMENT_ENABLED": "Activer un remplacement simplifie",
+    "BESS_SIZING_REPLACEMENT_YEAR": "Annee de remplacement",
+    "BESS_SIZING_REPLACEMENT_FRACTION": "Fraction CAPEX remplacee (0-1)",
+    "BESS_SIZING_RECOMMEND_METRIC": "Critere de recommandation techno-economique",
+    "BESS_SIZING_RECOMMEND_METRIC_MARGIN": "Marge nette annualisee max",
+    "BESS_SIZING_RECOMMEND_METRIC_NPV": "VAN simplifiee max",
+    "BESS_SIZING_RECOMMEND_METRIC_PAYBACK": "Temps de retour minimal",
+
+    "BESS_SIZING_KPI_TECHNO_CONFIG": "Reco techno-economique",
+    "BESS_SIZING_KPI_MARGINAL_CONFIG": "Reco marginale",
+    "BESS_SIZING_KPI_GAIN_SHARE": "Part gain max (reco marginale)",
+    "BESS_SIZING_KPI_GAIN_SHARE_OPTIMIZED": "Part gain max (config optimisee)",
+    "BESS_SIZING_KPI_NET_MARGIN": "Marge nette (reco techno)",
+    "BESS_SIZING_KEY_COMPARE_TITLE": "Comparaison des configurations cles",
+    "BESS_SIZING_HELP_KEY_COMPARE": "Compare les configurations brute max, techno-economique et marginale sur les KPI principaux.",
+
+    "BESS_SIZING_CHART_GAIN_SIZE_TITLE": "Gain brut vs taille batterie",
+    "BESS_SIZING_HELP_GAIN_SIZE": "Courbe gain brut annuel en fonction de la taille (MWh). Permet d'observer les rendements decroissants.",
+    "BESS_SIZING_CHART_NET_SIZE_TITLE": "Gain net vs taille batterie",
+    "BESS_SIZING_HELP_NET_SIZE": "Courbe marge nette annualisee vs taille. Utilisee en modes A/B pour la recommandation economique.",
+    "BESS_SIZING_CHART_MARGINAL_MW_TITLE": "Valeur marginale du MW additionnel",
+    "BESS_SIZING_HELP_MARGINAL_MW": "Gain additionnel apporte par un MW de puissance supplementaire.",
+    "BESS_SIZING_CHART_MARGINAL_MWH_TITLE": "Valeur marginale du MWh additionnel",
+    "BESS_SIZING_HELP_MARGINAL_MWH": "Gain additionnel apporte par un MWh de capacite energetique supplementaire.",
+    "BESS_SIZING_CHART_GAIN_SHARE_TITLE": "Part du gain maximal atteinte",
+    "BESS_SIZING_HELP_GAIN_SHARE": "Mesure le compromis: combien de gain maximal est atteint pour une taille donnee.",
+    "BESS_SIZING_CONCLUSIONS_TITLE": "Conclusions automatiques",
+    "BESS_SIZING_HELP_CONCLUSIONS": "Conclusions deduites des KPI et des recommandations (brut, techno-eco, marginal).",
+    "BESS_SIZING_NO_CONCLUSIONS": "Aucune conclusion automatique disponible.",
+    "BESS_SIZING_GLOSSARY_TITLE": "Definitions et interpretations",
+    "BESS_SIZING_HELP_GLOSSARY": "Glossaire des principales grandeurs utilisees dans l'analyse V2.",
+    "BESS_SIZING_GLOSS_POWER": "Puissance batterie",
+    "BESS_SIZING_DEF_POWER": "Puissance maximale de charge/decharge instantanee (MW).",
+    "BESS_SIZING_GLOSS_ENERGY": "Capacite energetique nominale",
+    "BESS_SIZING_DEF_ENERGY": "Energie stockable nominale de la batterie (MWh).",
+    "BESS_SIZING_GLOSS_USABLE": "Capacite utile",
+    "BESS_SIZING_DEF_USABLE": "Part exploitable entre SOC min et SOC max.",
+    "BESS_SIZING_GLOSS_DURATION": "Duree de stockage",
+    "BESS_SIZING_DEF_DURATION": "Rapport energie/puissance en heures (MWh/MW).",
+    "BESS_SIZING_GLOSS_RTE": "Rendement aller-retour",
+    "BESS_SIZING_DEF_RTE": "Produit des rendements de charge et de decharge.",
+    "BESS_SIZING_GLOSS_SOC": "SOC min / max",
+    "BESS_SIZING_DEF_SOC": "Bornes minimales et maximales de l'etat de charge de la batterie.",
+    "BESS_SIZING_GLOSS_THROUGHPUT": "Throughput annuel",
+    "BESS_SIZING_DEF_THROUGHPUT": "Somme des energies transitant par la batterie sur l'annee.",
+    "BESS_SIZING_GLOSS_CYCLE": "Cycle equivalent complet",
+    "BESS_SIZING_DEF_CYCLE": "Throughput annuel rapporte a 2 fois la capacite nominale.",
+    "BESS_SIZING_GLOSS_GROSS": "Gain brut d'arbitrage",
+    "BESS_SIZING_DEF_GROSS": "Delta de revenu marche entre PV seul et PV+BESS avant couts.",
+    "BESS_SIZING_GLOSS_NET": "Revenu net annuel",
+    "BESS_SIZING_DEF_NET": "Gain brut moins OPEX annuel (hors annualisation CAPEX).",
+    "BESS_SIZING_GLOSS_ANNUALIZED": "Cout annualise",
+    "BESS_SIZING_DEF_ANNUALIZED": "CAPEX annualise + OPEX annuel total.",
+    "BESS_SIZING_GLOSS_MARGINAL_OPT": "Optimisation marginale",
+    "BESS_SIZING_DEF_MARGINAL_OPT": "Recherche d'un compromis taille/valeur plutot qu'un maximum brut absolu.",
+    "BESS_SIZING_GLOSS_MARGINAL_GAIN": "Gain marginal",
+    "BESS_SIZING_DEF_MARGINAL_GAIN": "Valeur additionnelle obtenue par MW ou MWh supplementaire.",
+    "BESS_SIZING_GLOSS_KNEE": "Point de coude",
+    "BESS_SIZING_DEF_KNEE": "Zone ou la pente des gains diminue fortement avec la taille.",
+    "BESS_SIZING_GLOSS_CAP_SAT": "Saturation de capacite",
+    "BESS_SIZING_DEF_CAP_SAT": "Frequence d'atteinte des bornes SOC min/max.",
+    "BESS_SIZING_GLOSS_PWR_SAT": "Saturation de puissance",
+    "BESS_SIZING_DEF_PWR_SAT": "Frequence d'atteinte des limites de charge/decharge en MW.",
+    "BESS_SIZING_GLOSS_UNDER_OVER": "Sous-utilisation / surdimensionnement",
+    "BESS_SIZING_DEF_UNDER_OVER": "Indice indiquant qu'une partie de la capacite reste peu mobilisee.",
+
+    "BESS_SIZING_HELP_INPUTS": (
+        "Importez les 3 sources (PV, TMY, prix), puis verifiez les colonnes detectees. "
+        "Le pas de calcul final est toujours horaire."
+    ),
+    "BESS_SIZING_HELP_PARAMS": (
+        "Definit la grille de test MW x duree et les hypotheses batterie (SOC, rendement, solveur). "
+        "Le screening compare automatiquement chaque combinaison."
+    ),
+    "BESS_SIZING_HELP_RUN": (
+        "Lance un backtest annuel avec connaissance parfaite des prix de l'annee fournie. "
+        "Le modele n'autorise pas la recharge reseau en V1."
+    ),
+    "BESS_SIZING_HELP_EXEC_SUMMARY": (
+        "Affiche la meilleure configuration selon le gain annuel absolu et ses indicateurs clefs."
+    ),
+    "BESS_SIZING_HELP_TABLE": (
+        "Compare toutes les configurations testees avec revenus, gains, capture price et usage batterie."
+    ),
+    "BESS_SIZING_HELP_CHARTS": (
+        "Visualise la zone de performance (MW x h) et les tendances du gain selon puissance et duree."
+    ),
+    "BESS_SIZING_HELP_SCORE_MATRIX": (
+        "Chaque cellule represente le gain annuel pour un couple puissance-duree. "
+        "Les zones les plus elevees indiquent les dimensionnements les plus attractifs."
+    ),
+    "BESS_SIZING_HELP_GAIN_POWER": (
+        "Courbe enveloppe du meilleur gain obtenu pour chaque niveau de puissance, "
+        "toutes durees confondues."
+    ),
+    "BESS_SIZING_HELP_GAIN_DURATION": (
+        "Courbe enveloppe du meilleur gain obtenu pour chaque duree, "
+        "toutes puissances confondues."
+    ),
+    "BESS_SIZING_HELP_COMPARISON": (
+        "Barres: revenu annuel. Ligne: capture price moyen. "
+        "Permet de voir si le BESS augmente a la fois la valeur totale et la qualite temporelle de l'injection."
+    ),
+    "BESS_SIZING_HELP_CONFIG": (
+        "Selectionnez une configuration pour analyser son dispatch horaire et ses performances detaillees."
+    ),
+    "BESS_SIZING_HELP_TIMESERIES": (
+        "Lecture chronologique prix/PV/charge/decharge/SOC sur la periode choisie pour verifier le comportement. "
+        "Convention signe du graphe: charge positive, decharge affichee negative pour distinguer visuellement les flux."
+    ),
+    "BESS_SIZING_HELP_HEATMAP": (
+        "Montre le net dispatch moyen par mois et par heure. "
+        "Valeur positive = decharge nette vers reseau, valeur negative = charge nette depuis PV."
+    ),
+    "BESS_SIZING_HELP_WARNINGS": (
+        "Liste les alertes de preparation de donnees et d'alignement temporel. "
+        "A verifier avant interpretation business."
+    ),
+    "BESS_SIZING_HELP_TMY": (
+        "Controle simple de coherence entre signal PV et signal TMY associe (couverture et correlation). "
+        "Indicateur informatif en V1."
+    ),
+    "BESS_SIZING_HELP_ASSUMPTIONS": (
+        "Rappel des hypotheses de modelisation utilisees pendant le calcul (roles des series, solveur, contraintes)."
+    ),
+    "BESS_SIZING_HELP_EXPORT": (
+        "Exportez la synthese multi-configurations et la serie temporelle detaillee de la configuration selectionnee."
+    ),
+
+    "BESS_SIZING_EXPORT_SUMMARY": "Exporter synthese configurations (CSV)",
+    "BESS_SIZING_EXPORT_DETAIL": "Exporter serie temporelle configuration (CSV)",
+
+    "BESS_SIZING_ERROR_NEED_PV": "Veuillez charger un fichier PV.",
+    "BESS_SIZING_ERROR_NEED_TMY": "Veuillez charger un fichier TMY.",
+    "BESS_SIZING_ERROR_NEED_MARKET_CSV": "Veuillez charger un fichier prix en mode CSV.",
+    "BESS_SIZING_ERROR_NEED_DURATION": "Veuillez selectionner au moins une duree batterie.",
+    "BESS_SIZING_ERROR_POWER_RANGE": "La puissance min doit etre inferieure ou egale a la puissance max.",
+    "BESS_SIZING_ERROR_SOC_BOUNDS": "Les bornes SOC doivent respecter 0 <= SOC min < SOC max <= 1.",
+    "BESS_SIZING_ERROR_SOC_INITIAL": "Le SOC initial doit etre compris entre SOC min et SOC max.",
+
+    "HOURLY_TANPHI_SECTION_TITLE": "Approximate tan(phi) impact study",
+    "HOURLY_HELP_TANPHI_APPROX_MD": (
+        "Etude d'approximation d'ingenierie de l'impact tan(phi) (pas 0.01 de 0.25 a 0.35). "
+        "Ce module ne remplace pas une vraie resimulation PVsyst."
+    ),
+    "HOURLY_TANPHI_METHOD_CARD": (
+        "Approximation d'ingenierie: on suppose un onduleur modele en puissance apparente (kVA), "
+        "avec effet amont sur la capacite active (cos(phi)) et effet aval sur les pertes de courant (~1/cos^2)."
+    ),
+    "HOURLY_TANPHI_PRECISION_WARNING": (
+        "Pour un calcul plus fiable, exporter depuis PVsyst des variables detaillees, en particulier EacOhmL et IL_Pmax."
+    ),
+    "HOURLY_TANPHI_REF_ASSUMPTION_NOTE": "Hypothese appliquee: tan(phi)_ref = 0 faute d'information explicite dans le fichier horaire.",
+    "HOURLY_TANPHI_MODE_LABEL": "Mode de calcul",
+    "HOURLY_TANPHI_MODE_ENHANCED": "enhanced approximation",
+    "HOURLY_TANPHI_MODE_FALLBACK": "fallback minimal",
+    "HOURLY_TANPHI_RANGE_LABEL": "Plage etudiee",
+    "HOURLY_TANPHI_REF_LABEL": "Reference",
+    "HOURLY_TANPHI_REF_COS_LABEL": "Reference cos(phi)",
+    "HOURLY_TANPHI_REF_SOURCE_LABEL": "Source reference tan(phi)",
+    "HOURLY_TANPHI_REF_SOURCE_COMPUTED": "Calculee depuis EApGrid/EReGrid",
+    "HOURLY_TANPHI_REF_SOURCE_ASSUMED": "Supposee: tan(phi)_ref = 0",
+    "HOURLY_TANPHI_REF_ENERGY_LABEL": "E_Grid annuel estime (reference)",
+    "HOURLY_TANPHI_REF_EGRDLIM_LABEL": "EGrdLim annuel de reference (propage)",
+    "HOURLY_TANPHI_COL_OUT": "Colonne onduleur",
+    "HOURLY_TANPHI_COL_GRID": "Colonne injection reseau",
+    "HOURLY_TANPHI_TABLE_TITLE": "Synthese scenarios tan(phi)",
+    "HOURLY_TANPHI_COL_TANPHI": "tan_phi",
+    "HOURLY_TANPHI_COL_COSPHI": "cos_phi",
+    "HOURLY_TANPHI_COL_MODE": "mode_used",
+    "HOURLY_TANPHI_COL_ANN_EGRID": "annual_EGrid_est_MWh",
+    "HOURLY_TANPHI_COL_DELTA_MWH": "delta_vs_ref_MWh",
+    "HOURLY_TANPHI_COL_DELTA_PCT": "delta_vs_ref_pct",
+    "HOURLY_TANPHI_COL_PDECL": "P_decl_opt_MW",
+    "HOURLY_TANPHI_COL_PEAK_OUT": "peak_EOutInv_est_MW",
+    "HOURLY_TANPHI_COL_PEAK_GRID": "peak_EGrid_est_MW",
+    "HOURLY_TANPHI_COL_WARNINGS": "warnings",
+    "HOURLY_TANPHI_CHART_LOSS_TITLE": "tan(phi) vs annual energy loss/gain",
+    "HOURLY_TANPHI_Y_LOSS": "Perte d'energie annuelle (MWh, negatif = gain)",
+    "HOURLY_TANPHI_CHART_PDECL_TITLE": "tan(phi) vs optimal declared MW",
+    "HOURLY_TANPHI_Y_PDECL": "Optimal declared active power (MW)",
+    "HOURLY_TANPHI_EXTREMES_TITLE": "Extremes tan(phi) 0.25 et 0.35",
+    "HOURLY_TANPHI_025_PDECL": "tan(phi)=0.25 puissance optimale a declarer",
+    "HOURLY_TANPHI_025_LOSS_MWH": "tan(phi)=0.25 perte annuelle due au facteur de charge",
+    "HOURLY_TANPHI_025_LOSS_PCT": "tan(phi)=0.25 perte due au facteur de charge",
+    "HOURLY_TANPHI_035_PDECL": "tan(phi)=0.35 puissance optimale a declarer",
+    "HOURLY_TANPHI_035_LOSS_MWH": "tan(phi)=0.35 perte annuelle due au facteur de charge",
+    "HOURLY_TANPHI_035_LOSS_PCT": "tan(phi)=0.35 perte due au facteur de charge",
+    "HOURLY_TANPHI_SIGNED_NOTE": "Convention de signe: valeur positive = perte, valeur negative = gain potentiel.",
+    "HOURLY_TANPHI_LIMITS_TITLE": "Limites et avertissements",
+    "HOURLY_TANPHI_LIMIT_ENGINEERING": "Resultat fourni a titre d'engineering estimate (approximation), pas comme recalcul exact PVsyst.",
+    "HOURLY_TANPHI_LIMIT_NO_DIRECT_COS_ON_EGRID": "Le modele n'applique jamais directement E_Grid_est = cos(phi) * E_Grid.",
+    "HOURLY_TANPHI_LIMIT_RESIM_PVSYST": "Pour des decisions critiques, privilegier une vraie resimulation PVsyst avec variables detaillees.",
+    "HOURLY_TANPHI_REF_COMPUTED_NOTE": "Reference calculee depuis les energies apparente/reactive exportees dans le fichier horaire.",
+    "HOURLY_TANPHI_NOT_AVAILABLE": "Etude tan(phi) indisponible avec les colonnes actuelles.",
+    "HOURLY_AVAIL_TANPHI_APPROX": "Approximation tan(phi)",
+    "HOURLY_AVAIL_TANPHI_APPROX_DETAIL": "Necessite EOutInv et E_Grid, avec fiabilite accrue si EacOhmL et IL_Pmax sont presents.",
 }
+
+
+

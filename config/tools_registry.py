@@ -61,6 +61,15 @@ TOOLS: List[ToolSpec] = [
         enabled=True,
         badge=None,
     ),
+    ToolSpec(
+        tool_id="bess_sizing",
+        page="pages/60_bess_sizing.py",
+        icon="🔋",
+        title_key="TOOL_BESS_SIZING_TITLE",
+        desc_key="TOOL_BESS_SIZING_DESC",
+        enabled=True,
+        badge="NEW",
+    ),
 ]
 
 

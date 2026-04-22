@@ -179,6 +179,7 @@ def _build_availability_rows(ctx: Any) -> pd.DataFrame:
     clip = results.get("inverter_clipping", {})
 
     has_egrid = "E_Grid" in cols
+    has_eoutinv = "EOutInv" in cols
     has_egrdlim = "EGrdLim" in cols
     has_load_factor_full = {"EApGrid", "EReGrid"}.issubset(cols)
     has_perf = any(c in cols for c in ["PR", "GlobInc", "GlobEff", "Yf", "EArray"])
@@ -235,6 +236,11 @@ def _build_availability_rows(ctx: Any) -> pd.DataFrame:
                 if has_egrid else
                 t("HOURLY_AVAIL_LOAD_FACTOR_DETAIL_MISSING")
             ),
+        },
+        {
+            t("HOURLY_AVAIL_STUDY"): t("HOURLY_AVAIL_TANPHI_APPROX"),
+            t("HOURLY_AVAIL_STATUS"): t("HOURLY_STATUS_AVAILABLE") if (has_eoutinv and has_egrid) else t("HOURLY_STATUS_MISSING"),
+            t("HOURLY_AVAIL_DETAIL"): t("HOURLY_AVAIL_TANPHI_APPROX_DETAIL"),
         },
     ]
 
@@ -612,6 +618,7 @@ with section("SECTION_RESULTS"):
             lf = ctx.results.get("load_factor", {})
             thr = ctx.results.get("threshold", {})
             perf = ctx.results.get("performance_monthly", {})
+            tanphi_impact = ctx.results.get("tanphi_impact", {})
 
             dt_hours = 1.0
             irregular = 0.0
@@ -744,6 +751,7 @@ with section("SECTION_RESULTS"):
             if gl and gl.get("available", False):
                 gl_s = gl.get("summary", {})
                 method = str(gl_s.get("method", ""))
+                detected_col = str(gl_s.get("limit_parameter_column", "-"))
 
                 st.write({
                     t("HOURLY_LIMIT_METHOD"): (
@@ -753,42 +761,90 @@ with section("SECTION_RESULTS"):
                         if method == "estimated_from_capacity"
                         else "-"
                     ),
+                    t("HOURLY_LIMIT_DETECTED_COLUMN"): detected_col,
                     t("HOURLY_GRID_LOST_ENERGY") + " (kWh)": _fmt_num(gl_s.get("lost_kwh"), 0),
                     t("HOURLY_GRID_LOST_PCT"): _fmt_pct(gl_s.get("lost_pct"), 2),
                     t("HOURLY_GRID_HOURS_LIMITED"): f"{_fmt_num(gl_s.get('hours_limited'), 1)} h",
                     t("HOURLY_GRID_INJECTED") + " (kWh)": _fmt_num(gl_s.get("injected_kwh"), 0),
                 })
+
+                if method == "measured":
+                    gl_monthly_main = _sort_month_name(gl.get("monthly", pd.DataFrame()))
+                    if gl_monthly_main is not None and not gl_monthly_main.empty and "lost_kwh" in gl_monthly_main.columns:
+                        fig_gl_param = _bar(
+                            gl_monthly_main,
+                            x="month_name",
+                            y="lost_kwh",
+                            title="Monthly Lost Energy From File Limit Parameter",
+                            xlab="Month",
+                            ylab="Lost Energy (kWh)",
+                        )
+                        _centered_plot(fig_gl_param, key="grid_param_hist_main", ratio=(1, 3, 1), height=420)
             else:
                 st.info(t("HOURLY_GRID_LIMIT_NOT_AVAILABLE"))
 
             st.markdown(f"**{t('HOURLY_LIMIT_COMPLEMENTARY_STUDY_TITLE')}**")
             if thr and thr.get("available", False):
                 thr_s = thr.get("summary", {})
+                lost_kwh = thr_s.get("lost_kwh", thr_s.get("energy_above_kwh"))
+                lost_pct = thr_s.get("lost_pct_of_production")
+                if lost_pct is None:
+                    prod_wo_import = thr_s.get("production_without_import_kwh")
+                    if (prod_wo_import is None or float(prod_wo_import) <= 0.0) and gp and gp.get("available", False):
+                        prod_wo_import = (gp.get("summary", {}) or {}).get("production_without_import_kwh")
+                    try:
+                        lost_pct = 100.0 * float(lost_kwh) / float(prod_wo_import) if float(prod_wo_import) > 0 else 0.0
+                    except Exception:
+                        lost_pct = 0.0
                 st.write({
                     t("HOURLY_LIMIT_COLUMN_LABEL"): thr_s.get("threshold_column", "-"),
                     t("HOURLY_LIMIT_VALUE_LABEL"): _fmt_num(thr_s.get("threshold_value"), 2),
                     t("HOURLY_THR_HOURS_ABOVE"): f"{_fmt_num(thr_s.get('hours_above'), 1)} h",
-                    t("HOURLY_THR_SHARE_ABOVE"): _fmt_pct(thr_s.get("pct_above_operating_time"), 1),
-                    t("HOURLY_THR_ENERGY_ABOVE") + " (kWh)": _fmt_num(thr_s.get("energy_above_kwh"), 0),
+                    t("HOURLY_THR_SHARE_ABOVE"): _fmt_pct(lost_pct, 1),
+                    t("HOURLY_THR_ENERGY_ABOVE") + " (kWh)": _fmt_num(lost_kwh, 0),
                 })
 
                 monthly = _sort_month_name(thr.get("monthly", pd.DataFrame()))
-                if monthly is not None and not monthly.empty and "energy_above_kwh" in monthly.columns:
+                if monthly is not None and not monthly.empty:
+                    monthly_plot = monthly.copy()
+                    if "lost_kwh" not in monthly_plot.columns and "energy_above_kwh" in monthly_plot.columns:
+                        monthly_plot["lost_kwh"] = pd.to_numeric(monthly_plot["energy_above_kwh"], errors="coerce")
+                else:
+                    monthly_plot = monthly
+
+                if monthly_plot is not None and not monthly_plot.empty and "lost_kwh" in monthly_plot.columns:
                     fig_thr = _bar(
-                        monthly[monthly["month_name"] != "Annual"] if "Annual" in monthly["month_name"].astype(str).tolist() else monthly,
+                        monthly_plot[monthly_plot["month_name"] != "Annual"] if "Annual" in monthly_plot["month_name"].astype(str).tolist() else monthly_plot,
                         x="month_name",
-                        y="energy_above_kwh",
-                        title="Monthly Energy Above Limit",
+                        y="lost_kwh",
+                        title="Monthly Lost Energy Due To Limit",
                         xlab="Month",
-                        ylab="Energy Above Limit (kWh)",
+                        ylab="Lost Energy (kWh)",
                     )
                     _centered_plot(fig_thr, key="threshold_monthly_main", ratio=(1, 3, 1), height=420)
             else:
-                st.info(t("HOURLY_THRESHOLD_NOT_AVAILABLE"))
+                if thr and thr.get("disabled_zero_limit", False):
+                    st.info(t("HOURLY_THRESHOLD_DISABLED_ZERO"))
+                else:
+                    st.info(t("HOURLY_THRESHOLD_NOT_AVAILABLE"))
 
             _subheader_with_help("HOURLY_SECTION_LOAD_FACTOR_TITLE", "HOURLY_HELP_LOAD_FACTOR_MD")
             if lf and lf.get("available", False):
                 lf_s = lf.get("summary", {})
+                ref_source = lf_s.get("reference_declared_power_source")
+                if ref_source == "grid_capacity_input":
+                    ref_source_label = t("HOURLY_LF_REFERENCE_SOURCE_INPUT")
+                elif ref_source == "observed_active_peak":
+                    ref_source_label = t("HOURLY_LF_REFERENCE_SOURCE_PEAK")
+                else:
+                    ref_source_label = "-"
+                ref_declared_mw = None
+                try:
+                    ref_kw = lf_s.get("reference_declared_power_kw")
+                    if ref_kw is not None:
+                        ref_declared_mw = float(ref_kw) / 1000.0
+                except Exception:
+                    ref_declared_mw = None
                 st.write({
                     t("HOURLY_LF_P_ACTIVE") + " (kWh)": _fmt_num(lf_s.get("P_kWh"), 0),
                     t("HOURLY_LF_Q_REACTIVE") + " (kWh)": _fmt_num(lf_s.get("Q_kWh_equiv"), 0),
@@ -797,24 +853,127 @@ with section("SECTION_RESULTS"):
                     t("HOURLY_LF_Q_SHARE"): (
                         f"{100.0 * float(lf_s.get('q_share')):.2f} %" if lf_s.get("q_share") is not None else "-"
                     ),
+                    t("HOURLY_LF_ACTIVE_LOSS_KWH") + " (kWh)": _fmt_num(lf_s.get("active_loss_due_pf_kwh"), 0),
+                    t("HOURLY_LF_ACTIVE_LOSS_PCT"): _fmt_pct(lf_s.get("active_loss_due_pf_pct"), 2),
+                    t("HOURLY_LF_REFERENCE_DECLARED_POWER") + " (MW)": _fmt_num(ref_declared_mw, 3),
+                    t("HOURLY_LF_REFERENCE_SOURCE"): ref_source_label,
                 })
-
-                lf_m = _sort_month_name(lf.get("monthly", pd.DataFrame()))
-                if lf_m is not None and not lf_m.empty and "cosphi" in lf_m.columns and lf_m["cosphi"].notna().any():
-                    fig_lf = _line(
-                        lf_m[lf_m["month_name"] != "Annual"] if "Annual" in lf_m["month_name"].astype(str).tolist() else lf_m,
-                        x="month_name",
-                        y="cosphi",
-                        title="Monthly Power Factor",
-                        xlab="Month",
-                        ylab="cos(phi)",
-                    )
-                    _centered_plot(fig_lf, key="cosphi_monthly_main", ratio=(1, 3, 1), height=420)
             else:
                 if "E_Grid" in cols:
                     st.info(t("HOURLY_LOAD_FACTOR_ESTIMABLE"))
                 else:
                     st.info(t("HOURLY_LOAD_FACTOR_NOT_AVAILABLE"))
+
+            lower_cols = {str(c).lower() for c in cols}
+            has_tanphi_min_cols = ("eoutinv" in lower_cols) and ("e_grid" in lower_cols)
+            if has_tanphi_min_cols:
+                _subheader_with_help("HOURLY_TANPHI_SECTION_TITLE", "HOURLY_HELP_TANPHI_APPROX_MD")
+                st.info(t("HOURLY_TANPHI_METHOD_CARD"))
+                st.warning(t("HOURLY_TANPHI_PRECISION_WARNING"))
+
+                if tanphi_impact and tanphi_impact.get("available", False):
+                    tanphi_s = tanphi_impact.get("summary", {}) or {}
+                    tanphi_df = tanphi_impact.get("scenarios", pd.DataFrame())
+                    assumed_ref = bool(tanphi_s.get("assumed_tan_phi_ref_default", True))
+                    ref_source = str(tanphi_s.get("tan_phi_ref_source", "assumed_zero"))
+
+                    mode_used = str(tanphi_s.get("mode_used", "fallback"))
+                    mode_label = (
+                        t("HOURLY_TANPHI_MODE_ENHANCED")
+                        if mode_used == "enhanced"
+                        else t("HOURLY_TANPHI_MODE_FALLBACK")
+                    )
+                    ref_source_label = (
+                        t("HOURLY_TANPHI_REF_SOURCE_COMPUTED")
+                        if ref_source == "computed_from_apparent_reactive"
+                        else t("HOURLY_TANPHI_REF_SOURCE_ASSUMED")
+                    )
+                    if assumed_ref:
+                        st.caption(t("HOURLY_TANPHI_REF_ASSUMPTION_NOTE"))
+                    else:
+                        st.caption(t("HOURLY_TANPHI_REF_COMPUTED_NOTE"))
+
+                    tanphi_info = {
+                        t("HOURLY_TANPHI_MODE_LABEL"): mode_label,
+                        t("HOURLY_TANPHI_RANGE_LABEL"): "0.25 -> 0.35 (step 0.01)",
+                        t("HOURLY_TANPHI_REF_LABEL"): f"tan(phi)_ref = {_fmt_num(tanphi_s.get('tan_phi_ref'), 2)}",
+                        t("HOURLY_TANPHI_REF_COS_LABEL"): f"cos(phi)_ref = {_fmt_num(tanphi_s.get('cos_phi_ref'), 3)}",
+                        t("HOURLY_TANPHI_REF_SOURCE_LABEL"): ref_source_label,
+                        t("HOURLY_TANPHI_REF_ENERGY_LABEL") + " (MWh)": _fmt_num(
+                            tanphi_s.get("annual_ref_EGrid_MWh"), 2
+                        ),
+                        t("HOURLY_TANPHI_COL_OUT"): str(tanphi_s.get("out_column", "EOutInv")),
+                        t("HOURLY_TANPHI_COL_GRID"): str(tanphi_s.get("grid_column", "E_Grid")),
+                    }
+                    if tanphi_s.get("annual_ref_EGrdLim_MWh") is not None:
+                        tanphi_info[t("HOURLY_TANPHI_REF_EGRDLIM_LABEL") + " (MWh)"] = _fmt_num(
+                            tanphi_s.get("annual_ref_EGrdLim_MWh"), 2
+                        )
+                    st.write(tanphi_info)
+
+                    if tanphi_df is not None and not tanphi_df.empty:
+                        tan_series = pd.to_numeric(tanphi_df.get("tan_phi"), errors="coerce")
+                        if tan_series.notna().any():
+                            idx_025 = (tan_series - 0.25).abs().idxmin()
+                            idx_035 = (tan_series - 0.35).abs().idxmin()
+                            row_025 = tanphi_df.loc[idx_025]
+                            row_035 = tanphi_df.loc[idx_035]
+
+                            def _loss_mwh(row: pd.Series) -> float:
+                                if "annual_energy_loss_MWh" in row.index and pd.notna(row.get("annual_energy_loss_MWh")):
+                                    return float(row.get("annual_energy_loss_MWh", 0.0))
+                                return -float(row.get("delta_vs_ref_MWh", 0.0))
+
+                            loss_025_mwh = _loss_mwh(row_025)
+                            loss_035_mwh = _loss_mwh(row_035)
+                            loss_025_pct = -float(row_025.get("delta_vs_ref_pct", 0.0))
+                            loss_035_pct = -float(row_035.get("delta_vs_ref_pct", 0.0))
+
+                            st.markdown(f"**{t('HOURLY_TANPHI_EXTREMES_TITLE')}**")
+                            st.write(
+                                {
+                                    t("HOURLY_TANPHI_025_PDECL") + " (MW)": _fmt_num(row_025.get("P_decl_opt_MW"), 3),
+                                    t("HOURLY_TANPHI_025_LOSS_MWH") + " (MWh)": _fmt_num(loss_025_mwh, 2),
+                                    t("HOURLY_TANPHI_025_LOSS_PCT"): _fmt_pct(loss_025_pct, 2),
+                                    t("HOURLY_TANPHI_035_PDECL") + " (MW)": _fmt_num(row_035.get("P_decl_opt_MW"), 3),
+                                    t("HOURLY_TANPHI_035_LOSS_MWH") + " (MWh)": _fmt_num(loss_035_mwh, 2),
+                                    t("HOURLY_TANPHI_035_LOSS_PCT"): _fmt_pct(loss_035_pct, 2),
+                                }
+                            )
+                            st.caption(t("HOURLY_TANPHI_SIGNED_NOTE"))
+
+                        if "annual_energy_loss_MWh" in tanphi_df.columns:
+                            fig_loss = _line(
+                                tanphi_df,
+                                x="tan_phi",
+                                y="annual_energy_loss_MWh",
+                                title=t("HOURLY_TANPHI_CHART_LOSS_TITLE"),
+                                xlab="tan(phi)",
+                                ylab=t("HOURLY_TANPHI_Y_LOSS"),
+                            )
+                            _centered_plot(fig_loss, key="tanphi_loss_main", ratio=(1, 3, 1), height=420)
+
+                        fig_pdecl = _line(
+                            tanphi_df,
+                            x="tan_phi",
+                            y="P_decl_opt_MW",
+                            title=t("HOURLY_TANPHI_CHART_PDECL_TITLE"),
+                            xlab="tan(phi)",
+                            ylab=t("HOURLY_TANPHI_Y_PDECL"),
+                        )
+                        _centered_plot(fig_pdecl, key="tanphi_pdecl_main", ratio=(1, 3, 1), height=420)
+
+                    st.markdown(f"**{t('HOURLY_TANPHI_LIMITS_TITLE')}**")
+                    st.markdown(
+                        "- "
+                        + t("HOURLY_TANPHI_LIMIT_ENGINEERING")
+                        + "\n- "
+                        + t("HOURLY_TANPHI_LIMIT_NO_DIRECT_COS_ON_EGRID")
+                        + "\n- "
+                        + t("HOURLY_TANPHI_LIMIT_RESIM_PVSYST")
+                    )
+                else:
+                    st.info(t("HOURLY_TANPHI_NOT_AVAILABLE"))
 
         with tab_details:
             perf = ctx.results.get("performance_monthly", {})
@@ -823,6 +982,7 @@ with section("SECTION_RESULTS"):
             lf = ctx.results.get("load_factor", {})
             pd_res = ctx.results.get("power_distribution", {})
             clip = ctx.results.get("inverter_clipping", {})
+            tanphi_impact = ctx.results.get("tanphi_impact", {})
 
             _subheader_with_help("HOURLY_DETAILS_PERFORMANCE_TITLE", "HOURLY_HELP_PERFORMANCE_MONTHLY_MD")
             if perf and perf.get("available", False):
@@ -835,6 +995,13 @@ with section("SECTION_RESULTS"):
                 monthly_pct = _sort_month_name(thr.get("monthly_pct", pd.DataFrame()))
                 seasonal = thr.get("seasonal")
                 night_monthly = _sort_month_name(thr.get("night_consumption_monthly", pd.DataFrame()))
+
+                if monthly is not None and not monthly.empty and "lost_kwh" not in monthly.columns and "energy_above_kwh" in monthly.columns:
+                    monthly = monthly.copy()
+                    monthly["lost_kwh"] = pd.to_numeric(monthly["energy_above_kwh"], errors="coerce")
+                if seasonal is not None and not seasonal.empty and "lost_kwh" not in seasonal.columns and "energy_above_kwh" in seasonal.columns:
+                    seasonal = seasonal.copy()
+                    seasonal["lost_kwh"] = pd.to_numeric(seasonal["energy_above_kwh"], errors="coerce")
 
                 if monthly is not None and not monthly.empty:
                     fig1 = _bar(
@@ -850,10 +1017,10 @@ with section("SECTION_RESULTS"):
                     fig2 = _bar(
                         monthly[monthly["month_name"] != "Annual"] if "Annual" in monthly["month_name"].astype(str).tolist() else monthly,
                         x="month_name",
-                        y="energy_above_kwh",
-                        title="Monthly Energy Above Limit",
+                        y="lost_kwh",
+                        title="Monthly Lost Energy Due To Limit",
                         xlab="Month",
-                        ylab="Energy Above Limit (kWh)",
+                        ylab="Lost Energy (kWh)",
                     )
                     _centered_plot(fig2, key="thr_energy_detail", ratio=(1, 3, 1), height=420)
 
@@ -881,24 +1048,31 @@ with section("SECTION_RESULTS"):
 
                 st.markdown(f"**{t('HOURLY_TABLE_THRESHOLD_MONTHLY')}**")
                 m = thr["monthly"].copy()
+                if "lost_kwh" not in m.columns and "energy_above_kwh" in m.columns:
+                    m["lost_kwh"] = pd.to_numeric(m["energy_above_kwh"], errors="coerce")
                 m_disp = pd.DataFrame({
                     t("HOURLY_COL_MONTH"): m["month_name"],
                     t("HOURLY_COL_HOURS_ABOVE"): m["hours_above"].map(lambda v: format_number(v, 1)),
-                    t("HOURLY_COL_ENERGY_ABOVE_KWH"): m["energy_above_kwh"].map(lambda v: format_number(v, 0)),
+                    t("HOURLY_COL_ENERGY_ABOVE_KWH"): m["lost_kwh"].map(lambda v: format_number(v, 0)),
                 })
                 st.dataframe(m_disp, width="stretch", hide_index=True)
 
                 if seasonal is not None and not seasonal.empty:
                     st.markdown(f"**{t('HOURLY_TABLE_THRESHOLD_SEASONAL')}**")
                     s2 = seasonal.copy()
+                    if "lost_kwh" not in s2.columns and "energy_above_kwh" in s2.columns:
+                        s2["lost_kwh"] = pd.to_numeric(s2["energy_above_kwh"], errors="coerce")
                     s2_disp = pd.DataFrame({
                         t("HOURLY_COL_SEASON"): s2["season"],
                         t("HOURLY_COL_HOURS_ABOVE"): s2["hours_above"].map(lambda v: format_number(v, 1)),
-                        t("HOURLY_COL_ENERGY_ABOVE_KWH"): s2["energy_above_kwh"].map(lambda v: format_number(v, 0)),
+                        t("HOURLY_COL_ENERGY_ABOVE_KWH"): s2["lost_kwh"].map(lambda v: format_number(v, 0)),
                     })
                     st.dataframe(s2_disp, width="stretch", hide_index=True)
             else:
-                st.info(t("HOURLY_THRESHOLD_NOT_AVAILABLE"))
+                if thr and thr.get("disabled_zero_limit", False):
+                    st.info(t("HOURLY_THRESHOLD_DISABLED_ZERO"))
+                else:
+                    st.info(t("HOURLY_THRESHOLD_NOT_AVAILABLE"))
 
             _subheader_with_help("HOURLY_DETAILS_GRID_LIMIT_TITLE", "HOURLY_HELP_GRID_LIMIT_MD")
             if gl and gl.get("available", False):
@@ -969,17 +1143,6 @@ with section("SECTION_RESULTS"):
                 lf_m = _sort_month_name(lf.get("monthly", pd.DataFrame()))
                 sat = lf.get("saturation_distribution")
 
-                if lf_m is not None and not lf_m.empty and "cosphi" in lf_m.columns and lf_m["cosphi"].notna().any():
-                    fig7 = _line(
-                        lf_m,
-                        x="month_name",
-                        y="cosphi",
-                        title="Monthly Power Factor",
-                        xlab="Month",
-                        ylab="cos(phi)",
-                    )
-                    _centered_plot(fig7, key="lf_cosphi_detail", ratio=(1, 3, 1), height=420)
-
                 if sat is not None and not sat.empty:
                     fig8 = _bar(
                         sat,
@@ -993,14 +1156,22 @@ with section("SECTION_RESULTS"):
 
                 st.markdown(f"**{t('HOURLY_TABLE_LOAD_FACTOR_MONTHLY')}**")
                 lm = lf_m.copy()
-                lm_disp = pd.DataFrame({
-                    t("HOURLY_COL_MONTH"): lm["month_name"],
-                    t("HOURLY_LF_S_APPARENT"): lm["S_kWh_equiv"].map(lambda v: format_number(v, 0)),
-                    t("HOURLY_LF_Q_REACTIVE"): lm["Q_kWh_equiv"].map(lambda v: format_number(v, 0)),
-                    t("HOURLY_LF_P_ACTIVE"): lm["P_kWh"].map(lambda v: format_number(v, 0) if v is not None else "-"),
-                    t("HOURLY_LF_COSPHI"): lm["cosphi"].map(lambda v: f"{float(v):.3f}" if v is not None else "-"),
-                    t("HOURLY_LF_Q_SHARE"): lm["q_share"].map(lambda v: f"{100.0 * float(v):.2f} %" if v is not None else "-"),
-                })
+                lm_disp_dict: dict[str, Any] = {
+                    t("HOURLY_COL_MONTH"): lm["month_name"] if "month_name" in lm.columns else pd.Series(dtype=str),
+                }
+                if "S_kWh_equiv" in lm.columns:
+                    lm_disp_dict[t("HOURLY_LF_S_APPARENT")] = lm["S_kWh_equiv"].map(lambda v: format_number(v, 0))
+                if "Q_kWh_equiv" in lm.columns:
+                    lm_disp_dict[t("HOURLY_LF_Q_REACTIVE")] = lm["Q_kWh_equiv"].map(lambda v: format_number(v, 0))
+                if "P_kWh" in lm.columns:
+                    lm_disp_dict[t("HOURLY_LF_P_ACTIVE")] = lm["P_kWh"].map(
+                        lambda v: format_number(v, 0) if v is not None else "-"
+                    )
+                if "q_share" in lm.columns:
+                    lm_disp_dict[t("HOURLY_LF_Q_SHARE")] = lm["q_share"].map(
+                        lambda v: f"{100.0 * float(v):.2f} %" if (v is not None and pd.notna(v)) else "-"
+                    )
+                lm_disp = pd.DataFrame(lm_disp_dict)
                 st.dataframe(lm_disp, width="stretch", hide_index=True)
 
                 if sat is not None and not sat.empty:
@@ -1013,6 +1184,53 @@ with section("SECTION_RESULTS"):
                     st.dataframe(sd_disp, width="stretch", hide_index=True)
             else:
                 st.info(t("HOURLY_LOAD_FACTOR_NOT_AVAILABLE"))
+
+            lower_cols = {str(c).lower() for c in cols}
+            has_tanphi_min_cols = ("eoutinv" in lower_cols) and ("e_grid" in lower_cols)
+            if has_tanphi_min_cols:
+                _subheader_with_help("HOURLY_TANPHI_SECTION_TITLE", "HOURLY_HELP_TANPHI_APPROX_MD")
+                if tanphi_impact and tanphi_impact.get("available", False):
+                    tanphi_s = tanphi_impact.get("summary", {}) or {}
+                    assumed_ref = bool(tanphi_s.get("assumed_tan_phi_ref_default", True))
+                    if assumed_ref:
+                        st.caption(t("HOURLY_TANPHI_REF_ASSUMPTION_NOTE"))
+                    else:
+                        st.caption(t("HOURLY_TANPHI_REF_COMPUTED_NOTE"))
+                    tanphi_df = tanphi_impact.get("scenarios", pd.DataFrame())
+                    if tanphi_df is not None and not tanphi_df.empty:
+                        disp = tanphi_df.copy()
+                        if "mode_used" in disp.columns:
+                            disp["mode_used"] = disp["mode_used"].map(
+                                lambda v: t("HOURLY_TANPHI_MODE_ENHANCED")
+                                if str(v) == "enhanced"
+                                else t("HOURLY_TANPHI_MODE_FALLBACK")
+                            )
+                        disp_tbl = pd.DataFrame(
+                            {
+                                t("HOURLY_TANPHI_COL_TANPHI"): disp["tan_phi"].map(lambda v: format_number(v, 2)),
+                                t("HOURLY_TANPHI_COL_COSPHI"): disp["cos_phi"].map(lambda v: format_number(v, 3)),
+                                t("HOURLY_TANPHI_COL_MODE"): disp["mode_used"],
+                                t("HOURLY_TANPHI_COL_ANN_EGRID"): disp["annual_EGrid_est_MWh"].map(
+                                    lambda v: format_number(v, 2)
+                                ),
+                                t("HOURLY_TANPHI_COL_DELTA_MWH"): disp["delta_vs_ref_MWh"].map(
+                                    lambda v: format_number(v, 2)
+                                ),
+                                t("HOURLY_TANPHI_COL_DELTA_PCT"): disp["delta_vs_ref_pct"].map(lambda v: f"{float(v):.2f} %"),
+                                t("HOURLY_TANPHI_COL_PDECL"): disp["P_decl_opt_MW"].map(lambda v: format_number(v, 3)),
+                                t("HOURLY_TANPHI_COL_PEAK_OUT"): disp["peak_EOutInv_est_MW"].map(
+                                    lambda v: format_number(v, 3)
+                                ),
+                                t("HOURLY_TANPHI_COL_PEAK_GRID"): disp["peak_EGrid_est_MW"].map(
+                                    lambda v: format_number(v, 3)
+                                ),
+                                t("HOURLY_TANPHI_COL_WARNINGS"): disp["warnings"].astype(str),
+                            }
+                        )
+                        st.markdown(f"**{t('HOURLY_TANPHI_TABLE_TITLE')}**")
+                        st.dataframe(disp_tbl, width="stretch", hide_index=True)
+                else:
+                    st.info(t("HOURLY_TANPHI_NOT_AVAILABLE"))
 
             _subheader_with_help("HOURLY_DETAILS_POWER_DISTRIBUTION_TITLE", "HOURLY_HELP_POWER_DISTRIBUTION_MD")
             if not pd_res:

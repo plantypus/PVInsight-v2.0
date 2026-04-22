@@ -67,11 +67,40 @@ def _as_float(x: Any) -> Optional[float]:
         return None
 
 
-def _sorted_unique_points(raw_points: List[Dict[str, Any]]) -> List[Tuple[float, float]]:
+def _select_most_probable_iam(angle_deg: float, values: List[float]) -> float:
+    """
+    Pick the most probable IAM value among duplicates.
+    Heuristic:
+    - at 0°: choose value closest to 1.0 (physical expectation)
+    - otherwise: robust central estimate (median), projected to nearest observed value
+    """
+    clean = [v for v in values if isinstance(v, (int, float)) and math.isfinite(float(v))]
+    if not clean:
+        return float("nan")
+
+    vals = sorted(float(v) for v in clean)
+
+    # 0° IAM is expected to be very close to 1
+    if abs(float(angle_deg)) <= 1e-6:
+        return min(vals, key=lambda v: (abs(v - 1.0), abs(v)))
+
+    n = len(vals)
+    if n % 2 == 1:
+        med = vals[n // 2]
+    else:
+        med = 0.5 * (vals[(n // 2) - 1] + vals[n // 2])
+
+    # keep an observed value (not an averaged synthetic point)
+    return min(vals, key=lambda v: (abs(v - med), abs(v - 1.0)))
+
+
+def _sorted_unique_points(raw_points: List[Dict[str, Any]]) -> Tuple[List[Tuple[float, float]], List[str]]:
     """
     Keep only valid (angle_deg, iam) pairs, cast to float,
-    sort by angle, and keep last value if duplicate angles exist.
+    sort by angle, resolve duplicate angles with a robust heuristic,
+    and return warnings about duplicates.
     """
+    warnings: List[str] = []
     tmp: List[Tuple[float, float]] = []
     for p in raw_points:
         if not isinstance(p, dict):
@@ -80,18 +109,36 @@ def _sorted_unique_points(raw_points: List[Dict[str, Any]]) -> List[Tuple[float,
         f = _as_float(p.get("iam"))
         if a is None or f is None:
             continue
+        if not math.isfinite(a) or not math.isfinite(f):
+            continue
         tmp.append((float(a), float(f)))
 
     tmp.sort(key=lambda t: t[0])
 
-    # de-dup by angle (keep last)
-    out: List[Tuple[float, float]] = []
+    # group near-equal angles
+    groups: List[Tuple[float, List[float]]] = []
     for a, f in tmp:
-        if out and abs(out[-1][0] - a) < 1e-9:
-            out[-1] = (a, f)
+        if groups and abs(groups[-1][0] - a) < 1e-9:
+            groups[-1][1].append(f)
         else:
-            out.append((a, f))
-    return out
+            groups.append((a, [f]))
+
+    # de-dup by angle (most probable IAM value)
+    out: List[Tuple[float, float]] = []
+    for a, vals in groups:
+        if len(vals) == 1:
+            out.append((a, vals[0]))
+            continue
+
+        chosen = _select_most_probable_iam(a, vals)
+        out.append((a, chosen))
+        joined = ", ".join(f"{v:.4f}" for v in vals)
+        warnings.append(
+            f"IAM duplicate angle {a:.3f}° detected ({len(vals)} values: {joined}). "
+            f"Using most probable value: {chosen:.4f}."
+        )
+
+    return out, warnings
 
 
 def _is_monotone_nonincreasing(vals: List[float], tol: float = 1e-9) -> bool:
@@ -168,7 +215,8 @@ def extract_iam_profile(pan_data: Dict[str, Any]) -> IAMPlotResult:
             stats={},
         )
 
-    pts = _sorted_unique_points(raw_points)
+    pts, dedup_warnings = _sorted_unique_points(raw_points)
+    warnings.extend(dedup_warnings)
 
     if len(pts) < 2:
         warnings.append("IAM profile has fewer than 2 valid points; plot may be uninformative.")
@@ -220,6 +268,12 @@ def extract_iam_profile(pan_data: Dict[str, Any]) -> IAMPlotResult:
     if angles:
         if abs(angles[0] - 0.0) > 1e-6:
             warnings.append("IAM does not start at 0°. Consider adding a 0° point for stability.")
+        else:
+            iam_at_0 = factors[0]
+            if abs(iam_at_0 - 1.0) > 0.03:
+                warnings.append(
+                    f"IAM at 0° is {iam_at_0:.4f}, expected very close to 1.0."
+                )
         if abs(angles[-1] - 90.0) > 1e-6:
             warnings.append("IAM does not end at 90°. Consider adding a 90° point for stability.")
 
@@ -321,16 +375,9 @@ def iam_png_from_result(result: Dict[str, Any], *, title: str = "IAM") -> Option
     if not isinstance(pts, list) or not pts:
         return None
 
-    x: List[float] = []
-    y: List[float] = []
-    for p in pts:
-        if not isinstance(p, dict):
-            continue
-        a = p.get("angle_deg")
-        f = p.get("iam")
-        if isinstance(a, (int, float)) and isinstance(f, (int, float)):
-            x.append(float(a))
-            y.append(float(f))
+    pairs, _ = _sorted_unique_points(pts if isinstance(pts, list) else [])
+    x = [a for a, _ in pairs]
+    y = [f for _, f in pairs]
 
     if len(x) < 2:
         return None

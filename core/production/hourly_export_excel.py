@@ -17,16 +17,23 @@ def export_excel(context: AnalysisContext, output: Path) -> None:
     - Hourly raw data
     - Units
     """
-    thr_res = context.results.get("threshold")
-    if not thr_res or not thr_res.get("available", False):
-        raise ValueError("Missing 'threshold' analysis — cannot export Excel.")
+    thr_res = context.results.get("threshold", {}) or {}
+    thr_available = bool(thr_res.get("available", False))
+    thr_summary = thr_res.get("summary", {}) or {}
+    if not thr_summary:
+        thr_summary = {
+            "threshold_column": getattr(context.options, "threshold_column", ""),
+            "threshold_value": float(getattr(context.options, "threshold_value", 0.0) or 0.0),
+            "night_disconnection": bool(getattr(context.options, "night_disconnection", False)),
+        }
 
     gp_res = context.results.get("global_production", {})
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
         workbook = writer.book
 
-        _export_summary(writer, context, gp_res, thr_res)
-        _export_threshold_excel(writer, workbook, thr_res)
+        _export_summary(writer, context, gp_res, thr_summary)
+        if thr_available:
+            _export_threshold_excel(writer, workbook, thr_res)
 
         pd_res = context.results.get("power_distribution")
         if pd_res and pd_res.get("available", False) and not pd_res.get("empty", False):
@@ -36,8 +43,7 @@ def export_excel(context: AnalysisContext, output: Path) -> None:
         _export_units(writer, context)
 
 
-def _export_summary(writer, context: AnalysisContext, gp_res: dict, thr_res: dict) -> None:
-    thr = thr_res["summary"]
+def _export_summary(writer, context: AnalysisContext, gp_res: dict, thr: dict) -> None:
 
     # Global production (optional)
     gp_summary = {}
@@ -62,8 +68,8 @@ def _export_summary(writer, context: AnalysisContext, gp_res: dict, thr_res: dic
 
             # Threshold
             "Hours above threshold",
-            "Share of operating time above threshold (%)",
-            "Energy above threshold (kWh)",
+            "Lost share vs production without import (%)",
+            "Lost energy due to studied limit (kWh)",
         ],
         "Value": [
             context.general_info.get("PVSyst_version", ""),
@@ -82,8 +88,8 @@ def _export_summary(writer, context: AnalysisContext, gp_res: dict, thr_res: dic
 
             # Threshold
             format_number(thr.get("hours_above", float("nan")), 0),
-            f"{thr.get('pct_above_operating_time', 0.0):.1f}",
-            format_number(thr.get("energy_above_kwh", float("nan")), 0),
+            f"{thr.get('lost_pct_of_production', 0.0):.1f}",
+            format_number(thr.get("lost_kwh", thr.get("energy_above_kwh", float("nan"))), 0),
         ],
     })
 

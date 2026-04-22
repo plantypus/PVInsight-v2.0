@@ -170,6 +170,7 @@ def analyze_grid_limit(context: AnalysisContext) -> None:
     # Decide mode
     has_egrdlim = "EGrdLim" in cols
     cap_kw = _as_optional_capacity_kw(context)
+    limit_parameter_column = "EGrdLim" if has_egrdlim else "E_Grid"
 
     method = None  # "measured" | "estimated_from_capacity"
     note = None
@@ -314,6 +315,8 @@ def analyze_grid_limit(context: AnalysisContext) -> None:
         "summary": {
             "method": method,
             "note": note,  # i18n key (optional), e.g. "estimated_losses_from_capacity"
+            "limit_parameter_column": limit_parameter_column,
+            "limit_parameter_in_file": bool(has_egrdlim),
             "dt_hours": dt_hours,
             "dt_meta": dt_meta,
             "lost_kwh": float(lost_kwh),

@@ -7,6 +7,7 @@ from app.bootstrap import configure_page, bootstrap
 from config.config import APP_NAME, APP_VERSION, LOGO_PNG
 from config.tools_registry import TOOLS
 from ui.i18n import t
+from ui.layout import render_local_image_inline
 
 
 # page_title should stay static (not translated) for Streamlit config behavior.
@@ -25,7 +26,7 @@ with cols[0]:
             logo = cand
 
     if logo.exists():
-        st.image(str(logo), width=110)
+        render_local_image_inline(logo, width=110)
 
 with cols[1]:
     st.markdown(f"<div class='pv-title'>{t('APP_TITLE')}</div>", unsafe_allow_html=True)

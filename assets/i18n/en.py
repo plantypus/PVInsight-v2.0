@@ -163,6 +163,7 @@ TEXTS = {
   "HOURLY_RESULTS_CLIPPING": "Study: Inverter clipping",
 
   "HOURLY_THRESHOLD_NOT_AVAILABLE": "Threshold study is unavailable (missing column).",
+    "HOURLY_THRESHOLD_DISABLED_ZERO": "Studied limit is 0: complementary analysis is skipped.",
   "HOURLY_DISTRIBUTION_NOT_AVAILABLE": "Distribution study is unavailable (missing column).",
   "HOURLY_CLIPPING_NOT_AVAILABLE": "Clipping study is unavailable (missing columns).",
   "HOURLY_CLIPPING_NOT_RUN": "No clipping data.",
@@ -173,7 +174,7 @@ TEXTS = {
 
   "HOURLY_THR_OPERATING_HOURS": "Operating hours (>0)",
   "HOURLY_THR_HOURS_ABOVE": "Hours above threshold",
-  "HOURLY_THR_SHARE_ABOVE": "Share of operating time above threshold",
+  "HOURLY_THR_SHARE_ABOVE": "Loss share vs production without import",
   "HOURLY_THR_SUM_ABOVE": "Sum above threshold",
 
   "HOURLY_CLIP_HOURS": "Clipping hours",
@@ -244,11 +245,11 @@ TEXTS = {
   "HOURLY_CHART_MONTHLY_ENERGY_ABOVE": "Monthly — energy above threshold",
   "HOURLY_Y_ENERGY_KWH": "Energy (kWh)",
 
-  "HOURLY_COL_ENERGY_ABOVE_KWH": "Energy above threshold (kWh)",
+  "HOURLY_COL_ENERGY_ABOVE_KWH": "Lost energy (kWh)",
   "HOURLY_COL_HOURS": "Hours",
   "HOURLY_COL_ENERGY_KWH": "Energy (kWh)",
 
-  "HOURLY_THR_ENERGY_ABOVE": "Energy above threshold",
+  "HOURLY_THR_ENERGY_ABOVE": "Lost energy due to studied limit",
 
   "HOURLY_INPUTS_GUIDE_GRID_CAPACITY": "Grid capacity (optional): enables annual/monthly load factor calculation when available.",
 
@@ -423,7 +424,7 @@ TEXTS = {
     "HOURLY_LIMIT_METHOD": "Method",
     "HOURLY_LIMIT_METHOD_MEASURED": "Measured in file",
     "HOURLY_LIMIT_METHOD_ESTIMATED": "Estimated from provided capacity",
-
+    "HOURLY_LIMIT_DETECTED_COLUMN": "Detected column", 
     "HOURLY_CHART_DURATION_CURVE_THRESHOLD": "Duration curve with threshold",
     "HOURLY_X_DURATION_RANK": "Rank",
     "HOURLY_Y_POWER_OR_ENERGY": "Value",
@@ -562,6 +563,7 @@ TEXTS = {
     "HOURLY_LIMIT_METHOD": "Method",
     "HOURLY_LIMIT_METHOD_MEASURED": "Measured in file",
     "HOURLY_LIMIT_METHOD_ESTIMATED": "Estimated from provided capacity",
+    "HOURLY_LIMIT_DETECTED_COLUMN": "Detected column",
     "HOURLY_GRID_LOST_ENERGY": "Curtailment energy loss",
     "HOURLY_GRID_LOST_PCT": "Loss share",
     "HOURLY_GRID_HOURS_LIMITED": "Curtailed duration",
@@ -570,17 +572,33 @@ TEXTS = {
 
     "HOURLY_LIMIT_COMPLEMENTARY_STUDY_TITLE": "Complementary limit study",
     "HOURLY_THR_HOURS_ABOVE": "Duration above limit",
-    "HOURLY_THR_SHARE_ABOVE": "Share of operating time above limit",
-    "HOURLY_THR_ENERGY_ABOVE": "Energy above limit",
+    "HOURLY_THR_SHARE_ABOVE": "Loss share vs production without import",
+    "HOURLY_THR_ENERGY_ABOVE": "Lost energy due to studied limit",
     "HOURLY_THRESHOLD_NOT_AVAILABLE": "Limit study not available.",
-
+    "HOURLY_THRESHOLD_DISABLED_ZERO": "Studied limit is 0: complementary analysis is skipped.",
     "HOURLY_SECTION_LOAD_FACTOR_TITLE": "Active / reactive grid analysis",
-    "HOURLY_HELP_LOAD_FACTOR_MD": "This section presents active, reactive, and apparent quantities as well as a cos(phi) indicator when the required columns are available.",
+    "HOURLY_HELP_LOAD_FACTOR_MD": "This section presents active, reactive, and apparent quantities with an annual cos(phi) indicator. It also includes a complementary tan(phi)=0.25 to 0.35 analysis to estimate active-energy loss and the minimum active injection power to declare (MW) with no production impact.",
     "HOURLY_LF_P_ACTIVE": "Active energy",
     "HOURLY_LF_Q_REACTIVE": "Reactive energy",
     "HOURLY_LF_S_APPARENT": "Apparent energy",
     "HOURLY_LF_COSPHI": "cos(phi)",
     "HOURLY_LF_Q_SHARE": "Reactive share",
+    "HOURLY_LF_ACTIVE_LOSS_KWH": "Theoretical active loss due to power factor",
+    "HOURLY_LF_ACTIVE_LOSS_PCT": "Theoretical active loss share",
+    "HOURLY_LF_REFERENCE_DECLARED_POWER": "Reference active power",
+    "HOURLY_LF_REFERENCE_SOURCE": "Reference power source",
+    "HOURLY_LF_REFERENCE_SOURCE_INPUT": "Provided grid capacity",
+    "HOURLY_LF_REFERENCE_SOURCE_PEAK": "Observed active power peak",
+    "HOURLY_LF_SCENARIOS_TITLE": "tan(phi) 0.25 to 0.35 scenarios",
+    "HOURLY_LF_COL_CASE": "Case",
+    "HOURLY_LF_CASE_BEST": "Best case (tan(phi)=0.25)",
+    "HOURLY_LF_CASE_WORST": "Worst case (tan(phi)=0.35)",
+    "HOURLY_LF_COL_TANPHI": "tan(phi)",
+    "HOURLY_LF_COL_COSPHI": "cos(phi)",
+    "HOURLY_LF_COL_ACTIVE_LIMIT_KW": "Active limit under constraint (MW)",
+    "HOURLY_LF_COL_LOSS_KWH": "Lost active energy (kWh)",
+    "HOURLY_LF_COL_LOSS_PCT": "Loss vs no constraint",
+    "HOURLY_LF_COL_MIN_DECLARED_KVA": "Minimum active power to declare with no impact (MW)",
     "HOURLY_LOAD_FACTOR_ESTIMABLE": "The detailed active / reactive simulation is not present in the file, but a potential impact could be estimated in a future update.",
     "HOURLY_LOAD_FACTOR_NOT_AVAILABLE": "Active / reactive analysis not available.",
 
@@ -588,7 +606,7 @@ TEXTS = {
     "HOURLY_TABLE_THRESHOLD_MONTHLY": "Monthly limit table",
     "HOURLY_COL_MONTH": "Month",
     "HOURLY_COL_HOURS_ABOVE": "Hours above",
-    "HOURLY_COL_ENERGY_ABOVE_KWH": "Energy above (kWh)",
+    "HOURLY_COL_ENERGY_ABOVE_KWH": "Lost energy (kWh)",
     "HOURLY_TABLE_THRESHOLD_SEASONAL": "Seasonal limit table",
     "HOURLY_COL_SEASON": "Season",
 
@@ -626,7 +644,7 @@ TEXTS = {
         "night import, possible grid curtailment, the overall system state, and a curtailment recommendation. "
         "System state criteria: very low constraint < 1%, low constraint from 1 to < 3%, moderate constraint "
         "from 3 to < 6%, high constraint ≥ 6% of total losses relative to production excluding night import. "
-        "The curtailment recommendation is based on energy above the studied limit and on the average operating "
+        "The curtailment recommendation is based on energy lost due to the studied limit and on the average operating "
         "rate during productive hours, computed relative to the maximum observed positive value."
     ),
     "HOURLY_SYSTEM_SENTENCE_GENERAL": "The plant produces **{prod_mwh}** MWh/year excluding night import.",
@@ -645,18 +663,18 @@ TEXTS = {
     "HOURLY_SYSTEM_STATE_HIGH_CONSTRAINT": "high constraint",
     "HOURLY_BRIDGING_RECOMMENDATION_FAVORABLE": (
         "Curtailment appears feasible: the plant operates on average at {utilization_pct} "
-        "of its maximum observed value during productive hours, and the share of energy above "
-        "the studied limit remains low ({energy_above_pct})."
+        "of its maximum observed value during productive hours, and the share of lost energy "
+        "remains low ({energy_above_pct})."
     ),
     "HOURLY_BRIDGING_RECOMMENDATION_CAUTION": (
         "Curtailment may be considered with caution: the plant operates on average at {utilization_pct} "
         "of its maximum observed value during productive hours, with {energy_above_pct} of energy "
-        "above the studied limit."
+        "lost due to the studied limit."
     ),
     "HOURLY_BRIDGING_RECOMMENDATION_NOT_RECOMMENDED": (
         "Curtailment is not especially recommended at this level: the plant already operates at "
         "{utilization_pct} of its maximum observed value during productive hours or the share of "
-        "energy above the studied limit becomes significant ({energy_above_pct})."
+        "lost energy becomes significant ({energy_above_pct})."
     ),
     "HOURLY_BRIDGING_RECOMMENDATION_NOT_AVAILABLE": (
         "No curtailment recommendation is available until a relevant studied limit is defined."
@@ -680,7 +698,7 @@ TEXTS = {
         "night import, possible grid curtailment, the overall system state, and a curtailment recommendation. "
         "System state criteria: very low constraint < 1%, low constraint from 1 to < 3%, moderate constraint "
         "from 3 to < 6%, high constraint ≥ 6% of total losses relative to production excluding night import. "
-        "The curtailment recommendation is based on energy above the studied limit and on the average operating "
+        "The curtailment recommendation is based on energy lost due to the studied limit and on the average operating "
         "rate during productive hours, computed relative to the P99 percentile of observed positive values."
     ),
     "HOURLY_SYSTEM_SENTENCE_GENERAL": "The plant produces **{prod_mwh}** MWh/year excluding night import.",
@@ -718,18 +736,18 @@ TEXTS = {
 
     "HOURLY_BRIDGING_RECOMMENDATION_FAVORABLE": (
         "Curtailment appears feasible: the plant operates on average at {utilization_pct} "
-        "of its usual high operating level (P99) during productive hours, and the share of energy "
-        "above the studied limit remains low ({energy_above_pct})."
+        "of its usual high operating level (P99) during productive hours, and the share of lost energy "
+        "remains low ({energy_above_pct})."
     ),
     "HOURLY_BRIDGING_RECOMMENDATION_CAUTION": (
         "Curtailment may be considered with caution: the plant operates on average at {utilization_pct} "
         "of its usual high operating level (P99) during productive hours, with {energy_above_pct} of "
-        "energy above the studied limit."
+        "energy lost due to the studied limit."
     ),
     "HOURLY_BRIDGING_RECOMMENDATION_NOT_RECOMMENDED": (
         "Curtailment is not especially recommended at this level: the plant already operates at "
         "{utilization_pct} of its usual high operating level (P99) during productive hours or the share "
-        "of energy above the studied limit becomes significant ({energy_above_pct})."
+        "of lost energy becomes significant ({energy_above_pct})."
     ),
     "HOURLY_BRIDGING_RECOMMENDATION_NOT_AVAILABLE": (
         "No curtailment recommendation is available until a relevant studied limit is defined."
@@ -1451,6 +1469,375 @@ If parameters are left empty, default values will be used.
 
     "MARKET_ANALYSIS_COMPARE_CONCLUSION_NONE": "No strong comparative conclusion could be drawn.",
 
+    "TOOL_BESS_SIZING_TITLE": "BESS PV sizing",
+    "TOOL_BESS_SIZING_DESC": "MW x MWh screening of a PV-coupled BESS with hourly dispatch optimization against day-ahead prices.",
+
+    "BESS_SIZING_INPUT_GUIDE_TITLE": "V1 setup - PV coupled battery",
+    "BESS_SIZING_INPUT_GUIDE_BODY": (
+        "- Upload annual PV production, TMY weather file, and market price source (API recommended).\n"
+        "- Review or adjust automatically detected column mapping.\n"
+        "- Define the power-duration grid and run screening."
+    ),
+    "BESS_SIZING_UPLOAD_PV": "PV production file (annual)",
+    "BESS_SIZING_UPLOAD_TMY": "TMY weather file (hourly or 15 min)",
+    "BESS_SIZING_MARKET_SOURCE": "Day-ahead price source",
+    "BESS_SIZING_MARKET_SOURCE_API": "Market tool API (recommended)",
+    "BESS_SIZING_MARKET_SOURCE_CSV": "Price CSV file",
+    "BESS_SIZING_MARKET_BZN": "Market zone (BZN)",
+    "BESS_SIZING_MARKET_YEAR": "Price year",
+    "BESS_SIZING_UPLOAD_MARKET": "Day-ahead price file",
+
+    "BESS_SIZING_COL_TIMESTAMP_PV": "PV timestamp column",
+    "BESS_SIZING_COL_VALUE_PV": "PV energy/power column",
+    "BESS_SIZING_COL_TIMESTAMP_TMY": "TMY timestamp column",
+    "BESS_SIZING_COL_VALUE_TMY": "TMY signal column (coherence)",
+    "BESS_SIZING_COL_TIMESTAMP_MARKET": "Price timestamp column",
+    "BESS_SIZING_COL_VALUE_MARKET": "Price column",
+    "BESS_SIZING_UNIT_PV": "PV unit",
+    "BESS_SIZING_UNIT_MARKET": "Price unit",
+    "BESS_SIZING_DETECTED_UNIT": "Detected unit",
+
+    "BESS_SIZING_SIZING_PARAMS_TITLE": "Screening parameters",
+    "BESS_SIZING_ANALYSIS_STRATEGY_INFO": (
+        "V2 strategy: the tool always runs marginal optimization and CAPEX/OPEX analysis "
+        "(default or user-edited assumptions), then compares the optimized configuration with the gross-max one."
+    ),
+    "BESS_SIZING_INPUT_TAB_TECH": "Technical",
+    "BESS_SIZING_INPUT_TAB_ECON": "CAPEX / OPEX",
+    "BESS_SIZING_POWER_MIN": "Power min (MW)",
+    "BESS_SIZING_POWER_MAX": "Power max (MW)",
+    "BESS_SIZING_POWER_STEP": "Power step (MW)",
+    "BESS_SIZING_DURATIONS": "Durations to test (h)",
+    "BESS_SIZING_DURATIONS_HELP": "Recommended utility-scale durations: 2h, 4h, 6h, 8h, 10h.",
+    "BESS_SIZING_SOC_MIN": "SOC min (0-1)",
+    "BESS_SIZING_SOC_MAX": "SOC max (0-1)",
+    "BESS_SIZING_SOC_INITIAL": "SOC initial (0-1)",
+    "BESS_SIZING_ROUNDTRIP": "Target roundtrip efficiency (0-1)",
+    "BESS_SIZING_ENFORCE_TERMINAL_SOC": "Enforce final SOC = initial SOC",
+    "BESS_SIZING_SOLVER_MODE": "Dispatch solver",
+    "BESS_SIZING_SOLVER_AUTO": "LP if available (else heuristic)",
+    "BESS_SIZING_SOLVER_HEURISTIC": "Heuristic only",
+    "BESS_SIZING_SOLVER_MODE_HELP": (
+        "LP (linear program) finds the global optimum under hourly constraints and is more robust. "
+        "Heuristic uses simple fast rules but can be sub-optimal."
+    ),
+    "BESS_SIZING_RUN_SECTION_TITLE": "Screening execution",
+    "BESS_SIZING_EXPORT_SECTION_TITLE": "Exports",
+
+    "BESS_SIZING_RUN_BUTTON": "Run BESS screening",
+    "BESS_SIZING_RUNNING": "Running calculation...",
+    "BESS_SIZING_DONE": "Screening completed.",
+    "BESS_SIZING_NO_RESULTS": "No results yet.",
+    "BESS_SIZING_WARNINGS": "Warnings",
+    "BESS_SIZING_WARNINGS_EMPTY": "No warnings detected.",
+    "BESS_SIZING_TAB_MAIN": "Main results",
+    "BESS_SIZING_TAB_SECONDARY": "Diagnostics and assumptions",
+
+    "BESS_SIZING_EXEC_SUMMARY": "Executive summary",
+    "BESS_SIZING_KPI_BEST_CONFIG": "Gross-max configuration",
+    "BESS_SIZING_KPI_GAIN_ABS": "Absolute annual gain",
+    "BESS_SIZING_KPI_GAIN_REL": "Relative annual gain",
+    "BESS_SIZING_KPI_CYCLES": "Equivalent cycles",
+    "BESS_SIZING_TABLE_TITLE": "Summary table",
+    "BESS_SIZING_CHARTS_TITLE": "Charts",
+    "BESS_SIZING_CHART_SCORE_MATRIX_TITLE": "MW x duration score matrix",
+    "BESS_SIZING_CHART_GAIN_POWER_TITLE": "Annual gain vs power",
+    "BESS_SIZING_CHART_GAIN_DURATION_TITLE": "Annual gain vs duration",
+    "BESS_SIZING_CHART_COMPARISON_TITLE": "PV only vs PV + BESS comparison",
+    "BESS_SIZING_CONFIG_SECTION_TITLE": "Selected configuration",
+    "BESS_SIZING_SELECT_CONFIG": "Detailed configuration",
+    "BESS_SIZING_TIMESERIES_TITLE": "Detailed time series",
+    "BESS_SIZING_START_DATE": "Start date",
+    "BESS_SIZING_END_DATE": "End date",
+    "BESS_SIZING_EMPTY_PERIOD": "No data on selected period.",
+    "BESS_SIZING_HEATMAP_TITLE": "Charge/discharge heatmap",
+    "BESS_SIZING_TMY_COHERENCE_TITLE": "TMY coherence (V1)",
+    "BESS_SIZING_TMY_NO_DATA": "No usable TMY data.",
+    "BESS_SIZING_TMY_COVERAGE": "TMY coverage",
+    "BESS_SIZING_TMY_MATCHED": "Matched hours",
+    "BESS_SIZING_TMY_TOTAL": "Total PV hours",
+    "BESS_SIZING_TMY_CORR": "PV/TMY correlation",
+    "BESS_SIZING_ASSUMPTIONS_TITLE": "V1 model assumptions",
+
+    "BESS_SIZING_COL_CONFIG": "Battery configuration",
+    "BESS_SIZING_COL_POWER": "Power (MW)",
+    "BESS_SIZING_COL_DURATION": "Duration (h)",
+    "BESS_SIZING_COL_ENERGY": "Nominal energy (MWh)",
+    "BESS_SIZING_COL_REVENUE_PV_ONLY": "PV only revenue (EUR/yr)",
+    "BESS_SIZING_COL_REVENUE_PV_BESS": "PV + BESS revenue (EUR/yr)",
+    "BESS_SIZING_COL_GAIN_ABS": "Absolute annual gain (EUR/yr)",
+    "BESS_SIZING_COL_GAIN_REL": "Relative annual gain (%)",
+    "BESS_SIZING_COL_CAPTURE_PV_ONLY": "PV only capture price (EUR/MWh)",
+    "BESS_SIZING_COL_CAPTURE_PV_BESS": "PV + BESS capture price (EUR/MWh)",
+    "BESS_SIZING_COL_ENERGY_CHARGED": "Charged energy (MWh/yr)",
+    "BESS_SIZING_COL_ENERGY_DISCHARGED": "Discharged energy (MWh/yr)",
+    "BESS_SIZING_COL_LOSSES": "Losses (MWh/yr)",
+    "BESS_SIZING_COL_THROUGHPUT": "Throughput (MWh/yr)",
+    "BESS_SIZING_COL_CYCLES": "Equivalent cycles (yr)",
+    "BESS_SIZING_COL_UTILIZATION": "Utilization rate (%)",
+    "BESS_SIZING_COL_HOURS_POWER_SAT": "Power saturation hours",
+    "BESS_SIZING_COL_HOURS_ENERGY_SAT": "Energy saturation hours",
+    "BESS_SIZING_COL_SOLVER": "Solver",
+    "BESS_SIZING_COL_ENERGY_CHARGED_PV": "Charged energy from PV (MWh/yr)",
+    "BESS_SIZING_COL_ENERGY_CHARGED_GRID": "Charged energy from grid (MWh/yr)",
+    "BESS_SIZING_COL_GAIN_SHARE_MAX": "Share of max gain reached (%)",
+    "BESS_SIZING_COL_MARGINAL_MW": "Marginal gain (EUR/additional MW)",
+    "BESS_SIZING_COL_MARGINAL_MWH": "Marginal gain (EUR/additional MWh)",
+    "BESS_SIZING_COL_USED_CAPACITY": "Used usable capacity (%)",
+    "BESS_SIZING_COL_UNDERUTILIZED": "Underutilized capacity (%)",
+    "BESS_SIZING_COL_POWER_SAT_RATE": "Power saturation (%)",
+    "BESS_SIZING_COL_ENERGY_SAT_RATE": "Energy saturation (%)",
+    "BESS_SIZING_COL_NET_MARGIN": "Annualized net margin (EUR/yr)",
+    "BESS_SIZING_COL_NET_REVENUE": "Annual net revenue (EUR/yr)",
+    "BESS_SIZING_COL_ANNUALIZED_COST": "Total annualized cost (EUR/yr)",
+    "BESS_SIZING_COL_CAPEX": "Total CAPEX (EUR)",
+    "BESS_SIZING_COL_OPEX": "Total annual OPEX (EUR/yr)",
+    "BESS_SIZING_COL_PAYBACK": "Simple payback (years)",
+    "BESS_SIZING_COL_NPV": "Simplified NPV (EUR)",
+
+    "BESS_SIZING_TECH_EXTRA_TITLE": "V2 technical options",
+    "BESS_SIZING_HELP_TECH_EXTRA": (
+        "Coupling and grid constraints: grid charging, export limit, degradation variable cost, auxiliary losses."
+    ),
+    "BESS_SIZING_ALLOW_GRID_CHARGING": "Allow grid charging",
+    "BESS_SIZING_HELP_ALLOW_GRID_CHARGING": (
+        "If enabled, the battery can charge from market in addition to PV. Otherwise, charging remains PV-only."
+    ),
+    "BESS_SIZING_USE_GRID_LIMIT": "Apply grid export limit",
+    "BESS_SIZING_HELP_GRID_LIMIT": (
+        "Export limit at point of interconnection (MW). Useful for constrained-grid screening."
+    ),
+    "BESS_SIZING_GRID_LIMIT_VALUE": "Grid export limit (MW)",
+    "BESS_SIZING_DEGRAD_COST": "Variable degradation cost (EUR/MWh throughput)",
+    "BESS_SIZING_AUX_LOSSES": "Auxiliary losses (MWh/h)",
+    "BESS_SIZING_ECON_TAB_TITLE": "CAPEX / OPEX details",
+    "BESS_SIZING_HELP_ECON_TAB": (
+        "Economic assumptions are editable. If unchanged, default values loaded from configuration are used."
+    ),
+    "BESS_SIZING_ECON_TAB_NOTE": (
+        "These assumptions drive the techno-economic recommendation (cost-revenue knee method)."
+    ),
+    "BESS_SIZING_RESET_ECON_DEFAULTS": "Reset CAPEX/OPEX defaults",
+
+    "BESS_SIZING_MODE_SECTION_TITLE": "V2 analysis mode",
+    "BESS_SIZING_HELP_ANALYSIS_MODES": (
+        "Mode A: techno-economic with user CAPEX/OPEX. "
+        "Mode B: techno-economic with default CAPEX/OPEX. "
+        "Mode C: marginal optimization without CAPEX/OPEX."
+    ),
+    "BESS_SIZING_MODE_SELECTOR": "Select analysis mode",
+    "BESS_SIZING_MODE_A_LABEL": "Mode A - user CAPEX/OPEX",
+    "BESS_SIZING_MODE_B_LABEL": "Mode B - default CAPEX/OPEX",
+    "BESS_SIZING_MODE_C_LABEL": "Mode C - marginal optimization",
+    "BESS_SIZING_MODE_B_WARNING": "Mode B: simplified default economic assumptions loaded from configuration file.",
+    "BESS_SIZING_TARGET_SHARE": "Target share of max gross gain (%)",
+    "BESS_SIZING_HELP_TARGET_SHARE": (
+        "Mode C recommends the smallest configuration reaching at least this share of maximal gross gain."
+    ),
+    "BESS_SIZING_CAPEX_POWER": "Power CAPEX (EUR/kW)",
+    "BESS_SIZING_CAPEX_ENERGY": "Energy CAPEX (EUR/kWh)",
+    "BESS_SIZING_CAPEX_FIXED": "Fixed CAPEX (EUR)",
+    "BESS_SIZING_OPEX_FIXED_PCT": "Fixed OPEX (% CAPEX/yr)",
+    "BESS_SIZING_OPEX_FIXED": "Fixed OPEX (EUR/yr)",
+    "BESS_SIZING_OPEX_VARIABLE": "Variable OPEX (EUR/MWh throughput)",
+    "BESS_SIZING_PROJECT_LIFE": "Project life (years)",
+    "BESS_SIZING_DISCOUNT_RATE": "Discount rate",
+    "BESS_SIZING_REPLACEMENT_ENABLED": "Enable simplified replacement",
+    "BESS_SIZING_REPLACEMENT_YEAR": "Replacement year",
+    "BESS_SIZING_REPLACEMENT_FRACTION": "Replaced CAPEX fraction (0-1)",
+    "BESS_SIZING_RECOMMEND_METRIC": "Techno-economic recommendation criterion",
+    "BESS_SIZING_RECOMMEND_METRIC_MARGIN": "Max annualized net margin",
+    "BESS_SIZING_RECOMMEND_METRIC_NPV": "Max simplified NPV",
+    "BESS_SIZING_RECOMMEND_METRIC_PAYBACK": "Min simple payback",
+
+    "BESS_SIZING_KPI_TECHNO_CONFIG": "Techno-economic recommendation",
+    "BESS_SIZING_KPI_MARGINAL_CONFIG": "Marginal recommendation",
+    "BESS_SIZING_KPI_GAIN_SHARE": "Share of max gain (marginal rec.)",
+    "BESS_SIZING_KPI_GAIN_SHARE_OPTIMIZED": "Share of max gain (optimized config)",
+    "BESS_SIZING_KPI_NET_MARGIN": "Net margin (techno rec.)",
+    "BESS_SIZING_KEY_COMPARE_TITLE": "Key configuration comparison",
+    "BESS_SIZING_HELP_KEY_COMPARE": "Compares gross-max, techno-economic, and marginal recommendations on key KPIs.",
+
+    "BESS_SIZING_CHART_GAIN_SIZE_TITLE": "Gross gain vs battery size",
+    "BESS_SIZING_HELP_GAIN_SIZE": "Gross annual gain as a function of size (MWh). Useful to identify diminishing returns.",
+    "BESS_SIZING_CHART_NET_SIZE_TITLE": "Net gain vs battery size",
+    "BESS_SIZING_HELP_NET_SIZE": "Annualized net margin vs size curve. Used in modes A/B for economic recommendation.",
+    "BESS_SIZING_CHART_MARGINAL_MW_TITLE": "Marginal value of additional MW",
+    "BESS_SIZING_HELP_MARGINAL_MW": "Additional value captured by one extra MW of power.",
+    "BESS_SIZING_CHART_MARGINAL_MWH_TITLE": "Marginal value of additional MWh",
+    "BESS_SIZING_HELP_MARGINAL_MWH": "Additional value captured by one extra MWh of energy capacity.",
+    "BESS_SIZING_CHART_GAIN_SHARE_TITLE": "Share of maximal gain reached",
+    "BESS_SIZING_HELP_GAIN_SHARE": "Compromise indicator: how much maximal gain is captured for each size.",
+    "BESS_SIZING_CONCLUSIONS_TITLE": "Automatic conclusions",
+    "BESS_SIZING_HELP_CONCLUSIONS": "Conclusions derived from KPI values and recommendations (gross, techno-economic, marginal).",
+    "BESS_SIZING_NO_CONCLUSIONS": "No automatic conclusions available.",
+    "BESS_SIZING_GLOSSARY_TITLE": "Definitions and interpretation",
+    "BESS_SIZING_HELP_GLOSSARY": "Glossary of key indicators used in the V2 analysis.",
+    "BESS_SIZING_GLOSS_POWER": "Battery power",
+    "BESS_SIZING_DEF_POWER": "Maximum instantaneous charge/discharge power (MW).",
+    "BESS_SIZING_GLOSS_ENERGY": "Nominal energy capacity",
+    "BESS_SIZING_DEF_ENERGY": "Nominal storable energy of the battery (MWh).",
+    "BESS_SIZING_GLOSS_USABLE": "Usable capacity",
+    "BESS_SIZING_DEF_USABLE": "Usable share between SOC min and SOC max.",
+    "BESS_SIZING_GLOSS_DURATION": "Storage duration",
+    "BESS_SIZING_DEF_DURATION": "Energy-to-power ratio in hours (MWh/MW).",
+    "BESS_SIZING_GLOSS_RTE": "Roundtrip efficiency",
+    "BESS_SIZING_DEF_RTE": "Product of charge and discharge efficiencies.",
+    "BESS_SIZING_GLOSS_SOC": "SOC min / max",
+    "BESS_SIZING_DEF_SOC": "Minimum and maximum battery state-of-charge limits.",
+    "BESS_SIZING_GLOSS_THROUGHPUT": "Annual throughput",
+    "BESS_SIZING_DEF_THROUGHPUT": "Total yearly energy processed by the battery.",
+    "BESS_SIZING_GLOSS_CYCLE": "Equivalent full cycle",
+    "BESS_SIZING_DEF_CYCLE": "Annual throughput divided by two times nominal capacity.",
+    "BESS_SIZING_GLOSS_GROSS": "Gross arbitrage gain",
+    "BESS_SIZING_DEF_GROSS": "Market revenue delta between PV-only and PV+BESS before costs.",
+    "BESS_SIZING_GLOSS_NET": "Annual net revenue",
+    "BESS_SIZING_DEF_NET": "Gross gain minus annual OPEX (before CAPEX annualization).",
+    "BESS_SIZING_GLOSS_ANNUALIZED": "Annualized cost",
+    "BESS_SIZING_DEF_ANNUALIZED": "Annualized CAPEX plus total annual OPEX.",
+    "BESS_SIZING_GLOSS_MARGINAL_OPT": "Marginal optimization",
+    "BESS_SIZING_DEF_MARGINAL_OPT": "Searches for a size/value compromise instead of only maximizing gross value.",
+    "BESS_SIZING_GLOSS_MARGINAL_GAIN": "Marginal gain",
+    "BESS_SIZING_DEF_MARGINAL_GAIN": "Additional value from one extra MW or one extra MWh.",
+    "BESS_SIZING_GLOSS_KNEE": "Knee point",
+    "BESS_SIZING_DEF_KNEE": "Area where gain slope drops significantly as size increases.",
+    "BESS_SIZING_GLOSS_CAP_SAT": "Capacity saturation",
+    "BESS_SIZING_DEF_CAP_SAT": "Frequency of SOC min/max limit binding.",
+    "BESS_SIZING_GLOSS_PWR_SAT": "Power saturation",
+    "BESS_SIZING_DEF_PWR_SAT": "Frequency of charge/discharge MW limits binding.",
+    "BESS_SIZING_GLOSS_UNDER_OVER": "Under-utilization / oversizing",
+    "BESS_SIZING_DEF_UNDER_OVER": "Indicator showing that part of usable capacity remains weakly used.",
+
+    "BESS_SIZING_HELP_INPUTS": (
+        "Import the three sources (PV, TMY, prices), then validate the detected column mapping. "
+        "The internal analysis time step is always hourly."
+    ),
+    "BESS_SIZING_HELP_PARAMS": (
+        "Defines the MW x duration test grid and battery assumptions (SOC, efficiency, solver). "
+        "The screening compares each combination automatically."
+    ),
+    "BESS_SIZING_HELP_RUN": (
+        "Runs a yearly backtest with perfect foresight of the provided historical price year. "
+        "Grid charging is not allowed in V1."
+    ),
+    "BESS_SIZING_HELP_EXEC_SUMMARY": (
+        "Shows the best configuration ranked by absolute annual gain with key performance indicators."
+    ),
+    "BESS_SIZING_HELP_TABLE": (
+        "Compares all tested configurations using revenue, gain, capture price, and battery usage metrics."
+    ),
+    "BESS_SIZING_HELP_CHARTS": (
+        "Visualizes the performance area (MW x h) and gain trends versus power and duration."
+    ),
+    "BESS_SIZING_HELP_SCORE_MATRIX": (
+        "Each cell is the annual gain for one power-duration pair. "
+        "Higher-value zones indicate more attractive sizing areas."
+    ),
+    "BESS_SIZING_HELP_GAIN_POWER": (
+        "Envelope curve of the best gain reached for each power level across all tested durations."
+    ),
+    "BESS_SIZING_HELP_GAIN_DURATION": (
+        "Envelope curve of the best gain reached for each duration across all tested power levels."
+    ),
+    "BESS_SIZING_HELP_COMPARISON": (
+        "Bars: annual revenue. Line: average capture price. "
+        "Shows whether BESS improves both total value and temporal quality of injection."
+    ),
+    "BESS_SIZING_HELP_CONFIG": (
+        "Select one configuration to inspect its hourly dispatch behavior and detailed KPIs."
+    ),
+    "BESS_SIZING_HELP_TIMESERIES": (
+        "Chronological view of price/PV/charge/discharge/SOC over a selected period to check dispatch logic. "
+        "Chart sign convention: charge is positive, discharge is displayed negative for visual separation."
+    ),
+    "BESS_SIZING_HELP_HEATMAP": (
+        "Shows average net dispatch by month and hour. "
+        "Positive value = net discharge to grid, negative value = net charge from PV."
+    ),
+    "BESS_SIZING_HELP_WARNINGS": (
+        "Lists data preparation and temporal alignment alerts. "
+        "Review this section before interpreting business value."
+    ),
+    "BESS_SIZING_HELP_TMY": (
+        "Basic coherence check between PV signal and TMY signal (coverage and correlation). "
+        "Informative indicator in V1."
+    ),
+    "BESS_SIZING_HELP_ASSUMPTIONS": (
+        "Recap of model assumptions used during the run (series roles, solver choice, constraints)."
+    ),
+    "BESS_SIZING_HELP_EXPORT": (
+        "Export both the multi-configuration summary and the detailed dispatch series of the selected scenario."
+    ),
+
+    "BESS_SIZING_EXPORT_SUMMARY": "Export configuration summary (CSV)",
+    "BESS_SIZING_EXPORT_DETAIL": "Export selected dispatch series (CSV)",
+
+    "BESS_SIZING_ERROR_NEED_PV": "Please upload a PV file.",
+    "BESS_SIZING_ERROR_NEED_TMY": "Please upload a TMY file.",
+    "BESS_SIZING_ERROR_NEED_MARKET_CSV": "Please upload a market price CSV in CSV mode.",
+    "BESS_SIZING_ERROR_NEED_DURATION": "Please select at least one battery duration.",
+    "BESS_SIZING_ERROR_POWER_RANGE": "Power min must be less than or equal to power max.",
+    "BESS_SIZING_ERROR_SOC_BOUNDS": "SOC bounds must satisfy 0 <= SOC min < SOC max <= 1.",
+    "BESS_SIZING_ERROR_SOC_INITIAL": "Initial SOC must be between SOC min and SOC max.",
+
+    "HOURLY_TANPHI_SECTION_TITLE": "Approximate tan(phi) impact study",
+    "HOURLY_HELP_TANPHI_APPROX_MD": (
+        "Engineering approximation study of tan(phi) impact (0.25 to 0.35, step 0.01). "
+        "This module does not replace a true PVsyst resimulation."
+    ),
+    "HOURLY_TANPHI_METHOD_CARD": (
+        "Engineering approximation: inverter is assumed to be modeled in apparent power (kVA), "
+        "with an upstream active-capacity effect (cos(phi)) and a downstream current-loss effect (~1/cos^2)."
+    ),
+    "HOURLY_TANPHI_PRECISION_WARNING": (
+        "For higher-fidelity results, export richer PVsyst variables, especially EacOhmL and IL_Pmax."
+    ),
+    "HOURLY_TANPHI_REF_ASSUMPTION_NOTE": "Applied assumption: tan(phi)_ref = 0 when no explicit reference is available in the hourly file.",
+    "HOURLY_TANPHI_MODE_LABEL": "Computation mode",
+    "HOURLY_TANPHI_MODE_ENHANCED": "enhanced approximation",
+    "HOURLY_TANPHI_MODE_FALLBACK": "fallback minimal",
+    "HOURLY_TANPHI_RANGE_LABEL": "Studied range",
+    "HOURLY_TANPHI_REF_LABEL": "Reference",
+    "HOURLY_TANPHI_REF_COS_LABEL": "cos(phi) reference",
+    "HOURLY_TANPHI_REF_SOURCE_LABEL": "tan(phi) reference source",
+    "HOURLY_TANPHI_REF_SOURCE_COMPUTED": "Computed from EApGrid/EReGrid",
+    "HOURLY_TANPHI_REF_SOURCE_ASSUMED": "Assumed: tan(phi)_ref = 0",
+    "HOURLY_TANPHI_REF_ENERGY_LABEL": "Estimated annual E_Grid (reference)",
+    "HOURLY_TANPHI_REF_EGRDLIM_LABEL": "Reference annual EGrdLim (propagated)",
+    "HOURLY_TANPHI_COL_OUT": "Inverter column",
+    "HOURLY_TANPHI_COL_GRID": "Grid injection column",
+    "HOURLY_TANPHI_TABLE_TITLE": "tan(phi) scenario summary",
+    "HOURLY_TANPHI_COL_TANPHI": "tan_phi",
+    "HOURLY_TANPHI_COL_COSPHI": "cos_phi",
+    "HOURLY_TANPHI_COL_MODE": "mode_used",
+    "HOURLY_TANPHI_COL_ANN_EGRID": "annual_EGrid_est_MWh",
+    "HOURLY_TANPHI_COL_DELTA_MWH": "delta_vs_ref_MWh",
+    "HOURLY_TANPHI_COL_DELTA_PCT": "delta_vs_ref_pct",
+    "HOURLY_TANPHI_COL_PDECL": "P_decl_opt_MW",
+    "HOURLY_TANPHI_COL_PEAK_OUT": "peak_EOutInv_est_MW",
+    "HOURLY_TANPHI_COL_PEAK_GRID": "peak_EGrid_est_MW",
+    "HOURLY_TANPHI_COL_WARNINGS": "warnings",
+    "HOURLY_TANPHI_CHART_LOSS_TITLE": "tan(phi) vs annual energy loss/gain",
+    "HOURLY_TANPHI_Y_LOSS": "Annual energy loss (MWh, negative = gain)",
+    "HOURLY_TANPHI_CHART_PDECL_TITLE": "tan(phi) vs optimal declared MW",
+    "HOURLY_TANPHI_Y_PDECL": "Optimal declared active power (MW)",
+    "HOURLY_TANPHI_EXTREMES_TITLE": "tan(phi) extremes 0.25 and 0.35",
+    "HOURLY_TANPHI_025_PDECL": "tan(phi)=0.25 optimal declared power",
+    "HOURLY_TANPHI_025_LOSS_MWH": "tan(phi)=0.25 annual loss due to load factor",
+    "HOURLY_TANPHI_025_LOSS_PCT": "tan(phi)=0.25 loss due to load factor",
+    "HOURLY_TANPHI_035_PDECL": "tan(phi)=0.35 optimal declared power",
+    "HOURLY_TANPHI_035_LOSS_MWH": "tan(phi)=0.35 annual loss due to load factor",
+    "HOURLY_TANPHI_035_LOSS_PCT": "tan(phi)=0.35 loss due to load factor",
+    "HOURLY_TANPHI_SIGNED_NOTE": "Sign convention: positive value = loss, negative value = potential gain.",
+    "HOURLY_TANPHI_LIMITS_TITLE": "Limits and warnings",
+    "HOURLY_TANPHI_LIMIT_ENGINEERING": "Result is provided as an engineering estimate (approximation), not as an exact PVsyst recalculation.",
+    "HOURLY_TANPHI_LIMIT_NO_DIRECT_COS_ON_EGRID": "The model never applies E_Grid_est = cos(phi) * E_Grid directly.",
+    "HOURLY_TANPHI_LIMIT_RESIM_PVSYST": "For critical decisions, prefer a full PVsyst resimulation with richer exported variables.",
+    "HOURLY_TANPHI_REF_COMPUTED_NOTE": "Reference computed from apparent/reactive energies available in the hourly file.",
+    "HOURLY_TANPHI_NOT_AVAILABLE": "tan(phi) study is not available with the current columns.",
+    "HOURLY_AVAIL_TANPHI_APPROX": "tan(phi) approximation",
+    "HOURLY_AVAIL_TANPHI_APPROX_DETAIL": "Requires EOutInv and E_Grid, with higher fidelity when EacOhmL and IL_Pmax are available.",
 }
+
 
 

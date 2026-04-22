@@ -8,6 +8,7 @@ from utils import check_required_columns, suggest_similar_columns
 
 from .grid_limit import analyze_grid_limit
 from .load_factor import analyze_load_factor
+from .tanphi_impact import analyze_tanphi_impact
 
 
 AnalysisFunc = Callable[[AnalysisContext], None]
@@ -26,6 +27,7 @@ def register_analyses() -> None:
     register_analysis("inverter_clipping", analyze_inverter_clipping)
     register_analysis("grid_limit", analyze_grid_limit)
     register_analysis("load_factor", analyze_load_factor)
+    register_analysis("tanphi_impact", analyze_tanphi_impact)
     register_analysis("performance_monthly", analyze_performance_monthly)
     register_analysis("system_summary", analyze_system_summary)
 
@@ -236,6 +238,18 @@ def analyze_threshold(context: AnalysisContext) -> None:
         }
         return
 
+    # A zero (or negative) studied limit means "no complementary limit study".
+    if thr <= 0:
+        context.results["threshold"] = {
+            "available": False,
+            "disabled_zero_limit": True,
+            "summary": {
+                "threshold_column": col,
+                "threshold_value": float(thr),
+            },
+        }
+        return
+
     dt_hours, dt_meta = infer_timestep_hours(df.index)
     unit = str(context.units_map.get(col, "")).strip()
 
@@ -249,7 +263,15 @@ def analyze_threshold(context: AnalysisContext) -> None:
     hours_above = float(int(above_mask.sum())) * dt_hours
     pct_above_prod_time = 100.0 * hours_above / hours_prod if hours_prod > 0 else 0.0
 
-    above_energy_kwh, _ = integrate_series_to_energy_kwh(s.where(above_mask, 0.0), unit, dt_hours)
+    above_energy_series = s.where(above_mask, 0.0)
+    above_energy_kwh, _ = integrate_series_to_energy_kwh(above_energy_series, unit, dt_hours)
+
+    # Lost energy if the studied limit is applied: only the excess above the limit.
+    lost_series = (s - thr).where(above_mask, 0.0).clip(lower=0.0)
+    lost_kwh, _ = integrate_series_to_energy_kwh(lost_series, unit, dt_hours)
+
+    production_wo_import_kwh, _ = integrate_series_to_energy_kwh(s_raw.clip(lower=0), unit, dt_hours)
+    lost_pct_of_production = _safe_pct(lost_kwh, production_wo_import_kwh)
 
     neg = (-s_raw.clip(upper=0))
     night_kwh, _ = integrate_series_to_energy_kwh(neg, unit, dt_hours)
@@ -266,6 +288,9 @@ def analyze_threshold(context: AnalysisContext) -> None:
         "hours_above": float(hours_above),
         "pct_above_operating_time": float(pct_above_prod_time),
         "energy_above_kwh": float(above_energy_kwh),
+        "lost_kwh": float(lost_kwh),
+        "production_without_import_kwh": float(production_wo_import_kwh),
+        "lost_pct_of_production": float(lost_pct_of_production),
         "night_import_hours": float(night_hours),
         "night_consumption_kwh": float(night_kwh),
     }
@@ -274,31 +299,42 @@ def analyze_threshold(context: AnalysisContext) -> None:
 
     df_above = df.loc[above_mask, :].copy()
     df_above["_value"] = s.loc[above_mask]
+    df_above["_excess"] = lost_series.loc[above_mask]
     df_above["month"] = df_above.index.month
 
+    def _sum_value_to_kwh(v: float) -> float:
+        out_kwh, _ = integrate_series_to_energy_kwh(pd.Series([float(v)]), unit, dt_hours)
+        return float(out_kwh)
+
     monthly = (
-        df_above.groupby("month", observed=False)["_value"]
-        .agg(steps_above="count", sum_value="sum")
+        df_above.groupby("month", observed=False)
+        .agg(
+            steps_above=("_value", "count"),
+            sum_value=("_value", "sum"),
+            sum_excess=("_excess", "sum"),
+        )
         .reset_index()
     )
     monthly["month_name"] = monthly["month"].map(month_map)
     monthly["hours_above"] = monthly["steps_above"].astype(float) * dt_hours
-    monthly["energy_above_kwh"] = monthly["sum_value"].astype(float).map(
-        lambda v: float(v) * dt_hours if ("kW" in unit and "kWh" not in unit) else float(v)
-    )
-    monthly = monthly[["month_name", "hours_above", "energy_above_kwh"]]
+    monthly["energy_above_kwh"] = monthly["sum_value"].astype(float).map(_sum_value_to_kwh)
+    monthly["lost_kwh"] = monthly["sum_excess"].astype(float).map(_sum_value_to_kwh)
+    monthly = monthly[["month_name", "hours_above", "energy_above_kwh", "lost_kwh"]]
 
     df_above["season"] = df_above.index.month.map(_season_en)
     seasonal = (
-        df_above.groupby("season", observed=False)["_value"]
-        .agg(steps_above="count", sum_value="sum")
+        df_above.groupby("season", observed=False)
+        .agg(
+            steps_above=("_value", "count"),
+            sum_value=("_value", "sum"),
+            sum_excess=("_excess", "sum"),
+        )
         .reset_index()
     )
     seasonal["hours_above"] = seasonal["steps_above"].astype(float) * dt_hours
-    seasonal["energy_above_kwh"] = seasonal["sum_value"].astype(float).map(
-        lambda v: float(v) * dt_hours if ("kW" in unit and "kWh" not in unit) else float(v)
-    )
-    seasonal = seasonal[["season", "hours_above", "energy_above_kwh"]]
+    seasonal["energy_above_kwh"] = seasonal["sum_value"].astype(float).map(_sum_value_to_kwh)
+    seasonal["lost_kwh"] = seasonal["sum_excess"].astype(float).map(_sum_value_to_kwh)
+    seasonal = seasonal[["season", "hours_above", "energy_above_kwh", "lost_kwh"]]
 
     df_prod = df.loc[prod_mask, :].copy()
     df_prod["month"] = df_prod.index.month
@@ -808,7 +844,9 @@ def analyze_system_summary(context: AnalysisContext) -> None:
 
     if thr and thr.get("available", False):
         thr_s = thr.get("summary", {})
-        energy_above_limit_kwh = float(thr_s.get("energy_above_kwh", 0.0))
+        energy_above_limit_kwh = float(
+            thr_s.get("lost_kwh", thr_s.get("energy_above_kwh", 0.0))
+        )
         energy_above_limit_pct_of_production = _safe_pct(energy_above_limit_kwh, production_wo_night_kwh)
 
     if threshold_value > 0 and productive_utilization_ratio is not None:
@@ -837,6 +875,8 @@ def analyze_system_summary(context: AnalysisContext) -> None:
         "productive_utilization_reference_label": productive_utilization_reference_label,
         "energy_above_limit_kwh": float(energy_above_limit_kwh),
         "energy_above_limit_pct_of_production": float(energy_above_limit_pct_of_production),
+        "limit_lost_kwh": float(energy_above_limit_kwh),
+        "limit_lost_pct_of_production": float(energy_above_limit_pct_of_production),
         "bridging_recommendation_level": bridging_recommendation_level,
         "pr_mean": pr_mean,
         "globhor_annual": globhor_annual,
